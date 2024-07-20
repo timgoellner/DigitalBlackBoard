@@ -5,7 +5,6 @@ import { createBrowserRouter, createRoutesFromElements, redirect, Route, RouterP
 
 import './styles/index.css';
 
-import App from './pages/App';
 import Authenticate from './pages/Login';
 import Blackboard from './pages/Blackboard';
 import Dashboard from './pages/Dashboard';
@@ -15,23 +14,33 @@ import validateUser from './helpers/validateUser';
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
-      <Route path = '/' element = {<App />} loader = {async () => {
-        if (await validateUser()) return redirect('/blackboard')
+      <Route path = '/' loader = {async () => {
+        const user = await validateUser();
+
+        if (user && !user.isStaff) return redirect('/blackboard')
+        else if (user && user.isStaff) return redirect('/dashboard')
         else return redirect('/login')
       }}/>
 
       <Route path = '/login' element = {<Authenticate />} loader = {async () => {
-        if (await validateUser()) return redirect('/blackboard')
+        const user = await validateUser();
+
+        if (user && !user.isStaff) return redirect('/blackboard')
+        else if (user && user.isStaff) return redirect('/dashboard')
         else return null
       }}/>
 
       <Route path = '/blackboard' element = {<Blackboard />} loader = {async () => {
-        if (!await validateUser()) return redirect('/login')
+        const user = await validateUser();
+
+        if (!user || user.isStaff) return redirect('/login')
         else return null
       }}/>
 
       <Route path = '/dashboard' element = {<Dashboard />} loader = {async () => {
-        if (!await validateUser()) return redirect('/login')
+        const user = await validateUser();
+
+        if (!user || !user.isStaff) return redirect('/login')
         else return null
       }}/>
     </>

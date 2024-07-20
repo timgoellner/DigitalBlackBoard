@@ -10,7 +10,7 @@ async function validateUser() {
     })
       .then((response) => response.json())
       .then((data) => {
-        resolve(data.message === "valid")
+        resolve((data.message === "valid") ? data.user : false)
       } )
     })
 }

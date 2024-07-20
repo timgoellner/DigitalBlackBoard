@@ -9,7 +9,7 @@ router.post("/", (request, response) => {
   var identifier = null
   if (isStaff) identifier = request.body
 
-  const { username, password } = request.body
+  const { organization, password } = request.body
 
   // TODO: check password
   if ((password !== '1234' && !isStaff) || (password !== '9876' && isStaff)) {
@@ -17,7 +17,9 @@ router.post("/", (request, response) => {
   }
   let data = {
     signInTime: Date.now(),
-    username,
+    organization,
+    identifier,
+    isStaff
   }
 
   const token = jwt.sign(data, jwtSecretKey)
@@ -28,10 +30,9 @@ router.get("/", (request, response) => {
   const jwtSecretKey = process.env.JWT_SECRET
   const token = request.headers['jwt-token']
   try {
-    const verified = jwt.verify(token, jwtSecretKey)
-    console.log(verified)
-    if (verified) {
-      return response.status(200).json({ message: 'valid' })
+    const user = jwt.verify(token, jwtSecretKey)
+    if (user) {
+      return response.status(200).json({ message: 'valid', user })
     } else {
       return response.status(401).json({ message: 'error' })
     }

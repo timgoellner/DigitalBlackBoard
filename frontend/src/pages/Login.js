@@ -5,7 +5,7 @@ function Login() {
   const [organization, setOrganization] = useState('')
   const [identifier, setIdentifier] = useState('')
   const [password, setPassword] = useState('')
-  const [isStaff, setIsStaff] = useState(false)
+  var isStaff = false;
 
   const navigate = useNavigate();
 
@@ -39,7 +39,7 @@ function Login() {
   return (
     <main>
       <form onSubmit={(event) => {
-        setIsStaff(false)
+        isStaff = false
         submitUser(event);
       }}>
         <input
@@ -60,7 +60,7 @@ function Login() {
       </form>
 
       <form onSubmit={(event) => {
-        setIsStaff(true)
+        isStaff = true
         submitUser(event);
       }}>
         <input
