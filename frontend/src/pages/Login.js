@@ -51,7 +51,7 @@ function Login() {
   }
 
   return (
-    <main>
+    <main className='login'>
       <h1>DigitalBlackBoard Login</h1>
       <div className='switch' onClick={(event) => { toggleLogin(event) }}></div>
       <div className='forms'>

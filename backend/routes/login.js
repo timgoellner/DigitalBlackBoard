@@ -16,7 +16,7 @@ router.post("/", async (request, response) => {
   const { organization, identifier } = request.body
 
   if (!organization || !identifier || (isStaff && !password)) {
-    return response.status(401).json({ message: 'please fill all fields' })
+    return response.status(401).json({ message: 'invalid login credentials' })
   }
 
   // TODO: check password
@@ -27,7 +27,7 @@ router.post("/", async (request, response) => {
   }
 
   if (isStaff != userData[0].isStaff) {
-    return response.status(401).json({ message: 'wrong login form' })
+    return response.status(401).json({ message: 'invalid login credentials' })
   }
 
   if (isStaff && !await bcypt.compare(password, userData[0].password)) {
