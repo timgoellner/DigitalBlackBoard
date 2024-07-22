@@ -7,6 +7,9 @@ function Login() {
   const [organization, setOrganization] = useState('')
   const [identifier, setIdentifier] = useState('')
   const [password, setPassword] = useState('')
+
+  const [errorUser, setErrorUser] = useState('')
+  const [errorStaff, setErrorStaff] = useState('')
   var isStaff = false;
 
   const navigate = useNavigate();
@@ -33,7 +36,8 @@ function Login() {
           if (isStaff) navigate('/dashboard')
           else navigate('/blackboard')
         } else {
-          alert(data.message)
+          if (isStaff) setErrorStaff(data.message)
+          else setErrorUser(data.message)
         }
       })
   }
@@ -41,6 +45,9 @@ function Login() {
   function toggleLogin() {
     document.getElementsByClassName('switch')[0].classList.toggle('clicked')
     document.getElementsByClassName('forms')[0].classList.toggle('clicked')
+
+    setErrorUser('')
+    setErrorStaff('')
   }
 
   return (
@@ -61,13 +68,14 @@ function Login() {
           />
 
           <input
-            value={password}
-            type="password"
-            placeholder="Password"
-            onChange={(e) => setPassword(e.target.value)}
+            value={identifier}
+            type="text"
+            placeholder="Identifier"
+            onChange={(e) => setIdentifier(e.target.value)}
           />
 
           <button type="submit">Login</button>
+          <error>{errorUser}</error>
         </form>
 
         <div className='gap'></div>
@@ -99,6 +107,7 @@ function Login() {
           />
 
           <button type="submit">Login</button>
+          <error>{errorStaff}</error>
         </form>
       </div>
     </main>

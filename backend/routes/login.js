@@ -1,19 +1,37 @@
-const express = require("express")
-const jwt = require('jsonwebtoken')
+const jwt =  require('jsonwebtoken')
+const bcypt =  require('bcrypt')
+const express = require('express')
+
+const mysql =  require("../helpers/mysql");
+
 const router = express.Router()
 
-router.post("/", (request, response) => {
+router.post("/", async (request, response) => {
   const jwtSecretKey = process.env.JWT_SECRET
 
   const isStaff = request.query.type === 'staff'
-  var identifier = null
-  if (isStaff) identifier = request.body
+  var password = null
+  if (isStaff) password = request.body.password
 
-  const { organization, password } = request.body
+  const { organization, identifier } = request.body
+
+  if (!organization || !identifier || (isStaff && !password)) {
+    return response.status(401).json({ message: 'please fill all fields' })
+  }
 
   // TODO: check password
-  if ((password !== '1234' && !isStaff) || (password !== '9876' && isStaff)) {
-    return response.status(401).json({ message: 'invalid password' })
+  const userData = await mysql.sendQuery(`SELECT password, isStaff FROM accounts WHERE organization = '${organization}' AND identifier = '${identifier}'`)
+
+  if (!userData.length) {
+    return response.status(401).json({ message: 'invalid login credentials' })
+  }
+
+  if (isStaff != userData[0].isStaff) {
+    return response.status(401).json({ message: 'wrong login form' })
+  }
+
+  if (isStaff && !await bcypt.compare(password, userData[0].password)) {
+    return response.status(401).json({ message: 'invalid login credentials' })
   }
   let data = {
     signInTime: Date.now(),
@@ -41,4 +59,4 @@ router.get("/", (request, response) => {
   }
 })
 
-module.exports = router;
+module.exports = router
