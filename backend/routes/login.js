@@ -19,7 +19,6 @@ router.post("/", async (request, response) => {
     return response.status(401).json({ message: 'invalid login credentials' })
   }
 
-  // TODO: check password
   const userData = await mysql.sendQuery(`SELECT password, isStaff FROM accounts WHERE organization = '${organization}' AND identifier = '${identifier}'`)
 
   if (!userData.length) {
@@ -33,7 +32,7 @@ router.post("/", async (request, response) => {
   if (isStaff && !await bcypt.compare(password, userData[0].password)) {
     return response.status(401).json({ message: 'invalid login credentials' })
   }
-  let data = {
+  const data = {
     signInTime: Date.now(),
     organization,
     identifier,

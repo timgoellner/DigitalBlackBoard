@@ -8,6 +8,7 @@ const cors = require('cors')
 const app = express()
 
 const loginRouter = require("./routes/login")
+const registerRouter = require("./routes/register")
 
 // Global Middleware
 app.use(express.urlencoded({ extended: false }))
@@ -24,6 +25,7 @@ app.use(helmet({
 
 // Routes
 app.use("/login", loginRouter)
+app.use("/register", registerRouter)
 
 app.listen(process.env.PORT)
 console.log("[server] listening on port " + process.env.PORT)

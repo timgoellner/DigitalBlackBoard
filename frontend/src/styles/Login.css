@@ -76,6 +76,7 @@
     width: 100%;
     color: darkred;
     font-size: .9rem;
+    white-space: nowrap;
   }
   
   form:first-child error {
@@ -129,6 +130,7 @@
 
   form.register-form {
     gap: 2rem;
+    width: fit-content;
   }
 
   form.register-form div {
@@ -141,6 +143,7 @@
     font-size: small;
     top: -1.2rem;
     left: .5rem;
+    width: max-content;
   }
 
   .new-organization {

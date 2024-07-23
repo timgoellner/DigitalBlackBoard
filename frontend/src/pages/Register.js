@@ -39,7 +39,7 @@ function Register() {
 
   return (
     <main className='register'>
-      <h1>Setup new admin account</h1>
+      <h1>Setup organisation admin account</h1>
 
       <form className='register-form' onSubmit={(event) => {
           submitUser(event);
