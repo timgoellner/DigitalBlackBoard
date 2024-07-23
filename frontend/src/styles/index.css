@@ -1,7 +1,12 @@
 :root {
   --blue: #2b4b6f;
   --darkblue: #153253;
-  --orange: #aa6c39;
+  --orange: #be6217;
+  --darkorange: #ae5105;
+  --lightorange: #be6217c8;
+  --green: #37962d;
+  --darkgreen: #1d7614;
+  --lightgreen: #37962de4;
   --gray: #6e6e6e;
   --lightgray: #aaa8a8;
 }

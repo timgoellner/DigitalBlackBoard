@@ -110,6 +110,7 @@ function Login() {
           <error>{errorStaff}</error>
         </form>
       </div>
+      <button onClick={ () => { navigate('/register') } } className='new-organization'>Register organization</button>
     </main>
   );
 }

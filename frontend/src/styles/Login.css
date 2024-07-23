@@ -1,6 +1,6 @@
-.login {
+.login, .register {
   display: flex;
-  height: 80dvh;
+  height: 95dvh;
   justify-content: center;
   align-items: center;
   flex-direction: column;
@@ -122,9 +122,34 @@
     }
   }
   
-  form:last-child {
+  form:last-child:not(.register-form) {
     opacity: .4;
     pointer-events: none;
+  }
+
+  form.register-form {
+    gap: 2rem;
+  }
+
+  form.register-form div {
+    position: relative;
+  }
+
+  form.register-form p {
+    position: absolute;
+    margin: 0;
+    font-size: small;
+    top: -1.2rem;
+    left: .5rem;
+  }
+
+  .new-organization {
+    background-color: var(--lightorange);
+    border: 1px solid var(--darkorange);
+  }
+
+  .new-organization:hover {
+    background-color: var(--darkorange);
   }
   
   @media only screen and (max-width: 600px) {
