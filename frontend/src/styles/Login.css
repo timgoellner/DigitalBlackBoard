@@ -147,12 +147,13 @@
   }
 
   .new-organization {
-    background-color: var(--lightorange);
-    border: 1px solid var(--darkorange);
+    background-color: white;
+    border: 2px solid var(--blue);
+    color: var(--blue);
   }
 
   .new-organization:hover {
-    background-color: var(--darkorange);
+    background-color: var(--lightblue);
   }
   
   @media only screen and (max-width: 600px) {

@@ -1,0 +1,56 @@
+.dashboard {
+  display: flex;
+  width: 100dvw;
+  height: 100dvh;
+
+  .controll-section {
+    display: flex;
+    flex-direction: column;
+    width: 20dvw;
+    justify-content: space-between;
+  }
+
+  h1 {
+    margin: 1rem 2rem;
+    font-weight: 400;
+    font-size: 1.8rem;
+  }
+
+  .bars {
+    display: flex;
+    flex-direction: column;
+    height: 60dvh;
+
+    hr {
+      width: 80%;
+      color: var(--lightgray);
+      margin: 1rem 1.5rem;
+      opacity: .5;
+    }
+  }
+
+  .bar {
+    display: flex;
+    flex-direction: column;
+
+    > div {
+      display: flex;
+      max-width: 75%;
+      height: 4dvh;
+      align-items: center;
+      padding: .5rem 1rem .5rem 3rem;
+      cursor: pointer;
+      border-radius: 0 2rem 2rem 0;
+    }
+
+    > div.selected {
+      background-color: var(--lightblue);
+    }
+  }
+
+  .info {
+    color: var(--gray);
+    margin: .5rem 3rem;
+  }
+}
+
