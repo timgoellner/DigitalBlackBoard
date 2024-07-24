@@ -6,8 +6,28 @@
   flex-direction: column;
   gap: 5dvh;
 
-  h1 {
-    text-align: center;
+  .heading {
+    display: flex;
+
+    * {
+      font-weight: 600;
+      font-size: 2.1rem;
+      margin: 0;
+    }
+
+    p:nth-child(1) {
+      color: var(--lightblue);
+    }
+    p:nth-child(2) {
+      color: var(--blue);
+    }
+    p:nth-child(3) {
+      color: var(--darkblue);
+    }
+
+    h1 {
+      margin-left: .7rem;
+    }
   }
   
   form {

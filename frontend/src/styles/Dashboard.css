@@ -8,12 +8,38 @@
     flex-direction: column;
     width: 20dvw;
     justify-content: space-between;
-  }
 
-  h1 {
-    margin: 1rem 2rem;
-    font-weight: 400;
-    font-size: 1.8rem;
+    > div:first-child {
+      display: flex;
+      flex-direction: column;
+      margin: 2rem 0 0 3rem;
+
+      span {
+        display: flex;
+      }
+
+      p {
+        margin: 0;
+        font-weight: 600;
+        font-size: 1.9rem;
+      }
+
+      p:nth-child(1) {
+        color: var(--lightblue);
+      }
+      p:nth-child(2) {
+        color: var(--blue);
+      }
+      p:nth-child(3) {
+        color: var(--darkblue);
+      }
+
+      h1 {
+        font-weight: 600;
+        font-size: 1.9rem;
+        margin: 0;
+      }
+    }
   }
 
   .bars {
@@ -22,7 +48,7 @@
     height: 60dvh;
 
     hr {
-      width: 80%;
+      width: 75%;
       color: var(--lightgray);
       margin: 1rem 1.5rem;
       opacity: .5;
@@ -35,16 +61,22 @@
 
     > div {
       display: flex;
-      max-width: 75%;
+      max-width: 70%;
       height: 4dvh;
       align-items: center;
-      padding: .5rem 1rem .5rem 3rem;
+      padding: .5rem .7rem .5rem 3rem;
       cursor: pointer;
       border-radius: 0 2rem 2rem 0;
     }
 
     > div.selected {
       background-color: var(--lightblue);
+    }
+
+    svg {
+      width: 1.5rem;
+      height: 1.5rem;
+      margin-right: 1rem;
     }
   }
 

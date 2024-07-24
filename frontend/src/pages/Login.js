@@ -52,7 +52,12 @@ function Login() {
 
   return (
     <main className='login'>
-      <h1>DigitalBlackBoard Login</h1>
+      <div className='heading'>
+        <p>Digital</p>
+        <p>Black</p>
+        <p>Board</p>
+        <h1>Login</h1>
+      </div>
       <div className='switch' onClick={(event) => { toggleLogin(event) }}></div>
       <div className='forms'>
         <form onSubmit={(event) => {

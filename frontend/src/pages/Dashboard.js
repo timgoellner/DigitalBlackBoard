@@ -1,6 +1,12 @@
 import { useNavigate, useLoaderData } from 'react-router-dom';
 import { useState } from 'react';
 
+import { PiChalkboardTeacherFill, PiStudentFill } from "react-icons/pi";
+import { FaPeopleLine, FaSchool, FaRegIdBadge } from "react-icons/fa6";
+import { IoLayers } from "react-icons/io5";
+import { FaExclamationTriangle } from "react-icons/fa";
+import { FiLogOut } from "react-icons/fi";
+
 import "../styles/Dashboard.css"
 
 import Home from '../components/Home';
@@ -9,7 +15,7 @@ import Teachers from '../components/Teachers';
 import Students from '../components/Students';
 import Classes from '../components/Classes';
 import Changes from '../components/Changes';
-import Users from '../components/Users';
+import Accounts from '../components/Accounts';
 
 function Dashboard() {
   const [page, setPage] = useState(0)
@@ -36,23 +42,30 @@ function Dashboard() {
   return (
     <main className='dashboard'>
       <div className='controll-section'>
-        <h1>DBB Dashboard</h1>
+        <div>
+          <span>
+            <p>Digital</p>
+            <p>Black</p>
+            <p>Board</p>
+          </span>
+          <h1> Dashboard</h1>
+        </div>
         <div className='bars'>
           <div className='bar'>
-            <div onClick={() => selectPage(0)} className='selected'>Home</div>
-            <div onClick={() => selectPage(1)}>Grades</div>
-            <div onClick={() => selectPage(2)}>Teachers</div>
-            <div onClick={() => selectPage(3)}>Students</div>
-            <div onClick={() => selectPage(4)}>Classes</div>
+            <div onClick={() => selectPage(0)} className='selected'><FaSchool /> Home</div>
+            <div onClick={() => selectPage(1)}><IoLayers /> Grades</div>
+            <div onClick={() => selectPage(2)}><PiChalkboardTeacherFill /> Teachers</div>
+            <div onClick={() => selectPage(3)}><PiStudentFill /> Students</div>
+            <div onClick={() => selectPage(4)}><FaPeopleLine /> Classes</div>
           </div>
           <hr />
           <div className='bar'>
-            <div onClick={() => selectPage(5)}>Changes</div>
-            <div onClick={() => selectPage(6)}>Users</div>
+            <div onClick={() => selectPage(5)}><FaExclamationTriangle /> Changes</div>
+            <div onClick={() => selectPage(6)}><FaRegIdBadge /> Accounts</div>
           </div>
           <hr />
           <div className='bar'>
-            <div onClick={() => logout()}>Logout</div>
+            <div onClick={() => logout()}><FiLogOut /> Logout</div>
           </div>
         </div>
         <div className='info'>
@@ -68,7 +81,7 @@ function Dashboard() {
           (page === 3 && <Students />) ||
           (page === 4 && <Classes />) ||
           (page === 5 && <Changes />) ||
-          (page === 6 && <Users />)
+          (page === 6 && <Accounts />)
         }
       </div>
     </main>
