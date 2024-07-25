@@ -73,17 +73,15 @@ function Dashboard() {
         </div>
       </div>
 
-      <div>
-        {
-          (page === 0 && <Home />) ||
-          (page === 1 && <Grades />) ||
-          (page === 2 && <Teachers />) ||
-          (page === 3 && <Students />) ||
-          (page === 4 && <Classes />) ||
-          (page === 5 && <Changes />) ||
-          (page === 6 && <Accounts />)
-        }
-      </div>
+      {
+        (page === 0 && <Home />) ||
+        (page === 1 && <Grades />) ||
+        (page === 2 && <Teachers />) ||
+        (page === 3 && <Students />) ||
+        (page === 4 && <Classes />) ||
+        (page === 5 && <Changes />) ||
+        (page === 6 && <Accounts />)
+      }
     </main>
   )
 }

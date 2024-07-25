@@ -9,6 +9,7 @@ const app = express()
 
 const loginRouter = require("./routes/login")
 const registerRouter = require("./routes/register")
+const dashboardRouter = require("./routes/dashboard")
 
 // Global Middleware
 app.use(express.urlencoded({ extended: false }))
@@ -26,6 +27,7 @@ app.use(helmet({
 // Routes
 app.use("/login", loginRouter)
 app.use("/register", registerRouter)
+app.use("/dashboard", dashboardRouter)
 
 app.listen(process.env.PORT)
 console.log("[server] listening on port " + process.env.PORT)

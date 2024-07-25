@@ -2,7 +2,8 @@ const jwt =  require('jsonwebtoken')
 const bcypt =  require('bcrypt')
 const express = require('express')
 
-const mysql =  require("../helpers/mysql");
+const mysql = require("../helpers/mysql");
+const validateUser = require("../helpers/validateUser")
 
 const router = express.Router()
 
@@ -44,16 +45,10 @@ router.post("/", async (request, response) => {
 })
 
 router.get("/", (request, response) => {
-  const jwtSecretKey = process.env.JWT_SECRET
-  const token = request.headers['jwt-token']
-  try {
-    const user = jwt.verify(token, jwtSecretKey)
-    if (user) {
-      return response.status(200).json({ message: 'valid', user })
-    } else {
-      return response.status(401).json({ message: 'error' })
-    }
-  } catch (error) {
+  const user = validateUser(request);
+  if (user) {
+    return response.status(200).json({ message: 'valid', user })
+  } else {
     return response.status(401).json({ message: 'error' })
   }
 })
