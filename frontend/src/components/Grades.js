@@ -6,6 +6,8 @@ import { IoLanguageSharp } from "react-icons/io5";
 
 import "../styles/components/Grades.css"
 
+import GradesPopup from './modules/GradesPopup';
+
 function Grades() {
   const [grades, setGrades] = useState([])
   const [gradeName, setGradeName] = useState('')
@@ -16,7 +18,7 @@ function Grades() {
 
   const token = localStorage.getItem('jwt-token')
 
-  useEffect(() => {
+  const refresh = () => {
     fetch(`http://localhost:100/dashboard/grades`, { headers: { 'jwt-token': token } })
       .then((response) => response.json())
       .then((data) => {
@@ -34,8 +36,10 @@ function Grades() {
             (subgradeName && grade.subgrades.indexOf(subgradeName) === -1)
           ) return null
 
+          if (grade.subgrades !== null) grade.subgrades.sort()
+
           return (
-            <div className='grade'>
+            <div className='grade' key={grade.id}>
               <p>{grade.key}</p>
               <span>
                 {(grade.subgrades !== null) && <p><MdAccountTree />{grade.subgrades.map(subgrade => subgrade + " ")}</p> }
@@ -47,7 +51,9 @@ function Grades() {
 
         setGrades(gradesList)
       })
-  }, [gradeName, subgradeName, order])
+  }
+  
+  useEffect(refresh, [gradeName, subgradeName, order])
 
   function orderGrades(schema) {
     const buttons = document.getElementsByClassName('order-buttons')[0].children
@@ -66,7 +72,7 @@ function Grades() {
       </div>
       <div className='actions'>
         <div className='sort'>
-          <p>Grade options</p>
+          <p>Search options</p>
           <div>
             <p>Grade</p>
             <input
@@ -84,7 +90,6 @@ function Grades() {
             />
           </div>
         </div>
-        <hr />
         <div className='order'>
           <p>Order options</p>
           <div className='order-buttons'>
@@ -94,7 +99,7 @@ function Grades() {
           </div>
         </div>
         <hr />
-        <button>New Grade</button>
+        <GradesPopup type={'new'} refresh={refresh}/>
       </div>
     </div>
   )
