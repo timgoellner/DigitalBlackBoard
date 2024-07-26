@@ -14,7 +14,7 @@ DATABASE TABLE SETUP
     - id (int [pk, nn, uq, ai])
     - organization (varchar(45) [nn])
     - grade (varchar(5) [nn])
-    - subgrade (varchar(1))
+    - subgrades (varchar(1))
     - hasSubgrade (boolean [nn])
 
  * teachers

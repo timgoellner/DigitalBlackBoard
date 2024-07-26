@@ -1,5 +1,6 @@
 .dashboard {
   display: flex;
+  position: relative;
   width: 100dvw;
   height: 100dvh;
 
