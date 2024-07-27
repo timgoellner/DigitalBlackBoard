@@ -39,13 +39,7 @@ function Grades() {
           if (grade.subgrades !== null) grade.subgrades.sort()
 
           return (
-            <div className='grade' key={grade.id}>
-              <p>{grade.key}</p>
-              <span>
-                {(grade.subgrades !== null) && <p><MdAccountTree />{grade.subgrades.map(subgrade => subgrade + " ")}</p> }
-                <p><MdPeopleAlt />{grade.count}</p>
-              </span>
-            </div>
+            <GradesPopup key={grade.id} type={'old'} refresh={refresh} grade={grade}/>
           )
         })
 

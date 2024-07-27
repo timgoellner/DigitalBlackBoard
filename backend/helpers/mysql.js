@@ -80,7 +80,10 @@ async function sendQuery(query) {
     return new Promise(function(resolve, reject) {
         setTimeout(function() {
             connection.query(query, function(error, rows, fields) {
-                if (error) console.log("[mysql] error: " + error)
+                if (error) {
+                  console.log("[mysql] error: " + error)
+                  resolve(false)
+               }
                 resolve(rows)
             })
         }, 0);

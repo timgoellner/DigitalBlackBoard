@@ -66,11 +66,10 @@
     }
   }
 
-  .create {
+  .actions {
     display: flex;
-    flex-direction: column;
     width: 100%;
-    align-items: center;
+    justify-content: center;
 
     > button {
       border: none;
@@ -78,17 +77,38 @@
       background-color: var(--blue);
       color: white;
       padding: .5rem 1rem;
-      width: 10dvw;
+      max-width: 10dvw;
+      min-width: 5dvw;
+      width: 100%;
     }
     
     > button:hover {
       cursor: pointer;
       background-color: var(--darkblue);
     }
+
+    > button:nth-child(2) {
+      background-color: var(--red);
+    }
+
+    >button:nth-child(2):hover {
+      background-color: var(--darkred);
+    }
+  }
+
+  .actions.old {
+    gap: 2rem;
+  }
+
+  .footer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 
   error {
     color: darkred;
+    text-align: center;
     transform: translate(0, .5rem);
   }
 }

@@ -132,6 +132,7 @@
       border: 1px solid var(--lightgray);
       border-radius: 1rem;
       margin: 2rem 2rem;
+      cursor: pointer;
   
       p {
         margin: 0;
@@ -158,6 +159,10 @@
         height: 1.5rem;
         margin-right: .7rem;
       }
+    }
+
+    .grade:hover {
+      border: 1px solid var(--blue);
     }
   }
 }
