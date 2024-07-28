@@ -57,18 +57,12 @@ function GradesPopup(props) {
 
   const old = props.type === 'old'
 
-  var subgrades
-  if (old) {
-    if (props.grade.subgrades === null) subgrades = 0
-    else subgrades = props.grade.subgrades.length
-  }
-
   useEffect(() => {
     if (old) {
       setGrade(props.grade.key)
-      setSubgradesCount(subgrades)
+      setSubgradesCount((props.grade.subgrades === null) ? 0 : props.grade.subgrades.length)
     }
-  }, [open, old, subgrades])
+  }, [open, old])
 
   return (
     <>
@@ -103,14 +97,14 @@ function GradesPopup(props) {
             <div>
               <p>Subgrades</p>
               <div className='subgrades'>
-                <button className={(old && subgrades > 0) && 'selected'} onClick={() => setSubgrades(0)}>a</button>
-                <button className={(old && subgrades > 1) && 'selected'} onClick={() => setSubgrades(1)}>b</button>
-                <button className={(old && subgrades > 2) && 'selected'} onClick={() => setSubgrades(2)}>c</button>
-                <button className={(old && subgrades > 3) && 'selected'} onClick={() => setSubgrades(3)}>d</button>
-                <button className={(old && subgrades > 4) && 'selected'} onClick={() => setSubgrades(4)}>e</button>
-                <button className={(old && subgrades > 5) && 'selected'} onClick={() => setSubgrades(5)}>f</button>
-                <button className={(old && subgrades > 6) && 'selected'} onClick={() => setSubgrades(6)}>g</button>
-                <button className={(old && subgrades > 7) && 'selected'} onClick={() => setSubgrades(7)}>h</button>
+                <button className={(old && subgradesCount > 0) && 'selected'} onClick={() => setSubgrades(0)}>a</button>
+                <button className={(old && subgradesCount > 1) && 'selected'} onClick={() => setSubgrades(1)}>b</button>
+                <button className={(old && subgradesCount > 2) && 'selected'} onClick={() => setSubgrades(2)}>c</button>
+                <button className={(old && subgradesCount > 3) && 'selected'} onClick={() => setSubgrades(3)}>d</button>
+                <button className={(old && subgradesCount > 4) && 'selected'} onClick={() => setSubgrades(4)}>e</button>
+                <button className={(old && subgradesCount > 5) && 'selected'} onClick={() => setSubgrades(5)}>f</button>
+                <button className={(old && subgradesCount > 6) && 'selected'} onClick={() => setSubgrades(6)}>g</button>
+                <button className={(old && subgradesCount > 7) && 'selected'} onClick={() => setSubgrades(7)}>h</button>
               </div>
             </div>
           </div>

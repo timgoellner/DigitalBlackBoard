@@ -93,7 +93,7 @@ function Grades() {
           </div>
         </div>
         <hr />
-        <GradesPopup type={'new'} refresh={refresh}/>
+        <GradesPopup type={'new'} refresh={refresh} grade={{}}/>
       </div>
     </div>
   )

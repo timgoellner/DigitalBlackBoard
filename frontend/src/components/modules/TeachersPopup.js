@@ -35,10 +35,6 @@ function TeachersPopup(props) {
     setTeacherSubjects(subjects)
   }
 
-  function setSubjects() {
-    
-  }
-
   function request(method) {
     const token = localStorage.getItem('jwt-token')
 
@@ -69,6 +65,14 @@ function TeachersPopup(props) {
 
   const old = props.type === 'old'
 
+  useEffect(() => {
+    if (old) {
+      setTeacherForename(props.teacher.forename)
+      setTeacherLastname(props.teacher.lastname)
+      setTeacherSubjects(props.teacher.subjects)
+    }
+  }, [open, old])
+
   return (
     <>
       {((!old) && (
@@ -80,7 +84,7 @@ function TeachersPopup(props) {
           <th>{props.teacher.forename}</th>
           <th>{props.teacher.lastname}</th>
           <th>{props.teacher.classes}</th>
-          <th>{props.teacher.subjects.map(subject => subject + " ")}</th>
+          <th>{props.teacher.subjects.join(', ')}</th>
         </tr>
       ))}
 
@@ -108,21 +112,24 @@ function TeachersPopup(props) {
                 />
               </div>
             </div>
-            <div>
-              <div className='subjects'>
-                {teacherSubjects.map((subject, index) => (
-                  <span>
-                    <p>{subject}</p>
-                    <a href onClick={() => handleDelete(index)}><IoMdClose /></a>
-                  </span>
-                ))}
+            <div className='subject-settings'>
+              <p>Subjects</p>
+              <div>
+                <div className='subjects'>
+                  {teacherSubjects.map((subject, index) => (
+                    <span>
+                      <p>{subject}</p>
+                      <a href onClick={() => handleDelete(index)}><IoMdClose /></a>
+                    </span>
+                  ))}
+                </div>
+                <input
+                  value={currentSubject}
+                  type="text"
+                  onChange={(e) => setCurrentSubject(e.target.value)}
+                  onKeyUp={(e) => handleKeyUp(e)}
+                />
               </div>
-              <input
-                value={currentSubject}
-                type="text"
-                onChange={(e) => setCurrentSubject(e.target.value)}
-                onKeyUp={(e) => handleKeyUp(e)}
-              />
             </div>
           </div>
           <div className='footer'>
