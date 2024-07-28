@@ -17,7 +17,7 @@ function GradesPopup(props) {
     setSubgradesCount(0)
     setError('')
     setOpen(false)
-  };
+  }
 
   function setSubgrades(count) {
     const subgrades = document.getElementsByClassName('subgrades')[0].children

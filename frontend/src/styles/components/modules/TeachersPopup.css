@@ -1,0 +1,119 @@
+.teachers-popup {
+  position: relative;
+  width: 20dvw;
+  height: fit-content;
+
+  p {
+    margin: 0;
+  }
+
+  > p {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  input {
+    border-radius: .3rem;
+    border-color: var(--lightgray);
+    border-style: solid;
+    border-width: .1em;
+    padding: .5rem .8rem;
+    width: 9dvw;
+    box-sizing: border-box;
+
+    color: var(--gray);
+  }
+
+  input:focus {
+    border-color: var(--blue);
+    outline: none;
+  }
+
+  .settings {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 2rem;
+    gap: 1.5rem;
+    width: 100%;
+
+    > div:first-child {
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    > div:last-child {
+      width: 100%;
+      box-sizing: border-box;
+      padding: .5rem;
+      border: 1px solid var(--lightgray);
+      border-radius: .3rem;
+
+      .subjects {
+        display: flex;
+        gap: .5rem;
+        flex-wrap: wrap;
+
+        span {
+          display: flex;
+          justify-content: center;
+          gap: .3rem;
+          padding: .2rem;
+          border-radius: .3rem;
+          background-color: var(--lightlightgray);
+          width: fit-content;
+          height: 1rem;
+          font-size: .9rem;
+
+          p {
+            transform: translate(0, -.15rem);
+          }
+  
+          a {
+            cursor: pointer;
+          }
+        }
+      }
+
+      input {
+        border: 0;
+        border-radius: 0;
+        border-bottom: 1px solid var(--gray);
+      }
+    }
+  }
+
+  .actions {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+
+    > button {
+      border: none;
+      border-radius: .3rem;
+      background-color: var(--blue);
+      color: white;
+      padding: .5rem 1rem;
+      max-width: 10dvw;
+      min-width: 5dvw;
+      width: 100%;
+    }
+    
+    > button:hover {
+      cursor: pointer;
+      background-color: var(--darkblue);
+    }
+  }
+
+  .footer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  error {
+    color: darkred;
+    text-align: center;
+    transform: translate(0, .5rem);
+  }
+}

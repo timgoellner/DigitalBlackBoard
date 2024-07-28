@@ -6,7 +6,7 @@
   --lightblue: #2f5f965f;
   --orange: #be6217;
   --darkorange: #ae5105;
-  --lightorange: #be6217c8;
+  --lightorange: #be621752;
   --green: #37962d;
   --darkgreen: #1d7614;
   --lightgreen: #37962de4;
@@ -14,6 +14,7 @@
   --darkred: #790404;
   --gray: #6e6e6e;
   --lightgray: #aaa8a8;
+  --lightlightgray: #aaa8a82f;
 }
 
 body {
@@ -31,7 +32,7 @@ body {
 }
 
 .popup-content {
-  background: rgb(255, 255, 255);
+  background-color: white;
   border-radius: 1rem;
   padding: 2rem;
 
