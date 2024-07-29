@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import Popup from 'reactjs-popup';
 
 import { IoMdClose } from "react-icons/io";
 
 import "../../styles/components/modules/TeachersPopup.css"
 
-function TeachersPopup(props) {
+function TeachersPopup({ type, refresh, teacher }) {
   const [teacherForename, setTeacherForename] = useState('')
   const [teacherLastname, setTeacherLastname] = useState('')
   const [teacherSubjects, setTeacherSubjects] = useState([])
@@ -14,13 +14,18 @@ function TeachersPopup(props) {
 
   const [open, setOpen] = useState(false);
   const closeModal = () => {
-    setTeacherForename('')
-    setTeacherLastname('')
-    setTeacherSubjects([])
     setCurrentSubject('')
     setError('')
     setOpen(false)
   }
+
+  const old = type === 'old'
+
+  useMemo(() => {
+    setTeacherForename((old) ? teacher.forename : '')
+    setTeacherLastname((old) ? teacher.lastname : '')
+    setTeacherSubjects((old) ? teacher.subjects : [])
+  }, [open])
 
   function handleKeyUp(e) {
     if (e.keyCode === 13 && e.target.value && !(/^\s*$/.test(e.target.value)) && e.target.value.length < 40) {
@@ -38,6 +43,11 @@ function TeachersPopup(props) {
   function request(method) {
     const token = localStorage.getItem('jwt-token')
 
+    if (method === 'DELETE' && teacher.classes > 0) {
+      setError('teacher has active classes')
+      return
+    }
+
     fetch(`http://localhost:100/dashboard/teachers`, {
       method: method,
       headers: {
@@ -49,29 +59,13 @@ function TeachersPopup(props) {
       .then((response) => response.json())
       .then((data) => {
         if (data.message === 'success') {
-          setTeacherForename('')
-          setTeacherLastname('')
-          setTeacherSubjects([])
-          setCurrentSubject('')
-          setError('')
-
           setOpen(false)
-          props.refresh()
+          refresh()
         } else {
           setError(data.message)
         }
       })
   }
-
-  const old = props.type === 'old'
-
-  useEffect(() => {
-    if (old) {
-      setTeacherForename(props.teacher.forename)
-      setTeacherLastname(props.teacher.lastname)
-      setTeacherSubjects(props.teacher.subjects)
-    }
-  }, [open, old])
 
   return (
     <>
@@ -81,10 +75,10 @@ function TeachersPopup(props) {
         </button>
       )) || ((old) && (
         <tr className='teacher' onClick={() => setOpen(o => !o)}>
-          <th>{props.teacher.forename}</th>
-          <th>{props.teacher.lastname}</th>
-          <th>{props.teacher.classes}</th>
-          <th>{props.teacher.subjects.join(', ')}</th>
+          <th>{teacher.forename}</th>
+          <th>{teacher.lastname}</th>
+          <th>{teacher.classes}</th>
+          <th>{teacher.subjects.join(', ')}</th>
         </tr>
       ))}
 

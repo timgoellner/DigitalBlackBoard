@@ -54,17 +54,53 @@ router.post("/", async (request, response) => {
   return response.status(200).json({ message: 'success' })
 })
 
+router.put("/", async (request, response) => {
+  const user = validateUser(request)
+  if (!user || !user.isStaff) return response.status(401).json({ message: 'error' })
+
+  var { teacherForename, teacherLastname, teacherSubjects } = request.body
+
+  if (teacherForename.length > 45 || teacherForename.length === 0 || teacherLastname.length > 45 || teacherLastname.length === 0) return response.status(401).json({ message: 'invalid parameters' })
+
+  const existing = await mysql.sendQuery(`SELECT * FROM teachers WHERE organization = '${user.organization}' AND forename = '${teacherForename}' AND lastname = '${teacherLastname}'`)
+  if (existing.length === 0) return response.status(401).json({ message: 'teacher does not exist' })
+
+  const currentTeacherSubjects = await mysql.sendQuery(`SELECT subject FROM teacher_subjects WHERE organization = '${user.organization}' AND teacher = ${existing[0].id}`)
+  const subjects = await mysql.sendQuery(`SELECT id, name FROM subjects WHERE organization = '${user.organization}'`)
+
+  for (var i = 0; i < teacherSubjects.length; i++) {
+    const teacherSubject = teacherSubjects.at(i)
+
+    const subjectData = subjects.find(subject => subject.name === teacherSubject)
+    if (!subjectData) return response.status(401).json({ message: `subject ${teacherSubject} does not exist` })
+    
+    const subjectId = subjectData.id
+    const currentSubject = currentTeacherSubjects.find(currentTeacherSubject => currentTeacherSubject.subject === subjectId)
+    
+    if (currentSubject) currentTeacherSubjects.splice(currentTeacherSubjects.indexOf(currentSubject), 1)
+    else await mysql.sendQuery(`INSERT INTO teacher_subjects (organization, teacher, subject) VALUES ('${user.organization}', ${existing[0].id}, ${subjectId})`)
+  }
+
+  for (var i = 0; i < currentTeacherSubjects.length; i++) {
+    await mysql.sendQuery(`DELETE FROM teacher_subjects WHERE organization = '${user.organization}' AND teacher = ${existing[0].id} AND subject = ${currentTeacherSubjects.at(i).subject}`)
+  }
+
+  return response.status(200).json({ message: 'success' })
+})
+
 router.delete("/", async (request, response) => {
   const user = validateUser(request)
   if (!user || !user.isStaff) return response.status(401).json({ message: 'error' })
 
-  var { grade } = request.body
+  var { teacherForename, teacherLastname } = request.body
 
-  const existing = await mysql.sendQuery(`SELECT * FROM grades WHERE organization = '${user.organization}' AND grade = '${grade}'`)
-  if (existing.length === 0) return response.status(401).json({ message: 'grade does not exist' })
+  const existing = await mysql.sendQuery(`SELECT * FROM teachers WHERE organization = '${user.organization}' AND forename = '${teacherForename}' AND lastname = '${teacherLastname}'`)
+  if (existing.length === 0) return response.status(401).json({ message: 'teacher does not exist' })
   
-  const deletion = await mysql.sendQuery(`DELETE FROM grades WHERE organization = '${user.organization}' AND grade = '${grade}'`)
-  if (deletion === false) return response.status(401).json({ message: 'grade is not empty' })
+  await mysql.sendQuery(`DELETE FROM teacher_subjects WHERE organization = '${user.organization}' AND teacher = ${existing[0].id}`)
+
+  const deletion = await mysql.sendQuery(`DELETE FROM teachers WHERE organization = '${user.organization}' AND id = ${existing[0].id}`)
+  if (deletion === false) return response.status(401).json({ message: 'error' })
   
   return response.status(200).json({ message: 'success' })
 })

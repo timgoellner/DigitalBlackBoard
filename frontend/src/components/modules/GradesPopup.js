@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import Popup from 'reactjs-popup';
 
 import { IoMdClose } from "react-icons/io";
@@ -6,18 +6,23 @@ import { MdAccountTree, MdPeopleAlt } from "react-icons/md";
 
 import "../../styles/components/modules/GradesPopup.css"
 
-function GradesPopup(props) {
+function GradesPopup({ type, refresh, gradeData }) {
   const [grade, setGrade] = useState('')
   const [subgradesCount, setSubgradesCount] = useState(0)
   const [error, setError] = useState('')
 
   const [open, setOpen] = useState(false);
   const closeModal = () => {
-    setGrade('')
-    setSubgradesCount(0)
     setError('')
     setOpen(false)
   }
+
+  const old = type === 'old'
+
+  useMemo(() => {
+    setGrade((old) ? gradeData.key : '')
+    setSubgradesCount((!old || gradeData.subgrades === null) ? 0 : gradeData.subgrades.length)
+  }, [open])
 
   function setSubgrades(count) {
     const subgrades = document.getElementsByClassName('subgrades')[0].children
@@ -44,25 +49,13 @@ function GradesPopup(props) {
       .then((response) => response.json())
       .then((data) => {
         if (data.message === 'success') {
-          setGrade('')
-          setSubgradesCount(0)
-          setError('')
           setOpen(false)
-          props.refresh()
+          refresh()
         } else {
           setError(data.message)
         }
       })
   }
-
-  const old = props.type === 'old'
-
-  useEffect(() => {
-    if (old) {
-      setGrade(props.grade.key)
-      setSubgradesCount((props.grade.subgrades === null) ? 0 : props.grade.subgrades.length)
-    }
-  }, [open, old])
 
   return (
     <>
@@ -72,10 +65,10 @@ function GradesPopup(props) {
         </button>
       )) || ((old) && (
         <div className='grade' onClick={() => setOpen(o => !o)}>
-          <p>{props.grade.key}</p>
+          <p>{gradeData.key}</p>
           <span>
-            {(props.grade.subgrades !== null) && <p><MdAccountTree />{props.grade.subgrades.map(subgrade => subgrade + " ")}</p> }
-            <p><MdPeopleAlt />{props.grade.count}</p>
+            {(gradeData.subgrades !== null) && <p><MdAccountTree />{gradeData.subgrades.map(subgrade => subgrade + " ")}</p> }
+            <p><MdPeopleAlt />{gradeData.count}</p>
           </span>
         </div>
       ))}

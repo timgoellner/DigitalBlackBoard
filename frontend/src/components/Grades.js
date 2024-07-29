@@ -39,7 +39,7 @@ function Grades() {
           if (grade.subgrades !== null) grade.subgrades.sort()
 
           return (
-            <GradesPopup key={grade.id} type={'old'} refresh={refresh} grade={grade}/>
+            <GradesPopup key={grade.id} type={'old'} refresh={refresh} gradeData={grade}/>
           )
         })
 
