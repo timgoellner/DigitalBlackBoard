@@ -1,4 +1,4 @@
-.grades-component {
+.students-component {
   display: flex;
   width: 80dvw;
   margin-top: 15dvh;
@@ -118,52 +118,62 @@
     }
   }
 
-  .grades {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
-    width: 60dvw;
-  
-    .grade {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      max-height: 20dvh;
-      border: 1px solid var(--lightgray);
-      border-radius: 1rem;
-      margin: 2rem 2rem;
-      cursor: pointer;
-  
-      p {
-        margin: 0;
+  .students {
+    display: block;
+    box-sizing: border-box;
+    width: 45dvw;
+    height: 70dvh;
+    margin: 0 7.5dvw;
+    border-spacing: 0;
+    border-radius: .5rem .5rem 0 0;
+    overflow: scroll;
+
+    th {
+      text-transform: capitalize;
+    }
+
+    tr {
+      th {
+        width: 10dvw;
+        font-size: 1.2rem;
+        font-weight: lighter;
+        padding: .5rem;
+        text-align: left;
       }
-  
-      > p {
-        font-size: 2.3rem;
-        text-transform: uppercase;
+
+      > th:nth-child(3) {
+        width: 5dvw;
       }
-  
-      span {
-        display: flex;
-        flex-direction: column;
-        gap: .5rem;
-        margin-left: 2rem;
-  
-        p {
-          display: flex;
-          align-items: center;
-        }
-      }
-  
-      svg {
-        width: 1.5rem;
-        height: 1.5rem;
-        margin-right: .7rem;
+
+      > th:last-child {
+        width: 25dvw;
       }
     }
 
-    .grade:hover {
-      border: 1px solid var(--blue);
+    tr:not(tr:last-child):not(tr:first-child) > th {
+      border-bottom: 1px solid var(--lightgray);
+    }
+
+    tr:last-child > th {
+      border-bottom: 3px solid var(--blue);
+    }
+
+    tr:first-child > th {
+      font-weight: normal;
+      color: white;
+      background-color: var(--blue);
+    }
+
+    tr:not(tr:first-child) {
+      cursor: pointer;
+    }
+
+    tr:nth-child(2n) {
+      background-color: var(--lightlightgray);
+    }
+
+    tr:hover:not(tr:first-child) {
+      background-color: var(--lightblue);
     }
   }
 }

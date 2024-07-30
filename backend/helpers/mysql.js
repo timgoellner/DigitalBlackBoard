@@ -33,6 +33,7 @@ DATABASE TABLE SETUP
  * classes
     - id (int [pk, nn, uq, ai])
     - organization (varchar(45) [nn])
+    - name (varchar(45) [nn])
     - teacher (int [fk, nn])
     - subject (int [fk, nn])
     - room (int [fk, nn])

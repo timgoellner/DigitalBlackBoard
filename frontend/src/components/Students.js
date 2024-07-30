@@ -1,6 +1,118 @@
+import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+
+import { IoLanguageSharp } from "react-icons/io5";
+import { IoLayers } from "react-icons/io5";
+import { FaPeopleLine } from "react-icons/fa6";
+
+import "../styles/components/Students.css"
+
+import StudentsPopup from './modules/StudentsPopup';
+
 function Students() {
+  const [students, setStudents] = useState([])
+  const [studentForename, setStudentForename] = useState('')
+  const [studentLastname, setStudentLastname] = useState('')
+  const [studentGrade, setStudentsGrade] = useState('')
+  const [order, setOrder] = useState(0)
+
+  const navigate = useNavigate();
+
+  const token = localStorage.getItem('jwt-token')
+
+  const refresh = () => {
+    fetch(`http://localhost:100/dashboard/students`, { headers: { 'jwt-token': token } })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.message !== 'success') navigate('/login')
+
+        var studentsList = Object.keys(data.students).map(key => { return { ...data.students[key], key } })
+
+        if (order === 0) studentsList = studentsList.sort((a, b) =>  b.forename < a.forename)
+        else if (order === 1) studentsList = studentsList.sort((a, b) =>  b.grade < a.grade)
+        else if (order === 2) studentsList = studentsList.sort((a, b) => b.classes.length - a.classes.length)
+
+        studentsList = studentsList.map((student) => {
+          if (
+            (studentForename && !student.forename.includes(studentForename)) ||
+            (studentLastname && !student.lastname.includes(studentLastname)) ||
+            (studentGrade && !student.grade.includes(studentGrade))
+          ) return null
+
+          student.classes.sort()
+
+          return (
+            <StudentsPopup key={student.id} type={'old'} refresh={refresh} student={student}/>
+          )
+        })
+
+        setStudents(studentsList)
+      })
+  }
+  
+  useEffect(refresh, [studentForename, studentLastname, studentGrade, order])
+
+  function orderStudents(schema) {
+    const buttons = document.getElementsByClassName('order-buttons')[0].children
+    for (var i = 0; i < 3; i++) {
+      if (i === schema) buttons[i].classList.add('selected')
+      else buttons[i].classList.remove('selected')
+    }
+
+    setOrder(schema)
+  }
+
   return(
-    <h1>Students</h1>
+    <div className='students-component'>
+      <table className='students'>
+        <tr>
+          <th>Forename</th>
+          <th>Lastname</th>
+          <th>Grade</th>
+          <th>Classes</th>
+        </tr>
+        {students}
+      </table>
+      <div className='actions'>
+        <div className='sort'>
+          <p>Search options</p>
+          <div>
+            <p>Forename</p>
+            <input
+              value={studentForename}
+              type="text"
+              onChange={(e) => setStudentForename(e.target.value)}
+            />
+          </div>
+          <div>
+            <p>Lastname</p>
+            <input
+              value={studentLastname}
+              type="text"
+              onChange={(e) => setStudentLastname(e.target.value)}
+            />
+          </div>
+          <div>
+            <p>Grade</p>
+            <input
+              value={studentGrade}
+              type="text"
+              onChange={(e) => setStudentsGrade(e.target.value)}
+            />
+          </div>
+        </div>
+        <div className='order'>
+          <p>Order options</p>
+          <div className='order-buttons'>
+            <button className='selected' onClick={() => orderStudents(0)}><IoLanguageSharp /></button>
+            <button onClick={() => orderStudents(1)}><IoLayers /></button>
+            <button onClick={() => orderStudents(2)}><FaPeopleLine /></button>
+          </div>
+        </div>
+        <hr />
+        <StudentsPopup type={'new'} refresh={refresh}/>
+      </div>
+    </div>
   )
 }
 

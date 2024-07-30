@@ -31,15 +31,13 @@ function Teachers() {
         else if (order === 1) teachersList = teachersList.sort((a, b) =>  b.subjects.length - a.subjects.length)
         else if (order === 2) teachersList = teachersList.sort((a, b) => b.classes - a.classes)
 
-        console.log(teachersList)
-
         teachersList = teachersList.map((teacher) => {
           if (
             (teacherForeame && !teacher.forename.includes(teacherForeame)) ||
             (teacherLastname && !teacher.lastname.includes(teacherLastname))
           ) return null
 
-          if (teacher.subjects !== null) teacher.subjects.sort()
+          teacher.subjects.sort()
 
           return (
             <TeachersPopup key={teacher.id} type={'old'} refresh={refresh} teacher={teacher}/>

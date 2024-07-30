@@ -30,6 +30,7 @@ router.post("/", async (request, response) => {
   if (!user || !user.isStaff) return response.status(401).json({ message: 'error' })
 
   var { grade, subgradesCount } = request.body
+  grade = grade.toLowerCase()
 
   if (grade.length > 5 || grade.length === 0 || subgradesCount > 8) return response.status(401).json({ message: 'invalid parameters' })
 
@@ -53,6 +54,7 @@ router.put("/", async (request, response) => {
   if (!user || !user.isStaff) return response.status(401).json({ message: 'error' })
 
   var { grade, subgradesCount } = request.body
+  grade = grade.toLowerCase()
 
   if (grade.length > 5 || grade.length === 0 || subgradesCount > 8) return response.status(401).json({ message: 'invalid parameters' })
 
@@ -82,6 +84,7 @@ router.delete("/", async (request, response) => {
   if (!user || !user.isStaff) return response.status(401).json({ message: 'error' })
 
   var { grade } = request.body
+  grade = grade.toLowerCase()
 
   const existing = await mysql.sendQuery(`SELECT * FROM grades WHERE organization = '${user.organization}' AND grade = '${grade}'`)
   if (existing.length === 0) return response.status(401).json({ message: 'grade does not exist' })

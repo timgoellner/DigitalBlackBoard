@@ -59,6 +59,8 @@ router.put("/", async (request, response) => {
   if (!user || !user.isStaff) return response.status(401).json({ message: 'error' })
 
   var { teacherForename, teacherLastname, teacherSubjects } = request.body
+  teacherForename = teacherForename.toLowerCase()
+  teacherLastname = teacherLastname.toLowerCase()
 
   if (teacherForename.length > 45 || teacherForename.length === 0 || teacherLastname.length > 45 || teacherLastname.length === 0) return response.status(401).json({ message: 'invalid parameters' })
 
@@ -93,6 +95,8 @@ router.delete("/", async (request, response) => {
   if (!user || !user.isStaff) return response.status(401).json({ message: 'error' })
 
   var { teacherForename, teacherLastname } = request.body
+  teacherForename = teacherForename.toLowerCase()
+  teacherLastname = teacherLastname.toLowerCase()
 
   const existing = await mysql.sendQuery(`SELECT * FROM teachers WHERE organization = '${user.organization}' AND forename = '${teacherForename}' AND lastname = '${teacherLastname}'`)
   if (existing.length === 0) return response.status(401).json({ message: 'teacher does not exist' })
