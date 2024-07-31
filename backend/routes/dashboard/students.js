@@ -81,4 +81,18 @@ router.put("/", async (request, response) => {
   return response.status(200).json({ message: 'success' })
 })
 
+router.delete("/", async (request, response) => {
+  const user = validateUser(request)
+  if (!user || !user.isStaff) return response.status(401).json({ message: 'error' })
+
+  var { id } = request.body
+
+  const existing = await mysql.sendQuery(`SELECT * FROM students WHERE organization = '${user.organization}' AND id = ${id}`)
+  if (existing.length === 0) return response.status(401).json({ message: 'student does not exist' })
+  
+  await mysql.sendQuery(`DELETE FROM students WHERE organization = '${user.organization}' AND id = ${id}`)
+  
+  return response.status(200).json({ message: 'success' })
+})
+
 module.exports = router
