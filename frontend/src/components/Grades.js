@@ -31,7 +31,7 @@ function Grades() {
 
         gradesList = gradesList.map((grade) => {
           if (
-            (gradeName && !grade.key.includes(gradeName)) ||
+            (gradeName && !grade.key.includes(gradeName.toLowerCase())) ||
             (subgradeName && grade.subgrades === null) ||
             (subgradeName && grade.subgrades.indexOf(subgradeName) === -1)
           ) return null

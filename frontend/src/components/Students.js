@@ -14,6 +14,7 @@ function Students() {
   const [studentForename, setStudentForename] = useState('')
   const [studentLastname, setStudentLastname] = useState('')
   const [studentGrade, setStudentsGrade] = useState('')
+  const [studentSubgrade, setStudentSubgrade] = useState('')
   const [order, setOrder] = useState(0)
 
   const navigate = useNavigate();
@@ -34,9 +35,11 @@ function Students() {
 
         studentsList = studentsList.map((student) => {
           if (
-            (studentForename && !student.forename.includes(studentForename)) ||
-            (studentLastname && !student.lastname.includes(studentLastname)) ||
-            (studentGrade && !student.grade.includes(studentGrade))
+            (studentForename && !student.forename.includes(studentForename.toLowerCase())) ||
+            (studentLastname && !student.lastname.includes(studentLastname.toLowerCase())) ||
+            (studentGrade && !student.grade.includes(studentGrade.toLowerCase())) ||
+            (studentSubgrade && student.subgrade === '') ||
+            (studentSubgrade && !student.subgrade.includes(studentSubgrade.toLowerCase()))
           ) return null
 
           student.classes.sort()
@@ -50,7 +53,7 @@ function Students() {
       })
   }
   
-  useEffect(refresh, [studentForename, studentLastname, studentGrade, order])
+  useEffect(refresh, [studentForename, studentLastname, studentGrade, studentSubgrade, order])
 
   function orderStudents(schema) {
     const buttons = document.getElementsByClassName('order-buttons')[0].children
@@ -92,13 +95,24 @@ function Students() {
               onChange={(e) => setStudentLastname(e.target.value)}
             />
           </div>
-          <div>
+          <div className='multi'>
             <p>Grade</p>
-            <input
-              value={studentGrade}
-              type="text"
-              onChange={(e) => setStudentsGrade(e.target.value)}
-            />
+            <div>
+              <p>Name</p>
+              <input
+                value={studentGrade}
+                type="text"
+                onChange={(e) => setStudentsGrade(e.target.value)}
+              />
+            </div>
+            <div>
+              <p>Subgrade</p>
+              <input
+                value={studentSubgrade}
+                type="text"
+                onChange={(e) => setStudentSubgrade(e.target.value)}
+              />
+            </div>
           </div>
         </div>
         <div className='order'>

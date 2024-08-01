@@ -43,7 +43,7 @@ const router = createBrowserRouter(
         const user = await validateUser();
 
         if (!user || user.isStaff) return redirect('/login')
-        else return null
+        else return user
       }}/>
 
       <Route path = '/dashboard' element = {<Dashboard />} loader = {async () => {

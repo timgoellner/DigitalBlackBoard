@@ -33,8 +33,8 @@ function Teachers() {
 
         teachersList = teachersList.map((teacher) => {
           if (
-            (teacherForeame && !teacher.forename.includes(teacherForeame)) ||
-            (teacherLastname && !teacher.lastname.includes(teacherLastname))
+            (teacherForeame && !teacher.forename.includes(teacherForeame.toLowerCase())) ||
+            (teacherLastname && !teacher.lastname.includes(teacherLastname.toLowerCase()))
           ) return null
 
           teacher.subjects.sort()
