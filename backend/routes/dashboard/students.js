@@ -9,7 +9,7 @@ router.get("/", async (request, response) => {
   const user = validateUser(request);
   if (!user || !user.isStaff) return response.status(401).json({ message: 'error' })
   
-  const studentsData = await mysql.sendQuery(`SELECT students.id, students.forename, students.lastname, grades.grade, grades.subgrade, classes.name class FROM students LEFT JOIN grades ON students.grade = grades.id LEFT JOIN classes ON students.grade = classes.grade WHERE students.organization = 'testorga' AND grades.subgrade IS NOT NULL UNION ALL SELECT students.id, students.forename, students.lastname, grades.grade, grades.subgrade, classes.name class FROM students LEFT JOIN grades ON students.grade = grades.id LEFT JOIN student_classes ON students.id = student_classes.student LEFT JOIN classes ON student_classes.class = classes.id WHERE students.organization = 'testorga' AND grades.subgrade IS NULL`)
+  const studentsData = await mysql.sendQuery(`SELECT students.id, students.forename, students.lastname, accounts.identifier, grades.grade, grades.subgrade, classes.name class FROM students LEFT JOIN accounts ON students.account = accounts.id LEFT JOIN grades ON students.grade = grades.id LEFT JOIN classes ON students.grade = classes.grade WHERE students.organization = 'testorga' AND grades.subgrade IS NOT NULL UNION ALL SELECT students.id, students.forename, students.lastname, accounts.identifier, grades.grade, grades.subgrade, classes.name class FROM students LEFT JOIN accounts ON students.account = accounts.id LEFT JOIN grades ON students.grade = grades.id LEFT JOIN student_classes ON students.id = student_classes.student LEFT JOIN classes ON student_classes.class = classes.id WHERE students.organization = 'testorga' AND grades.subgrade IS NULL`)
 
   const students = {}
   studentsData.forEach(student => {
@@ -18,6 +18,7 @@ router.get("/", async (request, response) => {
       students[student.id] = {
         forename: student.forename,
         lastname: student.lastname,
+        identifier: student.identifier,
         grade: student.grade,
         subgrade: (student.subgrade) ? student.subgrade : "",
         classes: (student.class) ? [student.class] : []
@@ -47,8 +48,13 @@ router.post("/", async (request, response) => {
 
   const grade = await mysql.sendQuery(`SELECT grades.id FROM grades WHERE organization = '${user.organization}' AND grade = '${studentGrade}' AND subgrade ${studentSubgrade}`)
   if (grade.length === 0) return response.status(401).json({ message: 'grade does not exist' })
-    
-  await mysql.sendQuery(`INSERT INTO students (organization, forename, lastname, grade) VALUES ('${user.organization}', '${studentForename}', '${studentLastname}', ${grade[0].id})`)
+
+  var identifier = await mysql.sendQuery(`SELECT identifier FROM accounts WHERE organization = '${user.organization}' AND isStaff = FALSE ORDER BY identifier DESC LIMIT 1`)
+  identifier = String(parseInt((!identifier) ? '0' : identifier[0].identifier) + 1).padStart(5, '0')
+
+  const accountId = JSON.parse(JSON.stringify(await mysql.sendQuery(`INSERT INTO accounts (organization, identifier, isStaff) VALUES ('${user.organization}', '${identifier}', 0)`))).insertId
+
+  await mysql.sendQuery(`INSERT INTO students (organization, account, forename, lastname, grade) VALUES ('${user.organization}', ${accountId}, '${studentForename}', '${studentLastname}', ${grade[0].id})`)
 
   return response.status(200).json({ message: 'success' })
 })
@@ -89,8 +95,9 @@ router.delete("/", async (request, response) => {
 
   const existing = await mysql.sendQuery(`SELECT * FROM students WHERE organization = '${user.organization}' AND id = ${id}`)
   if (existing.length === 0) return response.status(401).json({ message: 'student does not exist' })
-  
+
   await mysql.sendQuery(`DELETE FROM students WHERE organization = '${user.organization}' AND id = ${id}`)
+  await mysql.sendQuery(`DELETE FROM accounts WHERE organization = '${user.organization}' AND id = ${existing[0].account}`)
   
   return response.status(200).json({ message: 'success' })
 })

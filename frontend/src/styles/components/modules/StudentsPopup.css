@@ -41,6 +41,16 @@
       width: 100%;
       justify-content: space-between;
     }
+
+    > div.identifier {
+      display: flex;
+      justify-content: left;
+      gap: .8rem;
+
+      p:last-child {
+        font-weight: lighter;
+      }
+    }
   }
 
   .actions.old {

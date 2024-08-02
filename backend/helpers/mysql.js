@@ -26,6 +26,7 @@ DATABASE TABLE SETUP
  * students
     - id (int [pk, nn, uq, ai])
     - organization (varchar(45) [nn])
+    - account (int [fk, nn])
     - forename (varchar(45) [nn])
     - lastname (varchar(45) [nn])
     - grade (int [fk, nn])

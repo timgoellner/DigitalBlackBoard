@@ -1,7 +1,7 @@
-import { useState, useMemo } from 'react';
-import Popup from 'reactjs-popup';
+import { useState, useMemo } from 'react'
+import Popup from 'reactjs-popup'
 
-import { IoMdClose } from "react-icons/io";
+import { IoMdClose } from "react-icons/io"
 
 import "../../styles/components/modules/TeachersPopup.css"
 

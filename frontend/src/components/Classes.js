@@ -21,6 +21,9 @@ function Classes() {
   const [order, setOrder] = useState(0)
 
   const weekdays = { "monday": 1, "tuesday": 2, "wednesday": 3, "thursday": 4, "friday": 5, "saturday": 6, "sunday": 7 }
+  const [teachers, setTeachers] = useState([])
+  const [grades, setGrades] = useState([])
+  const [students, setStudents] = useState([])
 
   const navigate = useNavigate();
 
@@ -65,6 +68,9 @@ function Classes() {
         })
 
         setClasses(classesList)
+        setTeachers(teachersList)
+        setGrades(gradesList)
+        setStudents(studentsList)
       })
   }
   
@@ -173,7 +179,7 @@ function Classes() {
           </div>
         </div>
         <hr />
-        <ClassesPopup type={'new'} refresh={refresh}/>
+        {(teachers !== null) && <ClassesPopup type={'new'} refresh={refresh} teachers={teachers} grades={grades} students={students}/>}
       </div>
     </div>
   )

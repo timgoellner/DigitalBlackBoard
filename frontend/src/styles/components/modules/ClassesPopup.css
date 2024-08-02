@@ -12,34 +12,98 @@
     margin-bottom: 2rem;
   }
 
-  input {
+  input, select {
     border-radius: .3rem;
     border-color: var(--lightgray);
+    background-color: white;
     border-style: solid;
     border-width: .1em;
     padding: .5rem .8rem;
-    width: 9dvw;
-    box-sizing: border-box;
-
     color: var(--gray);
+    box-sizing: border-box;
   }
 
-  input:focus {
+  input:focus, select:focus {
     border-color: var(--blue);
     outline: none;
+  }
+
+  select > option:first-child {
+    font-weight: bold;
   }
 
   .settings {
     display: flex;
     flex-direction: column;
     margin-bottom: 2rem;
+    text-wrap: nowrap;
     gap: 1rem;
-    width: 100%;
 
-    > div {
+    > div:has(div):not(:last-child) {
       display: flex;
-      width: 100%;
       justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .time {
+      div:not(:first-child) {
+        width: 22.5%;
+      }
+
+      div:first-child {
+        width: 50%;
+      }
+    }
+
+    > div > div {
+      width: 100%;
+
+      > select, input {
+        width: 100%;
+      }
+    }
+
+    .students-settings:has(.students > span) select {
+      padding-top: .5rem;
+    }
+
+    .students-settings {
+      border: 1px solid var(--lightgray);
+      border-radius: .3rem;
+      box-sizing: border-box;
+      padding: .5rem;
+      padding-left: .8rem;
+
+      select {
+        border: none;
+        padding: 0;
+      }
+
+      .students {
+        display: flex;
+        gap: .5rem;
+        flex-wrap: wrap;
+  
+        span {
+          display: flex;
+          justify-content: center;
+          gap: .3rem;
+          padding: .2rem;
+          border-radius: .3rem;
+          background-color: var(--lightlightgray);
+          width: fit-content;
+          height: 1rem;
+          font-size: .9rem;
+  
+          p {
+            transform: translate(0, -.15rem);
+          }
+  
+          a {
+            cursor: pointer;
+          }
+        }
+      }
     }
   }
 

@@ -10,6 +10,7 @@ function StudentsPopup({ type, refresh, student }) {
   const [studentLastname, setStudentLastname] = useState('')
   const [studentGrade, setStudentGrade] = useState('')
   const [studentSubgrade, setStudentSubgrade] = useState('')
+  const [studentIdentifier, setStudentIdentifier] = useState('')
   const [error, setError] = useState('')
 
   const [open, setOpen] = useState(false);
@@ -25,6 +26,7 @@ function StudentsPopup({ type, refresh, student }) {
     setStudentLastname((old) ? student.lastname : '')
     setStudentGrade((old) ? student.grade : '')
     setStudentSubgrade((old) ? student.subgrade : '')
+    setStudentIdentifier((old) ? student.identifier : '')
   }, [open])
 
   function request(method) {
@@ -106,6 +108,12 @@ function StudentsPopup({ type, refresh, student }) {
                 />
               </div>
             </div>
+            {(old) && (
+              <div className='identifier'>
+                <p>Identifier:</p>
+                <p>{studentIdentifier}</p>
+              </div>
+            )}
           </div>
           <div className='footer'>
             <div className={(old) ? 'actions old' : 'actions'}>

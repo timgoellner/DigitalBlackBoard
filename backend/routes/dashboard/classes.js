@@ -47,11 +47,26 @@ router.get("/", async (request, response) => {
     }
   })
 
-  const teachers = mysql.sendQuery(`SELECT id, forename, lastname FROM teachers WHERE teachers.organization = '${user.organization}' ORDER BY forename, lastname`)
-  const grades = mysql.sendQuery(`SELECT id, grade, subgrade FROM grades WHERE grades.organization = '${user.organization}' ORDER BY grade, subgrade`)
-  const students = mysql.sendQuery(`SELECT id, forename, lastname FROM students WHERE students.organization = '${user.organization}' ORDER BY forename, lastname`)
+  const teachers = await mysql.sendQuery(`SELECT id, forename, lastname FROM teachers WHERE teachers.organization = '${user.organization}' ORDER BY forename, lastname`)
+  const grades = await mysql.sendQuery(`SELECT id, grade, subgrade FROM grades WHERE grades.organization = '${user.organization}' ORDER BY grade, subgrade`)
+  const students = await mysql.sendQuery(`SELECT id, forename, lastname, grade FROM students WHERE students.organization = '${user.organization}' ORDER BY forename, lastname`)
 
   return response.status(200).json({ message: 'success', classes, teachers, grades, students })
+})
+
+router.post("/", async (request, response) => {
+  const user = validateUser(request)
+  if (!user || !user.isStaff) return response.status(401).json({ message: 'error' })
+
+  console.log(request.body)
+
+  var { className, classWeekday, classStarttime, classDuration, classTeacher, classSubject, classGrade, classStudents } = request.body
+  classWeekday = classWeekday.toLowerCase()
+  classSubject = classSubject.toLowerCase()
+
+  if (teacherForename.length > 45 || teacherForename.length === 0 || teacherLastname.length > 45 || teacherLastname.length === 0) return response.status(401).json({ message: 'invalid parameters' })
+
+  
 })
 
 module.exports = router
