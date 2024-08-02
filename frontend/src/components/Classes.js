@@ -96,6 +96,7 @@ function Classes() {
           <th>Duration</th>
           <th>Teacher</th>
           <th>Subject</th>
+          <th>Room</th>
           <th>Grade</th>
           <th>Students</th>
         </tr>

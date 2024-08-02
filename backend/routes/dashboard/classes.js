@@ -5,6 +5,8 @@ const validateUser = require("../../helpers/validateUser")
 
 const router = express.Router()
 
+const weekdays = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+
 router.get("/", async (request, response) => {
   const user = validateUser(request);
   if (!user || !user.isStaff) return response.status(401).json({ message: 'error' })
@@ -58,15 +60,38 @@ router.post("/", async (request, response) => {
   const user = validateUser(request)
   if (!user || !user.isStaff) return response.status(401).json({ message: 'error' })
 
-  console.log(request.body)
-
-  var { className, classWeekday, classStarttime, classDuration, classTeacher, classSubject, classGrade, classStudents } = request.body
+  var { className, classWeekday, classStarttime, classDuration, classTeacher, classSubject, classRoom, classGrade, classStudents } = request.body
   classWeekday = classWeekday.toLowerCase()
   classSubject = classSubject.toLowerCase()
 
-  if (teacherForename.length > 45 || teacherForename.length === 0 || teacherLastname.length > 45 || teacherLastname.length === 0) return response.status(401).json({ message: 'invalid parameters' })
+  if (
+    className.length > 45 || className.length === 0 ||
+    !weekdays.includes(classWeekday) ||
+    !/^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/.test(classStarttime) ||
+    classDuration == 0
+  ) return response.status(401).json({ message: 'invalid parameters' })
 
-  
+  const teacher = await mysql.sendQuery(`SELECT * FROM teachers WHERE organization = '${user.organization}' AND id = '${classTeacher}'`)
+  if (teacher.length === 0) return response.status(401).json({ message: 'teacher does not exist' })
+
+  const subject = await mysql.sendQuery(`SELECT * FROM subjects WHERE organization = '${user.organization}' AND name = '${classSubject}'`)
+  if (subject.length === 0) return response.status(401).json({ message: 'subject does not exist' })
+
+  const room = await mysql.sendQuery(`SELECT * FROM rooms WHERE organization = '${user.organization}' AND name = '${classRoom}'`)
+  if (room.length === 0) return response.status(401).json({ message: 'room does not exist' })
+
+  const grade = await mysql.sendQuery(`SELECT * FROM grades WHERE organization = '${user.organization}' AND id = '${classGrade}'`)
+  if (grade.length === 0) return response.status(401).json({ message: 'grade does not exist' })
+
+  const classId = JSON.parse(JSON.stringify(await mysql.sendQuery(`INSERT INTO classes (organization, name, weekday, startTime, duration, teacher, subject, room, grade, usesGrade) VALUES ('${user.organization}', '${className}', '${classWeekday}', '${classStarttime}', ${classDuration}, ${teacher[0].id}, ${subject[0].id}, ${room[0].id}, ${grade[0].id}, ${grade[0].hasSubgrade})`))).insertId
+
+  if (!grade[0].hasSubgrade) {
+    for (var i = 0; i < classStudents.length; i++) {
+      await mysql.sendQuery(`INSERT INTO student_classes (organization, student, class) VALUES ('${user.organization}', ${classStudents[i].id}, ${classId})`)
+    }
+  }
+
+  return response.status(200).json({ message: 'success' })
 })
 
 module.exports = router

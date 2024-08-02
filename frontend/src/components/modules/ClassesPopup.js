@@ -11,6 +11,7 @@ function ClassesPopup({ type, refresh, class_, teachers, grades, students }) {
   const [classDuration, setClassDuration] = useState('0')
   const [classTeacher, setClassTeacher] = useState('')
   const [classSubject, setClassSubject] = useState('')
+  const [classRoom, setClassRoom] = useState('')
   const [classGrade, setClassGrade] = useState('')
   const [classStudents, setClassStudents] = useState([])
   const [error, setError] = useState('')
@@ -36,8 +37,9 @@ function ClassesPopup({ type, refresh, class_, teachers, grades, students }) {
         setClassDuration(class_.duration)
         setClassTeacher(class_.teacher.id)
         setClassSubject(class_.subject)
+        setClassRoom(class_.room)
         setClassGrade(class_.grade.id)
-        setClassStudents([])
+        setClassStudents(class_.students)
       } else {
         setClassName('')
         setClassWeekday('')
@@ -45,6 +47,7 @@ function ClassesPopup({ type, refresh, class_, teachers, grades, students }) {
         setClassDuration('0')
         setClassTeacher('')
         setClassSubject('')
+        setClassRoom('')
         setClassGrade('')
         setClassStudents([])
       }
@@ -87,7 +90,7 @@ function ClassesPopup({ type, refresh, class_, teachers, grades, students }) {
       if (grade) noSubgrade = grade.subgrade === null
     }
     else noSubgrade = true
-    
+
     if (!noSubgrade) filteredStudents = []
         
     return [
@@ -101,7 +104,7 @@ function ClassesPopup({ type, refresh, class_, teachers, grades, students }) {
         : [<option key="no-students" value="">{(!noSubgrade) ? 'All students of that grade': ((classGrade !== '') ? 'No students available' : 'Select a grade to choose students')}</option>]
       )
     ]
-  }, [allStudents, classGrade, classStudents])
+  }, [open, allStudents, classGrade, classStudents])
 
   function studentAdd(id) {
     if (id !== "") {
@@ -138,7 +141,8 @@ function ClassesPopup({ type, refresh, class_, teachers, grades, students }) {
         classStarttime, 
         classDuration, 
         classTeacher: classTeacher !== "" ? classTeacher : undefined,
-        classSubject, 
+        classSubject,
+        classRoom,
         classGrade: classGrade !== "" ? classGrade : undefined, 
         classStudents 
       }),
@@ -168,6 +172,7 @@ function ClassesPopup({ type, refresh, class_, teachers, grades, students }) {
           <th>{class_.duration}m</th>
           <th>{class_.teacher.forename} {class_.teacher.lastname}</th>
           <th>{class_.subject}</th>
+          <th>{class_.room}</th>
           <th>{class_.grade.grade}{class_.grade.subgrade}</th>
           <th>{class_.students.length}</th>
         </tr>
@@ -179,12 +184,20 @@ function ClassesPopup({ type, refresh, class_, teachers, grades, students }) {
           <p>{old ? 'Change class' : 'New class'}</p>
           <div className='settings'>
             <div>
+              <p>Name</p>
+              <input
+                value={className}
+                type="text"
+                onChange={(e) => setClassName(e.target.value)}
+              />
+            </div>
+            <div>
               <div>
-                <p>Name</p>
+                <p>Room</p>
                 <input
-                  value={className}
+                  value={classRoom}
                   type="text"
-                  onChange={(e) => setClassName(e.target.value)}
+                  onChange={(e) => setClassRoom(e.target.value)}
                 />
               </div>
               <div>
