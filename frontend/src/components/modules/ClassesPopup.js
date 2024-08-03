@@ -39,7 +39,7 @@ function ClassesPopup({ type, refresh, class_, teachers, grades, students }) {
         setClassSubject(class_.subject)
         setClassRoom(class_.room)
         setClassGrade(class_.grade.id)
-        setClassStudents(class_.students)
+        setClassStudents(class_.grade.subgrade === null ? class_.students : [])
       } else {
         setClassName('')
         setClassWeekday('')
@@ -136,6 +136,7 @@ function ClassesPopup({ type, refresh, class_, teachers, grades, students }) {
         'jwt-token': token
       },
       body: JSON.stringify({ 
+        classId: (old) && class_.key,
         className, 
         classWeekday, 
         classStarttime, 
@@ -188,7 +189,7 @@ function ClassesPopup({ type, refresh, class_, teachers, grades, students }) {
               <input
                 value={className}
                 type="text"
-                onChange={(e) => setClassName(e.target.value)}
+                onChange={(e) => (!old) && setClassName(e.target.value)}
               />
             </div>
             <div>
