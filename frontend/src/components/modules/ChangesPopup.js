@@ -10,6 +10,7 @@ function ChangesPopup({ type, refresh, change, teachers, classes, grades }) {
   const [changeTeacher, setChangeTeacher] = useState('')
   const [changeSubject, setChangeSubject] = useState('')
   const [changeRoom, setChangeRoom] = useState('')
+  const [changeInformation, setChangeInformation] = useState('')
   const [error, setError] = useState('')
 
   const [className, setClassName] = useState('')
@@ -37,6 +38,7 @@ function ChangesPopup({ type, refresh, change, teachers, classes, grades }) {
         setChangeTeacher(change.teacher.id)
         setChangeSubject(change.subject)
         setChangeRoom(change.room)
+        setChangeInformation(change.information)
       } else {
         setChangeType('')
         setChangeClass('')
@@ -44,6 +46,7 @@ function ChangesPopup({ type, refresh, change, teachers, classes, grades }) {
         setChangeSubject('')
         setChangeRoom('')
         setClassGrade('')
+        setChangeInformation('')
       }
       setAllTeachers(teachers)
       setAllGrades(grades)
@@ -75,18 +78,18 @@ function ChangesPopup({ type, refresh, change, teachers, classes, grades }) {
 
   const htmlClasses = useMemo(() => {
     var filteredClasses = allClasses
-      .filter(class_ => class_.grade == classGrade && 
-        ((className === '') ? true : class_.name == className))
+      .filter(class_ => class_.gradeId == classGrade && 
+        ((className === '') ? true : class_.name.includes(className)))
         
     return [
       ...(filteredClasses.length > 0
-        ? [<option key="blank" value="">Select a student</option>,
-          ...filteredClasses.map(student => (
-            <option key={student.id} value={student.id}>
-              {student.forename} {student.lastname}
+        ? [<option key="blank" value="">Select a class</option>,
+          ...filteredClasses.map(class_ => (
+            <option key={class_.id} value={class_.id}>
+              {class_.name}
             </option>
           ))]
-        : [<option key="no-students" value="">{(classGrade === '') ? 'Select a grade to choose students' : 'No classes available'}</option>]
+        : [<option key="no-classes" value="">{(classGrade === '') ? 'Select a grade to choose classes' : 'No classes available'}</option>]
       )
     ]
   }, [open, allClasses, classGrade, className])
@@ -111,7 +114,8 @@ function ChangesPopup({ type, refresh, change, teachers, classes, grades }) {
         changeClass,
         changeTeacher: changeTeacher !== "" ? changeTeacher : undefined,
         changeSubject,
-        changeRoom
+        changeRoom,
+        changeInformation
       }),
     })
       .then((response) => response.json())
@@ -148,51 +152,89 @@ function ChangesPopup({ type, refresh, change, teachers, classes, grades }) {
           <p>{old ? 'Alter change' : 'New change'}</p>
           <div className='settings'>
             <div>
+              <p>Class Search Options</p>
+              <div className='multi class-settings'>
+                <div>
+                  <p>Grade</p>
+                  <select
+                    value={classGrade}
+                    onChange={e => alterGrade(e.target.value)}
+                  >
+                    {htmlGrades}
+                  </select>
+                </div>
+                <div>
+                  <p>Name</p>
+                  <input
+                    value={className}
+                    type="text"
+                    onChange={(e) => setClassName(e.target.value)}
+                  />
+                </div>
+              </div>
+              <select
+                value={changeClass}
+                onChange={e => setChangeClass(e.target.value)}
+              >
+                {htmlClasses}
+              </select>
+            </div>
+            <hr />
+            <div>
               <p>Type</p>
-              <input
-                value={changeType}
-                type="text"
-                onChange={(e) => (!old) && setChangeType(e.target.value)}
-              />
+              <select
+                  value={changeType}
+                  onChange={e => setChangeType(e.target.value)}
+              >
+                <option value="">Select a type</option>
+                <option value="cancellation">Cancellation</option>
+                <option value="change">Change</option>
+                <option value="information">Information</option>
+              </select>
             </div>
-            <div>
+            {changeType === 'change' &&
+            <>
+              <div className='multi'>
+                <div>
+                  <p>Room</p>
+                  <input
+                    value={changeRoom}
+                    type="text"
+                    onChange={(e) => setChangeRoom(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <p>Subject</p>
+                  <input
+                    value={changeSubject}
+                    type="text"
+                    onChange={(e) => setChangeSubject(e.target.value)}
+                  />
+                </div>
+              </div>
               <div>
-                <p>Room</p>
+                <div>
+                  <p>Teacher</p>
+                  <select
+                    value={changeTeacher}
+                    onChange={e => setChangeTeacher(e.target.value)}
+                  >
+                    {htmlTeachers}
+                  </select>
+                </div>
+              </div>
+            </>
+            }
+            {(changeType === 'change' || changeType === 'information') &&
+              <div>
+                <p>Information</p>
                 <input
-                  value={changeRoom}
+                  value={changeInformation}
                   type="text"
-                  onChange={(e) => setChangeRoom(e.target.value)}
+                  onChange={(e) => setChangeInformation(e.target.value)}
                 />
               </div>
-              <div>
-                <p>Subject</p>
-                <input
-                  value={changeSubject}
-                  type="text"
-                  onChange={(e) => setChangeSubject(e.target.value)}
-                />
-              </div>
-            </div>
-            <div>
-              <div>
-                <p>Teacher</p>
-                <select
-                  value={changeTeacher}
-                  onChange={e => setChangeTeacher(e.target.value)}
-                >
-                  {htmlTeachers}
-                </select>
-              </div>
-              <div>
-                <p>Grade</p>
-                <select
-                  value={classGrade}
-                  onChange={e => alterGrade(e.target.value)}
-                >
-                  {htmlGrades}
-                </select>
-              </div>
-            </div>
+            }
           </div>
           <div className='footer'>
             <div className={old ? 'actions old' : 'actions'}>

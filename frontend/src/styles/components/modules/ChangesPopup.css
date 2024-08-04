@@ -39,31 +39,25 @@
     text-wrap: nowrap;
     gap: 1rem;
 
-    > div:has(div):not(:last-child) {
+    div, input, select {
+      width: 100%;
+    }
+
+    hr {
+      width: 80%;
+      color: var(--lightgray);
+    }
+
+    .multi {
       display: flex;
-      justify-content: space-between;
       gap: 1rem;
     }
 
-    .time {
-      div:not(:first-child) {
-        width: 22.5%;
-      }
+    .class-settings {
+      margin-bottom: 1rem;
 
-      div:first-child {
-        width: 50%;
-      }
-    }
-
-    > div:first-child input {
-      width: 100%;
-    }
-
-    > div > div {
-      width: 100%;
-
-      > select, input {
-        width: 100%;
+      p {
+        font-weight: lighter;
       }
     }
   }

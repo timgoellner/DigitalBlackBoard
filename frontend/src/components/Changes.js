@@ -39,23 +39,33 @@ function Changes() {
         const classesList = data.classes
         const gradesList = data.grades
 
-        if (order === 0) changesList = changesList.sort((a, b) => b.type - a.type)
-        else if (order === 2) changesList = changesList.sort((a, b) => b.teacher.forename < a.teacher.forename)
-        else if (order === 3) changesList = changesList.sort((a, b) => b.subject < a.subject)
+        if (order === 0) changesList = changesList.sort((a, b) => b.type < a.type)
+        else if (order === 1) changesList = changesList.sort((a, b) => {
+          if (a.teacher.forename === null) return 1
+          else if (b.teacher.forename === null) return -1
+
+          return b.teacher.forename < a.teacher.forename
+        })
+        else if (order === 2) changesList = changesList.sort((a, b) => {
+          if (a.subject === null) return 1
+          else if (b.subject === null) return -1
+
+          return b.subject < a.subject
+        })
 
         changesList = changesList.map((change) => {
           if (
-            (changeType && !change.type == changeType) ||
-            (changeClass && !change.class.includes(changeClass.toLowerCase())) ||
+            (changeType && !change.type.toLowerCase().includes(changeType)) ||
+            (changeClass && !change.class.name.toLowerCase().includes(changeClass.toLowerCase())) ||
             (changeTeacherForename && change.teacher.forename === null) ||
-            (changeTeacherForename && !change.teacher.forename.includes(changeTeacherForename.toLowerCase())) ||
+            (changeTeacherForename && !change.teacher.forename.toLowerCase().includes(changeTeacherForename.toLowerCase())) ||
             (changeTeacherLastname && change.teacher.lastname === null) ||
-            (changeTeacherLastname && !change.teacher.lastname.includes(changeTeacherLastname.toLowerCase())) ||
+            (changeTeacherLastname && !change.teacher.lastname.toLowerCase().includes(changeTeacherLastname.toLowerCase())) ||
             (changeSubject && change.subject === null) ||
-            (changeSubject && !change.subject.includes(changeSubject.toLowerCase())) ||
-            (changeGrade && !change.grade.grade.includes(changeGrade.toLowerCase())) ||
+            (changeSubject && !change.subject.toLowerCase().includes(changeSubject.toLowerCase())) ||
+            (changeGrade && !change.grade.grade.toLowerCase().includes(changeGrade.toLowerCase())) ||
             (changeSubgrade && change.grade.subgrade === null) ||
-            (changeSubgrade && !change.grade.subgrade.includes(changeSubgrade.toLowerCase()))
+            (changeSubgrade && !change.grade.subgrade.toLowerCase().includes(changeSubgrade.toLowerCase()))
           ) return null
 
           return (
@@ -75,7 +85,7 @@ function Changes() {
 
   function orderChanges(schema) {
     const buttons = document.getElementsByClassName('order-buttons')[0].children
-    for (var i = 0; i < 6; i++) {
+    for (var i = 0; i < 3; i++) {
       if (i === schema) buttons[i].classList.add('selected')
       else buttons[i].classList.remove('selected')
     }
