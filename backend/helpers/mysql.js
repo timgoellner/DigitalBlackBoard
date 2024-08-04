@@ -44,6 +44,16 @@ DATABASE TABLE SETUP
     - grade (int [fk, nn])
     - usesGrade (boolean [nn])
 
+ * changes
+    - id (int [pk, nn, uq, ai])
+    - organization (varchar(45) [nn])
+    - type (int [nn])
+    - class (int [fk, nn])
+    - teacher (int [fk])
+    - room (int [fk])
+    - subject (int [fk])
+    - information (varchar(100))
+
 || CONNECTIONS
 
  * student_classes
