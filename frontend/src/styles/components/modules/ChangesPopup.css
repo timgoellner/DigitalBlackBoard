@@ -53,6 +53,10 @@
       gap: 1rem;
     }
 
+    .title div > p:last-child {
+      font-weight: lighter;
+    }
+
     .class-settings {
       margin-bottom: 1rem;
 

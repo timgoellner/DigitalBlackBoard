@@ -1,4 +1,5 @@
 const express = require('express')
+const test = require("mysql2")
 
 const mysql = require("../../helpers/mysql");
 const validateUser = require("../../helpers/validateUser")
@@ -49,8 +50,8 @@ router.post("/", async (request, response) => {
   if (!user || !user.isStaff) return response.status(401).json({ message: 'error' })
 
   var { changeType, changeClass, changeTeacher, changeSubject, changeRoom, changeInformation } = request.body
-  changeType = changeType.toLowerCase()
-  changeSubject = changeSubject.toLowerCase()
+  changeType = changeType?.toLowerCase()
+  changeSubject = changeSubject?.toLowerCase()
 
   const class_ = await mysql.sendQuery(`SELECT * FROM classes WHERE organization = '${user.organization}' AND id = '${changeClass}'`)
   if (class_.length === 0) return response.status(401).json({ message: 'class does not exist' })
@@ -93,6 +94,79 @@ router.post("/", async (request, response) => {
 
   if (changes.length > 0) await mysql.sendQuery(`UPDATE changes SET ${changes.join(', ')} WHERE organization = '${user.organization}' AND id = ${changeId}`)
 
+  return response.status(200).json({ message: 'success' })
+})
+
+router.put("/", async (request, response) => {
+  const user = validateUser(request)
+  if (!user || !user.isStaff) return response.status(401).json({ message: 'error' })
+
+  var { changeId, changeType, changeClass, changeTeacher, changeSubject, changeRoom, changeInformation } = request.body
+  changeType = changeType?.toLowerCase()
+  changeSubject = changeSubject?.toLowerCase()
+
+  const change = await mysql.sendQuery(`SELECT * FROM changes WHERE organization = '${user.organization}' AND id = '${changeId}'`)
+  if (change.length === 0) return response.status(401).json({ message: 'change does not exist' })
+
+  const class_ = await mysql.sendQuery(`SELECT * FROM classes WHERE organization = '${user.organization}' AND id = '${changeClass}'`)
+  if (class_.length === 0) return response.status(401).json({ message: 'class does not exist' })
+
+  if (!types.some(type => type === changeType)) return response.status(401).json({ message: 'invalid type' })
+
+  const changes = [`type = '${changeType}'`]
+
+  if (changeType === 'cancellation') changes.push("teacher = NULL, subject = NULL, room = NULL, information = NULL")
+
+  if (changeType === 'information') changes.push("teacher = NULL, subject = NULL, room = NULL")
+  
+  if (changeType === 'change') {
+    if (changeTeacher) {
+      const teacher = await mysql.sendQuery(`SELECT * FROM teachers WHERE organization = '${user.organization}' AND id = '${changeTeacher}'`)
+      if (teacher.length === 0) return response.status(401).json({ message: 'teacher does not exist' })
+
+      changes.push(`teacher = ${teacher[0].id}`)
+    } else changes.push("teacher = NULL")
+
+    if (changeSubject) {
+      const subject = await mysql.sendQuery(`SELECT * FROM subjects WHERE organization = '${user.organization}' AND name = '${changeSubject}'`)
+      if (subject.length === 0) return response.status(401).json({ message: 'subject does not exist' })
+
+      changes.push(`subject = ${subject[0].id}`)
+    } else changes.push("subject = NULL")
+
+    if (changeRoom) {
+      const room = await mysql.sendQuery(`SELECT * FROM rooms WHERE organization = '${user.organization}' AND name = '${changeRoom}'`)
+      if (room.length === 0) return response.status(401).json({ message: 'room does not exist' })
+
+      changes.push(`room = ${room[0].id}`)
+    } else changes.push("room = NULL")
+  }
+
+  if (changeType === 'change' || changeType === 'information') {
+    if (changeInformation) {
+      if (changeInformation.length > 100) return response.status(401).json({ message: 'too long information' })
+
+      changes.push(`information = '${changeInformation}'`)
+    } else changes.push("information = NULL")
+  }
+  
+  if (changes.length > 0) await mysql.sendQuery(`UPDATE changes SET ${changes.join(', ')} WHERE organization = '${user.organization}' AND id = ${changeId}`)
+
+  return response.status(200).json({ message: 'success' })
+})
+
+router.delete("/", async (request, response) => {
+  const user = validateUser(request)
+  if (!user || !user.isStaff) return response.status(401).json({ message: 'error' })
+
+  var { changeId } = request.body
+
+  const existing = await mysql.sendQuery(`SELECT * FROM changes WHERE organization = '${user.organization}' AND id = ${changeId}`)
+  if (existing.length === 0) return response.status(401).json({ message: 'change does not exist' })
+
+  const deletion = await mysql.sendQuery(`DELETE FROM changes WHERE organization = '${user.organization}' AND id = ${existing[0].id}`)
+  if (deletion === false) return response.status(401).json({ message: 'error' })
+  
   return response.status(200).json({ message: 'success' })
 })
 

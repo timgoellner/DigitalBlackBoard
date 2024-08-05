@@ -2,8 +2,8 @@ import { useNavigate, useLoaderData } from 'react-router-dom';
 import { useState } from 'react';
 
 import { PiChalkboardTeacherFill, PiStudentFill } from "react-icons/pi";
-import { FaPeopleLine, FaSchool, FaRegIdBadge } from "react-icons/fa6";
-import { IoLayers } from "react-icons/io5";
+import { FaPeopleLine, FaSchool } from "react-icons/fa6";
+import { IoLayers, IoSettingsSharp } from "react-icons/io5";
 import { FaExclamationTriangle } from "react-icons/fa";
 import { FiLogOut } from "react-icons/fi";
 
@@ -15,7 +15,7 @@ import Teachers from '../components/Teachers';
 import Students from '../components/Students';
 import Classes from '../components/Classes';
 import Changes from '../components/Changes';
-import Accounts from '../components/Accounts';
+import Settings from '../components/Settings';
 
 function Dashboard() {
   const [page, setPage] = useState(0)
@@ -61,7 +61,7 @@ function Dashboard() {
           <hr />
           <div className='bar'>
             <div onClick={() => selectPage(5)}><FaExclamationTriangle /> Changes</div>
-            <div onClick={() => selectPage(6)}><FaRegIdBadge /> Accounts</div>
+            <div onClick={() => selectPage(6)}><IoSettingsSharp /> Settings</div>
           </div>
           <hr />
           <div className='bar'>
@@ -80,7 +80,7 @@ function Dashboard() {
         (page === 3 && <Students />) ||
         (page === 4 && <Classes />) ||
         (page === 5 && <Changes />) ||
-        (page === 6 && <Accounts />)
+        (page === 6 && <Settings />)
       }
     </main>
   )

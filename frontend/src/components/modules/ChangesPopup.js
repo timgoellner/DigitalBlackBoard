@@ -109,7 +109,7 @@ function ChangesPopup({ type, refresh, change, teachers, classes, grades }) {
         'jwt-token': token
       },
       body: JSON.stringify({ 
-        classId: (old) && change.key,
+        changeId: (old) && change.key,
         changeType, 
         changeClass,
         changeTeacher: changeTeacher !== "" ? changeTeacher : undefined,
@@ -151,35 +151,50 @@ function ChangesPopup({ type, refresh, change, teachers, classes, grades }) {
           <a href className="close" onClick={closeModal}><IoMdClose /></a>
           <p>{old ? 'Alter change' : 'New change'}</p>
           <div className='settings'>
-            <div>
-              <p>Class Search Options</p>
-              <div className='multi class-settings'>
+            {!old ?
+              <>
                 <div>
-                  <p>Grade</p>
+                  <p>Class Search Options</p>
+                  <div className='multi class-settings'>
+                    <div>
+                      <p>Grade</p>
+                      <select
+                        value={classGrade}
+                        onChange={e => alterGrade(e.target.value)}
+                      >
+                        {htmlGrades}
+                      </select>
+                    </div>
+                    <div>
+                      <p>Name</p>
+                      <input
+                        value={className}
+                        type="text"
+                        onChange={(e) => setClassName(e.target.value)}
+                      />
+                    </div>
+                  </div>
                   <select
-                    value={classGrade}
-                    onChange={e => alterGrade(e.target.value)}
+                    value={changeClass}
+                    onChange={e => setChangeClass(e.target.value)}
                   >
-                    {htmlGrades}
+                    {htmlClasses}
                   </select>
                 </div>
+                <hr />
+              </>
+            : 
+              <div className='multi title'>
                 <div>
-                  <p>Name</p>
-                  <input
-                    value={className}
-                    type="text"
-                    onChange={(e) => setClassName(e.target.value)}
-                  />
+                  <p>Class</p>
+                  <p>{allClasses.find(class_ => class_.id == changeClass)?.name}</p>
+                </div>
+                <div>
+                  <p>Grade</p>
+                  <p>{allClasses.find(class_ => class_.id == changeClass)?.grade}{allClasses.find(class_ => class_.id == changeClass)?.subgrade}</p>
                 </div>
               </div>
-              <select
-                value={changeClass}
-                onChange={e => setChangeClass(e.target.value)}
-              >
-                {htmlClasses}
-              </select>
-            </div>
-            <hr />
+            }
             <div>
               <p>Type</p>
               <select
