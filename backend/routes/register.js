@@ -17,9 +17,9 @@ router.post("/", async (request, response) => {
   }
 
   const alreadyExists = await mysql.sendQuery(`SELECT COUNT(*) AS count FROM accounts WHERE organization = '${organization}'`)
-  if (alreadyExists[0].count > 0) {
-    return response.status(401).json({ message: 'organisation already exists' })
-  }
+  if (alreadyExists[0].count > 0) return response.status(401).json({ message: 'organisation already exists' })
+
+  await mysql.sendQuery(`INSERT INTO organizations (name, quarantine) VALUES ('${organization}', 0)`)
 
   password = await bcypt.hash(password, 10)
   await mysql.sendQuery(`INSERT INTO accounts (organization, identifier, password, isStaff) VALUES ('${organization}', '${identifier}', '${password}', 1)`)

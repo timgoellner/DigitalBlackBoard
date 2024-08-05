@@ -1,0 +1,97 @@
+.accounts-popup {
+  position: relative;
+  width: 20dvw;
+  height: fit-content;
+
+  p {
+    margin: 0;
+  }
+
+  > p {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  input, select {
+    border-radius: .3rem;
+    border-color: var(--lightgray);
+    background-color: white;
+    border-style: solid;
+    border-width: .1em;
+    padding: .5rem .8rem;
+    color: var(--gray);
+    box-sizing: border-box;
+  }
+
+  input:focus, select:focus {
+    border-color: var(--blue);
+    outline: none;
+  }
+
+  select > option:first-child {
+    font-weight: bold;
+  }
+
+  .settings {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 2rem;
+    text-wrap: nowrap;
+    gap: 1rem;
+
+    div, input {
+      width: 100%;
+    }
+
+    .multi {
+      display: flex;
+      gap: 1rem;
+    }
+  }
+
+  .actions.old {
+    gap: 2rem;
+  }
+
+  .actions {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+
+    > button {
+      border: none;
+      border-radius: .3rem;
+      background-color: var(--blue);
+      color: white;
+      padding: .5rem 1rem;
+      max-width: 10dvw;
+      min-width: 5dvw;
+      width: 100%;
+    }
+    
+    > button:hover {
+      cursor: pointer;
+      background-color: var(--darkblue);
+    }
+
+    > button:nth-child(2) {
+      background-color: var(--red);
+    }
+
+    >button:nth-child(2):hover {
+      background-color: var(--darkred);
+    }
+  }
+
+  .footer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  error {
+    color: darkred;
+    text-align: center;
+    transform: translate(0, .5rem);
+  }
+}

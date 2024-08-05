@@ -3,11 +3,17 @@ DATABASE TABLE SETUP
 
 || BASICS
 
+ * organizations
+    - id (int [pk, nn, uq, ai])
+    - name (varchar(45) [nn])
+    - quarantine (boolean [nn])
+    - news (varchar(100))
+
  * accounts
     - id (int [pk, nn, uq, ai])
     - organization (varchar(45) [nn])
     - identifier (varchar(45) [nn])
-    - password (varchar(45))
+    - password (varchar(72))
     - isStaff (boolean [nn])
 
  * grades
