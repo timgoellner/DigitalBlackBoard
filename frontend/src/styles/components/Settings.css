@@ -5,6 +5,72 @@
   margin-top: 20dvh;
   gap: 8rem;
 
+  .danger-zone {
+    display: flex;
+    flex-direction: column;
+
+    .news {
+      margin-bottom: 1.5rem;
+
+      > div {
+        display: flex;
+        gap: 1rem;
+
+        button {
+          width: 20%;
+        }
+      }
+    }
+
+    .quarantine {
+      display: flex;
+      flex-direction: column;
+      gap: .2rem;
+      margin-bottom: 1.5rem;
+
+      .actions {
+        display: flex;
+
+        p {
+          font-weight: lighter;
+        }
+
+        .quarantine-switch {
+          display: flex;
+          margin-right: 1rem;
+          background-color: white;
+          border: 2px solid var(--blue);
+          border-radius: .4rem;
+          overflow: hidden;
+          height: 2rem;
+
+          > button {
+            width: 3rem;
+            height: 100%;
+            border-radius: 0;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            
+            background-color: white;
+            color: var(--blue);
+          }
+
+          > button.selected {
+            background-color: var(--blue);
+            color: white;
+          }
+        }
+      }
+    }
+
+    .delete {
+      display: flex;
+      flex-direction: column;
+      gap: .2rem;
+    }
+  }
+
   .accounts-zone {
     .accounts-search {
       border: 1px solid var(--lightgray);
@@ -37,7 +103,7 @@
     > p {
       font-size: 1.5rem;
       font-weight: bold;
-      margin-bottom: .5rem;
+      margin-bottom: 1rem;
     }
   }
 
@@ -45,7 +111,7 @@
     margin: 0;
   }
 
-  button {
+  button:not(.switch) {
     border: none;
     border-radius: .3rem;
     background-color: var(--blue);
@@ -54,7 +120,7 @@
     width: 8dvw;
   }
   
-  button:hover {
+  button:hover:not(.switch) {
     cursor: pointer;
     background-color: var(--darkblue);
   }

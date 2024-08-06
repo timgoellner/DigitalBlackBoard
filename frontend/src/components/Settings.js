@@ -10,6 +10,7 @@ function Settings() {
   const [accounts, setAccounts] = useState([])
   const [identifier, setIndentifier] = useState('')
   const [news, setNews] = useState('')
+  const [quarantineStatus, setQuarantineStatus] = useState(false)
 
   const navigate = useNavigate();
 
@@ -40,7 +41,7 @@ function Settings() {
   }
 
   function setQuarantine(value) {
-
+    setQuarantineStatus(value)
   }
 
   return(
@@ -64,28 +65,28 @@ function Settings() {
       </div>
       <div className='danger-zone'>
         <p>Global Actions</p>
-        <div>
+        <div className='news'>
+          <p>News</p>
           <div>
-            <p>News</p>
             <input
               value={news}
               type="text"
               onChange={(e) => setNews(e.target.value)}
             />
+            <button onClick={saveNews()}>Save</button>
           </div>
-          <button onClick={saveNews()}>Save</button>
         </div>
-        <div>
-          <div>
-            <p>Quarantine Mode</p>
+        <div className='quarantine'>
+          <p>Quarantine Mode</p>
+          <div className='actions'>
             <div className='quarantine-switch'>
-              <button className='selected' onClick={setQuarantine(false)}></button>
-              <button onClick={setQuarantine(true)}></button>
+              <button className={(!quarantineStatus && 'selected') + ' switch'} onClick={() => setQuarantine(false)}>OFF</button>
+              <button className={(quarantineStatus && 'selected') + ' switch'} onClick={() => setQuarantine(true)}>ON</button>
             </div>
+            <p>Blocks user accounts from loggin in</p>
           </div>
-          <p>Blocks user accounts from loggin in</p>
         </div>
-        <div>
+        <div className='delete'>
           <p>Delete Organization</p>
           <DeletePopup />
         </div>
