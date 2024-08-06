@@ -5,7 +5,7 @@ import { IoMdClose } from "react-icons/io"
 
 import "../../styles/components/modules/DeletePopup.css"
 
-function DeletePopup({ type, refresh }) {
+function DeletePopup() {
   const [error, setError] = useState('')
 
   const navigate = useNavigate();
@@ -18,7 +18,7 @@ function DeletePopup({ type, refresh }) {
   function request() {
     const token = localStorage.getItem('jwt-token')
 
-    fetch(`http://localhost:100/dashboard/register`, {
+    fetch(`http://localhost:100/dashboard/organizations`, {
       method: 'DELETE',
       headers: {
         'content-type': 'application/json',
@@ -44,13 +44,12 @@ function DeletePopup({ type, refresh }) {
       </button>
 
       <Popup open={open} closeOnDocumentClick onClose={closeModal}>
-        <div className='classes-popup'>
+        <div className='delete-popup'>
           <a href className="close" onClick={closeModal}><IoMdClose /></a>
           <p>Confirm deletion</p>
-          <p>When clicking Confirm, all organization data including all accounts will be deleted</p>
           <div>
+            <p>When clicking Confirm, all organization data including all accounts will be deleted</p>
             <button onClick={() => request()}>Confirm</button>
-            <error>{error}</error>
           </div>
         </div>
       </Popup>

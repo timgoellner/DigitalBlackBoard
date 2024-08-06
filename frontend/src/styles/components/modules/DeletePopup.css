@@ -1,0 +1,39 @@
+.delete-popup {
+  position: relative;
+  width: 20dvw;
+  height: fit-content;
+
+  p {
+    margin: 0;
+  }
+
+  > p {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  button {
+    background-color: var(--red);
+    border: none;
+    border-radius: .3rem;
+    padding: .5rem;
+    width: 40%;
+    height: fit-content;
+    cursor: pointer;
+    color: white;
+    margin-top: 1rem;
+  }
+
+  
+  button:hover {
+    cursor: pointer;
+    background: repeating-linear-gradient(
+      45deg,
+      #000000,
+      #000000 20px,
+      #eed202 20px,
+      #eed202 40px
+    );
+    font-weight: bold;
+  }
+}

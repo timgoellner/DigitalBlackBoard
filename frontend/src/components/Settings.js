@@ -10,11 +10,26 @@ function Settings() {
   const [accounts, setAccounts] = useState([])
   const [identifier, setIndentifier] = useState('')
   const [news, setNews] = useState('')
-  const [quarantineStatus, setQuarantineStatus] = useState(false)
+  const [quarantine, setQuarantine] = useState(false)
 
   const navigate = useNavigate();
 
   const token = localStorage.getItem('jwt-token')
+
+  const load = () => {
+    fetch(`http://localhost:100/dashboard/organizations`, { headers: { 'jwt-token': token } })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.message !== 'success') navigate('/login')
+
+        var organizationData = data.organization
+
+        setNews(organizationData.news)
+        setQuarantine(organizationData.quarantine)
+      })
+  }
+
+  useEffect(load, [])
 
   const refresh = () => {
     fetch(`http://localhost:100/dashboard/accounts`, { headers: { 'jwt-token': token } })
@@ -36,13 +51,19 @@ function Settings() {
   
   useEffect(refresh, [identifier])
 
-  function saveNews() {
+  const request = () => {
+    const token = localStorage.getItem('jwt-token')
 
+    fetch(`http://localhost:100/dashboard/organizations`, {
+      method: 'PUT',
+      headers: {
+        'content-type': 'application/json',
+        'jwt-token': token
+      },
+      body: JSON.stringify({ news, quarantine }),
+    })
   }
 
-  function setQuarantine(value) {
-    setQuarantineStatus(value)
-  }
 
   return(
     <div className='settings-component'>
@@ -65,25 +86,25 @@ function Settings() {
       </div>
       <div className='danger-zone'>
         <p>Global Actions</p>
-        <div className='news'>
-          <p>News</p>
-          <div>
+        <div className='settings'>
+          <div className='news'>
+            <p>News</p>
             <input
               value={news}
               type="text"
               onChange={(e) => setNews(e.target.value)}
             />
-            <button onClick={saveNews()}>Save</button>
           </div>
-        </div>
-        <div className='quarantine'>
-          <p>Quarantine Mode</p>
-          <div className='actions'>
-            <div className='quarantine-switch'>
-              <button className={(!quarantineStatus && 'selected') + ' switch'} onClick={() => setQuarantine(false)}>OFF</button>
-              <button className={(quarantineStatus && 'selected') + ' switch'} onClick={() => setQuarantine(true)}>ON</button>
-            </div>
+          <div className='quarantine'>
+            <p>Quarantine Mode</p>
             <p>Blocks user accounts from loggin in</p>
+            <div className='quarantine-switch'>
+              <button className={(!quarantine && 'selected') + ' switch'} onClick={() => setQuarantine(false)}>OFF</button>
+              <button className={(quarantine && 'selected') + ' switch'} onClick={() => setQuarantine(true)}>ON</button>
+            </div>
+          </div>
+          <div className='submit'>
+            <button onClick={request}>Save</button>
           </div>
         </div>
         <div className='delete'>

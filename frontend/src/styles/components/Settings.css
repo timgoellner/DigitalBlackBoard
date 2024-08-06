@@ -9,16 +9,29 @@
     display: flex;
     flex-direction: column;
 
+    .submit {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 2rem;
+
+      > button {
+        width: 50%;
+        height: 2rem;
+        background-color: var(--blue);
+        padding: 0;
+      }
+
+      > button:hover {
+        background-color: var(--darkblue);
+      }
+    }
+
     .news {
       margin-bottom: 1.5rem;
 
       > div {
         display: flex;
         gap: 1rem;
-
-        button {
-          width: 20%;
-        }
       }
     }
 
@@ -26,40 +39,37 @@
       display: flex;
       flex-direction: column;
       gap: .2rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
 
-      .actions {
+      > p:nth-child(2) {
+        font-weight: lighter;
+      }
+
+      .quarantine-switch {
         display: flex;
+        margin-right: 1rem;
+        background-color: white;
+        border: 2px solid var(--blue);
+        border-radius: .4rem;
+        overflow: hidden;
+        height: 2rem;
+        width: fit-content;
 
-        p {
-          font-weight: lighter;
+        > button {
+          width: 3rem;
+          height: 100%;
+          border-radius: 0;
+          border: none;
+          padding: 0;
+          cursor: pointer;
+          
+          background-color: white;
+          color: var(--blue);
         }
 
-        .quarantine-switch {
-          display: flex;
-          margin-right: 1rem;
-          background-color: white;
-          border: 2px solid var(--blue);
-          border-radius: .4rem;
-          overflow: hidden;
-          height: 2rem;
-
-          > button {
-            width: 3rem;
-            height: 100%;
-            border-radius: 0;
-            border: none;
-            padding: 0;
-            cursor: pointer;
-            
-            background-color: white;
-            color: var(--blue);
-          }
-
-          > button.selected {
-            background-color: var(--blue);
-            color: white;
-          }
+        > button.selected {
+          background-color: var(--blue);
+          color: white;
         }
       }
     }
@@ -68,6 +78,14 @@
       display: flex;
       flex-direction: column;
       gap: .2rem;
+
+      button {
+        background-color: var(--red);
+      }
+
+      button:hover {
+        background-color: var(--darkred);
+      }
     }
   }
 
