@@ -1,6 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
+import { IoMdClose } from "react-icons/io"
+
 import "../styles/components/Settings.css"
 
 import AccountsPopup from './modules/AccountsPopup';
@@ -11,6 +13,14 @@ function Settings() {
   const [identifier, setIndentifier] = useState('')
   const [news, setNews] = useState('')
   const [quarantine, setQuarantine] = useState(false)
+
+  const [subjects, setSubjects] = useState([])
+  const [subject, setSubject] = useState('')
+  const [currentSubject, setCurrentSubject] = useState('')
+
+  const [rooms, setRooms] = useState([])
+  const [room, setRoom] = useState('')
+  const [currentRoom, setCurrentRoom] = useState('')
 
   const navigate = useNavigate();
 
@@ -40,7 +50,7 @@ function Settings() {
         var accountsList = data.accounts
 
         accountsList = accountsList.map((account) => {
-          if ((identifier && !account.identifier.toLowerCase().includes(identifier))) return null
+          if (identifier && !account.identifier.toLowerCase().includes(identifier)) return null
 
           return <AccountsPopup key={account.id} type={'old'} refresh={refresh} account={account}/>
         })
@@ -51,9 +61,43 @@ function Settings() {
   
   useEffect(refresh, [identifier])
 
-  const request = () => {
-    const token = localStorage.getItem('jwt-token')
+  const subjectsRequest = () => {
+    fetch(`http://localhost:100/dashboard/subjects`, { headers: { 'jwt-token': token } })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.message !== 'success') navigate('/login')
 
+        var subjectsList = data.subjects
+
+        subjectsList = subjectsList.filter((subjectElement) => {
+          return !(subject && !subjectElement.toLowerCase().includes(subject))
+        })
+
+        setSubjects(subjectsList)
+      })
+  }
+
+  useEffect(subjectsRequest, [subject])
+
+  const roomsRequest = () => {
+    fetch(`http://localhost:100/dashboard/rooms`, { headers: { 'jwt-token': token } })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.message !== 'success') navigate('/login')
+
+        var roomsList = data.rooms
+
+        roomsList = roomsList.filter((roomElement) => {
+          return !(room && !roomElement.includes(room))
+        })
+
+        setRooms(roomsList)
+      })
+  }
+
+  useEffect(roomsRequest, [room])
+
+  const request = () => {
     fetch(`http://localhost:100/dashboard/organizations`, {
       method: 'PUT',
       headers: {
@@ -64,24 +108,136 @@ function Settings() {
     })
   }
 
+  async function handleKeyRoom(e) {
+    if (e.keyCode === 13 && e.target.value && !(/^\s*$/.test(e.target.value)) && e.target.value.length < 40) {
+      setCurrentRoom('')
+
+      await fetch(`http://localhost:100/dashboard/rooms`, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          'jwt-token': token
+        },
+        body: JSON.stringify({ room: e.target.value }),
+      })
+
+      roomsRequest()
+    }
+  }
+
+  async function deleteRoom(room) {
+    await fetch(`http://localhost:100/dashboard/rooms`, {
+      method: 'DELETE',
+      headers: {
+        'content-type': 'application/json',
+        'jwt-token': token
+      },
+      body: JSON.stringify({ room }),
+    })
+
+    roomsRequest()
+  }
+
+  async function handleKeySubject(e) {
+    if (e.keyCode === 13 && e.target.value && !(/^\s*$/.test(e.target.value)) && e.target.value.length < 40) {
+      setCurrentSubject('')
+
+      await fetch(`http://localhost:100/dashboard/subjects`, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          'jwt-token': token
+        },
+        body: JSON.stringify({ subject: e.target.value }),
+      })
+
+      subjectsRequest()
+    }
+  }
+
+  async function deleteSubject(subject) {
+    await fetch(`http://localhost:100/dashboard/subjects`, {
+      method: 'DELETE',
+      headers: {
+        'content-type': 'application/json',
+        'jwt-token': token
+      },
+      body: JSON.stringify({ subject }),
+    })
+
+    subjectsRequest()
+  }
+
 
   return(
     <div className='settings-component'>
-      <div className='accounts-zone'>
-        <p>Staff Accounts</p>
-        <div className='accounts-search'>
-          <input
-            value={identifier}
-            type="text"
-            placeholder='Identifier'
-            onChange={(e) => setIndentifier(e.target.value)}
-          />
-          <table className='accounts'>
-            {accounts}
-          </table>
+      <div className='lists'>
+        <div className='accounts-zone'>
+          <p>Staff Accounts</p>
+          <div className='search'>
+            <input
+              value={identifier}
+              type="text"
+              placeholder='Identifier'
+              onChange={(e) => setIndentifier(e.target.value)}
+            />
+            <table className='list'>
+              {accounts}
+            </table>
+          </div>
+          <div className='actions'>
+            <AccountsPopup type={'new'} refresh={refresh}/>
+          </div>
         </div>
-        <div className='actions'>
-          <AccountsPopup type={'new'} refresh={refresh}/>
+        <div className='subjects-zone'>
+          <p>Subjects</p>
+          <div className='search'>
+            <input
+              value={subject}
+              type="text"
+              placeholder='Subject'
+              onChange={(e) => setSubject(e.target.value)}
+            />
+            <table className='list'>
+              {subjects.map((subject) => (
+                <tr value={subject} className='small-element'>
+                  <p>{subject}</p>
+                  <a href onClick={() => deleteSubject(subject)}><IoMdClose /></a>
+                </tr>
+              ))}
+            </table>
+          </div>
+          <input
+            value={currentSubject}
+            type="text"
+            onChange={(e) => setCurrentSubject(e.target.value)}
+            onKeyUp={(e) => handleKeySubject(e)}
+          />
+        </div>
+        <div className='rooms-zone'>
+          <p>Rooms</p>
+          <div className='search'>
+            <input
+              value={room}
+              type="text"
+              placeholder='Room'
+              onChange={(e) => setRoom(e.target.value)}
+            />
+            <table className='list'>
+              {rooms.map((room) => (
+                <tr value={room} className='small-element'>
+                  <p>{room}</p>
+                  <a href onClick={() => deleteRoom(room)}><IoMdClose /></a>
+                </tr>
+              ))}
+            </table>
+          </div>
+          <input
+            value={currentRoom}
+            type="text"
+            onChange={(e) => setCurrentRoom(e.target.value)}
+            onKeyUp={(e) => handleKeyRoom(e)}
+          />
         </div>
       </div>
       <div className='danger-zone'>

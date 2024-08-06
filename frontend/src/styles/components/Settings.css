@@ -2,8 +2,131 @@
   display: flex;
   justify-content: center;
   width: 60dvw;
-  margin-top: 20dvh;
+  margin-top: 15dvh;
   gap: 8rem;
+
+  .lists {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .lists > div {
+    .search {
+      border: 1px solid var(--lightgray);
+      border-bottom: 3px solid var(--blue);
+      border-radius: .3rem .3rem 0 0;
+      overflow: hidden;
+    }
+
+    .actions {
+      display: flex;
+      width: 100%;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+
+    input {
+      border: none;
+      border-bottom: 1px solid var(--lightgray);
+      border-radius: 0;
+    }
+
+    input:focus {
+      border-bottom: 1px solid var(--lightgray);
+    }
+  }
+
+  > div {
+    width: 15dvw;
+
+    > p {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+  }
+
+  p {
+    margin: 0;
+  }
+
+  button:not(.switch) {
+    border: none;
+    border-radius: .3rem;
+    background-color: var(--blue);
+    color: white;
+    padding: .5rem 1rem;
+    width: 8dvw;
+  }
+  
+  button:hover:not(.switch) {
+    cursor: pointer;
+    background-color: var(--darkblue);
+  }
+
+  input {
+    border-radius: .3rem;
+    border-color: var(--lightgray);
+    border-style: solid;
+    border-width: .1em;
+    padding: .5rem 1rem;
+    box-sizing: border-box;
+    width: 100%;
+
+    color: var(--gray);
+  }
+
+  input:focus {
+    border-color: var(--blue);
+    outline: none;
+  }
+
+  .list {
+    display: block;
+    overflow: scroll;
+    max-height: 15dvh;
+
+    .small-element {
+      display: flex;
+      justify-content: space-between;
+      font-size: 1.1rem;
+      font-weight: lighter;
+      padding: .3rem;
+      padding-right: 1rem;
+      padding-left: .5rem;
+
+      a {
+        cursor: pointer;
+      }
+    }
+
+    tr {
+      display: flex;
+      border-radius: 0;
+
+      th {
+        border-radius: 0;
+        font-size: 1.1rem;
+        font-weight: lighter;
+        padding: .3rem;
+        padding-left: .5rem;
+        text-align: left;
+      }
+    }
+
+    tr:not(.small-element) {
+      cursor: pointer;
+    }
+
+    tr:nth-child(2n + 1) {
+      background-color: var(--lightlightgray);
+    }
+
+    tr:hover:not(.small-element) {
+      background-color: var(--lightblue);
+    }
+  }
 
   .danger-zone {
     display: flex;
@@ -86,108 +209,6 @@
       button:hover {
         background-color: var(--darkred);
       }
-    }
-  }
-
-  .accounts-zone {
-    .accounts-search {
-      border: 1px solid var(--lightgray);
-      border-bottom: 3px solid var(--blue);
-      border-radius: .3rem;
-      overflow: hidden;
-    }
-
-    .actions {
-      display: flex;
-      width: 100%;
-      justify-content: center;
-      margin-top: 1rem;
-    }
-
-    input {
-      border: none;
-      border-bottom: 1px solid var(--lightgray);
-      border-radius: 0;
-    }
-
-    input:focus {
-      border-bottom: 1px solid var(--lightgray);
-    }
-  }
-
-  > div {
-    width: 15dvw;
-
-    > p {
-      font-size: 1.5rem;
-      font-weight: bold;
-      margin-bottom: 1rem;
-    }
-  }
-
-  p {
-    margin: 0;
-  }
-
-  button:not(.switch) {
-    border: none;
-    border-radius: .3rem;
-    background-color: var(--blue);
-    color: white;
-    padding: .5rem 1rem;
-    width: 8dvw;
-  }
-  
-  button:hover:not(.switch) {
-    cursor: pointer;
-    background-color: var(--darkblue);
-  }
-
-  input {
-    border-radius: .3rem;
-    border-color: var(--lightgray);
-    border-style: solid;
-    border-width: .1em;
-    padding: .5rem 1rem;
-    box-sizing: border-box;
-    width: 100%;
-
-    color: var(--gray);
-  }
-
-  input:focus {
-    border-color: var(--blue);
-    outline: none;
-  }
-
-  .accounts {
-    display: block;
-    overflow: scroll;
-
-    tr {
-      display: flex;
-      border-radius: 0;
-
-      th {
-        border-radius: 0;
-        font-size: 1.1rem;
-        font-weight: lighter;
-        padding: .3rem;
-        padding-left: .5rem;
-        text-align: left;
-      }
-    }
-
-    tr {
-      cursor: pointer;
-    }
-
-    tr:nth-child(2n + 1) {
-      background-color: var(--lightlightgray);
-    }
-
-    tr:hover {
-      background-color: var(--lightblue);
     }
   }
 }
