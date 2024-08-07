@@ -7,7 +7,7 @@ const validateUser = require("../../helpers/validateUser")
 const router = express.Router()
 
 router.get("/", async (request, response) => {
-  const user = validateUser(request);
+  const user = await validateUser(request);
   if (!user || !user.isStaff) return response.status(401).json({ message: 'error' })
   
   const roomsData = await mysql.sendQuery(`SELECT * FROM rooms WHERE organization = ${escape(user.organization)}`)
@@ -19,7 +19,7 @@ router.get("/", async (request, response) => {
 })
 
 router.post("/", async (request, response) => {
-  const user = validateUser(request)
+  const user = await validateUser(request)
   if (!user || !user.isStaff) return response.status(401).json({ message: 'error' })
 
   var { room } = request.body
@@ -32,7 +32,7 @@ router.post("/", async (request, response) => {
 })
 
 router.delete("/", async (request, response) => {
-  const user = validateUser(request)
+  const user = await validateUser(request)
   if (!user || !user.isStaff) return response.status(401).json({ message: 'error' })
 
   var { room } = request.body

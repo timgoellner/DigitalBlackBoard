@@ -7,7 +7,7 @@ const validateUser = require("../../helpers/validateUser")
 const router = express.Router()
 
 router.get("/", async (request, response) => {
-  const user = validateUser(request);
+  const user = await validateUser(request);
   if (!user || !user.isStaff) return response.status(401).json({ message: 'error' })
   
   var organization = await mysql.sendQuery(`SELECT * FROM organizations WHERE name = ${escape(user.organization)}`)
@@ -18,7 +18,7 @@ router.get("/", async (request, response) => {
 })
 
 router.put("/", async (request, response) => {
-  const user = validateUser(request)
+  const user = await validateUser(request)
   if (!user || !user.isStaff) return response.status(401).json({ message: 'error' })
 
   var { news, quarantine } = request.body
@@ -30,7 +30,7 @@ router.put("/", async (request, response) => {
 })
 
 router.delete("/", async (request, response) => {
-  const user = validateUser(request)
+  const user = await validateUser(request)
   if (!user || !user.isStaff) return response.status(401).json({ message: 'error' })
 
   await mysql.sendQuery(`DELETE FROM organizations WHERE name = ${escape(user.organization)}`)

@@ -9,7 +9,7 @@ const router = express.Router()
 const weekdays = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
 
 router.get("/", async (request, response) => {
-  const user = validateUser(request);
+  const user = await validateUser(request);
   if (!user || !user.isStaff) return response.status(401).json({ message: 'error' })
   
   const classesData = await mysql.sendQuery(`SELECT classes.id, classes.name, classes.weekday, classes.startTime, classes.duration, teachers.id teacherId, teachers.forename teacherForename, teachers.lastname teacherLastname, subjects.name subject, rooms.name room, grades.id gradeId, grades.grade, grades.subgrade, students.id studentId, students.forename studentForename, students.lastname studentLastname FROM classes LEFT JOIN teachers ON classes.teacher = teachers.id LEFT JOIN subjects ON classes.subject = subjects.id LEFT JOIN rooms ON classes.room = rooms.id LEFT JOIN grades ON classes.grade = grades.id LEFT JOIN student_classes ON classes.id = student_classes.class LEFT JOIN students ON student_classes.student = students.id WHERE classes.organization = ${escape(user.organization)} AND grades.subgrade IS NULL UNION ALL SELECT classes.id, classes.name, classes.weekday, classes.startTime, classes.duration, teachers.id teacherId, teachers.forename teacherForename, teachers.lastname teacherLastname, subjects.name subject, rooms.name room, grades.id gradeId, grades.grade, grades.subgrade, students.id studentId, students.forename studentForename, students.lastname studentLastname FROM classes LEFT JOIN teachers ON classes.teacher = teachers.id LEFT JOIN subjects ON classes.subject = subjects.id LEFT JOIN rooms ON classes.room = rooms.id LEFT JOIN grades ON classes.grade = grades.id LEFT JOIN students ON classes.grade = students.grade WHERE classes.organization = ${escape(user.organization)} AND grades.subgrade IS NOT NULL`)
@@ -58,7 +58,7 @@ router.get("/", async (request, response) => {
 })
 
 router.post("/", async (request, response) => {
-  const user = validateUser(request)
+  const user = await validateUser(request)
   if (!user || !user.isStaff) return response.status(401).json({ message: 'error' })
 
   var { className, classWeekday, classStarttime, classDuration, classTeacher, classSubject, classRoom, classGrade, classStudents } = request.body
@@ -96,7 +96,7 @@ router.post("/", async (request, response) => {
 })
 
 router.put("/", async (request, response) => {
-  const user = validateUser(request)
+  const user = await validateUser(request)
   if (!user || !user.isStaff) return response.status(401).json({ message: 'error' })
 
   var { classId, className, classWeekday, classStarttime, classDuration, classTeacher, classSubject, classRoom, classGrade, classStudents } = request.body
@@ -150,7 +150,7 @@ router.put("/", async (request, response) => {
 })
 
 router.delete("/", async (request, response) => {
-  const user = validateUser(request)
+  const user = await validateUser(request)
   if (!user || !user.isStaff) return response.status(401).json({ message: 'error' })
 
   var { classId } = request.body

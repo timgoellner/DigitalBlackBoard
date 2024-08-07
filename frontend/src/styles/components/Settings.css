@@ -78,7 +78,7 @@
 
   .list {
     display: block;
-    overflow: scroll;
+    overflow-y: auto;
     max-height: 15dvh;
 
     .small-element {

@@ -9,7 +9,7 @@ const router = express.Router()
 const types = [ "cancellation", "change", "information" ]
 
 router.get("/", async (request, response) => {
-  const user = validateUser(request);
+  const user = await validateUser(request);
   if (!user || !user.isStaff) return response.status(401).json({ message: 'error' })
   
   const changesData = await mysql.sendQuery(`SELECT changes.id, changes.type, classes.id classId, classes.name className, grades.id gradesId, grades.grade, grades.subgrade, teachers.id teacherId, teachers.forename teacherForename, teachers.lastname teacherLastname, rooms.name room, subjects.name subject, changes.information FROM changes LEFT JOIN classes ON changes.class = classes.id INNER JOIN grades ON classes.grade = grades.id LEFT JOIN teachers ON changes.teacher = teachers.id LEFT JOIN rooms ON changes.room = rooms.id LEFT JOIN subjects ON changes.subject = subjects.id WHERE changes.organization = ${escape(user.organization)}`)
@@ -46,7 +46,7 @@ router.get("/", async (request, response) => {
 })
 
 router.post("/", async (request, response) => {
-  const user = validateUser(request)
+  const user = await validateUser(request)
   if (!user || !user.isStaff) return response.status(401).json({ message: 'error' })
 
   var { changeType, changeClass, changeTeacher, changeSubject, changeRoom, changeInformation } = request.body
@@ -98,7 +98,7 @@ router.post("/", async (request, response) => {
 })
 
 router.put("/", async (request, response) => {
-  const user = validateUser(request)
+  const user = await validateUser(request)
   if (!user || !user.isStaff) return response.status(401).json({ message: 'error' })
 
   var { changeId, changeType, changeClass, changeTeacher, changeSubject, changeRoom, changeInformation } = request.body
@@ -156,7 +156,7 @@ router.put("/", async (request, response) => {
 })
 
 router.delete("/", async (request, response) => {
-  const user = validateUser(request)
+  const user = await validateUser(request)
   if (!user || !user.isStaff) return response.status(401).json({ message: 'error' })
 
   var { changeId } = request.body

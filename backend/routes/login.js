@@ -51,8 +51,8 @@ router.post("/", async (request, response) => {
   response.status(200).json({ message: 'valid', token })
 })
 
-router.get("/", (request, response) => {
-  const user = validateUser(request);
+router.get("/", async (request, response) => {
+  const user = await validateUser(request);
   if (user) {
     return response.status(200).json({ message: 'valid', user })
   } else {

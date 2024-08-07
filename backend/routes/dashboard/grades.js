@@ -7,7 +7,7 @@ const validateUser = require("../../helpers/validateUser")
 const router = express.Router()
 
 router.get("/", async (request, response) => {
-  const user = validateUser(request);
+  const user = await validateUser(request);
   if (!user || !user.isStaff) return response.status(401).json({ message: 'error' })
   
   const grades = await mysql.sendQuery(`SELECT grades.id, grades.grade, grades.subgrade, COUNT(students.id) count FROM grades LEFT JOIN students ON grades.id = students.grade WHERE grades.organization = ${escape(user.organization)} GROUP BY grades.id ORDER BY grades.grade`);
@@ -27,7 +27,7 @@ router.get("/", async (request, response) => {
 })
 
 router.post("/", async (request, response) => {
-  const user = validateUser(request)
+  const user = await validateUser(request)
   if (!user || !user.isStaff) return response.status(401).json({ message: 'error' })
 
   var { grade, subgradesCount } = request.body
@@ -51,7 +51,7 @@ router.post("/", async (request, response) => {
 })
 
 router.put("/", async (request, response) => {
-  const user = validateUser(request)
+  const user = await validateUser(request)
   if (!user || !user.isStaff) return response.status(401).json({ message: 'error' })
 
   var { grade, subgradesCount } = request.body
@@ -81,7 +81,7 @@ router.put("/", async (request, response) => {
 })
 
 router.delete("/", async (request, response) => {
-  const user = validateUser(request)
+  const user = await validateUser(request)
   if (!user || !user.isStaff) return response.status(401).json({ message: 'error' })
 
   var { grade } = request.body

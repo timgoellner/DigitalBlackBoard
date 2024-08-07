@@ -7,7 +7,7 @@ const validateUser = require("../../helpers/validateUser")
 const router = express.Router()
 
 router.get("/", async (request, response) => {
-  const user = validateUser(request);
+  const user = await validateUser(request);
   if (!user || !user.isStaff) return response.status(401).json({ message: 'error' })
   
   const studentsData = await mysql.sendQuery(`SELECT students.id, students.forename, students.lastname, accounts.identifier, grades.grade, grades.subgrade, classes.name class FROM students LEFT JOIN accounts ON students.account = accounts.id LEFT JOIN grades ON students.grade = grades.id LEFT JOIN classes ON students.grade = classes.grade WHERE students.organization = ${escape(user.organization)} AND grades.subgrade IS NOT NULL UNION ALL SELECT students.id, students.forename, students.lastname, accounts.identifier, grades.grade, grades.subgrade, classes.name class FROM students LEFT JOIN accounts ON students.account = accounts.id LEFT JOIN grades ON students.grade = grades.id LEFT JOIN student_classes ON students.id = student_classes.student LEFT JOIN classes ON student_classes.class = classes.id WHERE students.organization = ${escape(user.organization)} AND grades.subgrade IS NULL`)
@@ -31,7 +31,7 @@ router.get("/", async (request, response) => {
 })
 
 router.post("/", async (request, response) => {
-  const user = validateUser(request)
+  const user = await validateUser(request)
   if (!user || !user.isStaff) return response.status(401).json({ message: 'error' })
 
   var { studentForename, studentLastname, studentGrade, studentSubgrade } = request.body
@@ -61,7 +61,7 @@ router.post("/", async (request, response) => {
 })
 
 router.put("/", async (request, response) => {
-  const user = validateUser(request)
+  const user = await validateUser(request)
   if (!user || !user.isStaff) return response.status(401).json({ message: 'error' })
 
   var { studentForename, studentLastname, studentGrade, studentSubgrade, id } = request.body
@@ -89,7 +89,7 @@ router.put("/", async (request, response) => {
 })
 
 router.delete("/", async (request, response) => {
-  const user = validateUser(request)
+  const user = await validateUser(request)
   if (!user || !user.isStaff) return response.status(401).json({ message: 'error' })
 
   var { id } = request.body
