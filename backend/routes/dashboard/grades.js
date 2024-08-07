@@ -1,4 +1,5 @@
 const express = require('express')
+const escape = require("mysql2").escape
 
 const mysql = require("../../helpers/mysql");
 const validateUser = require("../../helpers/validateUser")
@@ -9,7 +10,7 @@ router.get("/", async (request, response) => {
   const user = validateUser(request);
   if (!user || !user.isStaff) return response.status(401).json({ message: 'error' })
   
-  const grades = await mysql.sendQuery(`SELECT grades.id, grades.grade, grades.subgrade, COUNT(students.id) count FROM grades LEFT JOIN students ON grades.id = students.grade WHERE grades.organization = '${user.organization}' GROUP BY grades.id ORDER BY grades.grade`);
+  const grades = await mysql.sendQuery(`SELECT grades.id, grades.grade, grades.subgrade, COUNT(students.id) count FROM grades LEFT JOIN students ON grades.id = students.grade WHERE grades.organization = ${escape(user.organization)} GROUP BY grades.id ORDER BY grades.grade`);
 
   const sortedGrades = {}
   grades.forEach(grade => {
@@ -34,15 +35,15 @@ router.post("/", async (request, response) => {
 
   if (grade.length > 5 || grade.length === 0 || subgradesCount > 8) return response.status(401).json({ message: 'invalid parameters' })
 
-  const existing = await mysql.sendQuery(`SELECT * FROM grades WHERE organization = '${user.organization}' AND grade = '${grade}'`)
+  const existing = await mysql.sendQuery(`SELECT * FROM grades WHERE organization = ${escape(user.organization)} AND grade = ${escape(grade)}`)
   if (existing.length > 0) return response.status(401).json({ message: 'grade already exists' }) 
 
   if (subgradesCount === 0) {
-    await mysql.sendQuery(`INSERT INTO grades (organization, grade, hasSubgrade) VALUES ('${user.organization}', '${grade}', 0)`)
+    await mysql.sendQuery(`INSERT INTO grades (organization, grade, hasSubgrade) VALUES (${escape(user.organization)}, ${escape(grade)}, 0)`)
   } else {
     const subgradeNames = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
     for ( ; subgradesCount > 0; subgradesCount--) {
-      await mysql.sendQuery(`INSERT INTO grades (organization, grade, subgrade, hasSubgrade) VALUES ('${user.organization}', '${grade}', '${subgradeNames[subgradesCount-1]}', 1)`)
+      await mysql.sendQuery(`INSERT INTO grades (organization, grade, subgrade, hasSubgrade) VALUES (${escape(user.organization)}, ${escape(grade)}, ${escape(subgradeNames[subgradesCount-1])}, 1)`)
     }
   }
 
@@ -58,7 +59,7 @@ router.put("/", async (request, response) => {
 
   if (grade.length > 5 || grade.length === 0 || subgradesCount > 8) return response.status(401).json({ message: 'invalid parameters' })
 
-  const existing = await mysql.sendQuery(`SELECT * FROM grades WHERE organization = '${user.organization}' AND grade = '${grade}'`)
+  const existing = await mysql.sendQuery(`SELECT * FROM grades WHERE organization = ${escape(user.organization)} AND grade = ${escape(grade)}`)
   if (existing.length === 0) return response.status(401).json({ message: 'grade does not exist' })
 
   var difference = subgradesCount - existing.length
@@ -67,11 +68,11 @@ router.put("/", async (request, response) => {
   const subgradeNames = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
   if (difference > 0) {
     for ( ; difference > 0; difference--) {
-      await mysql.sendQuery(`INSERT INTO grades (organization, grade, subgrade, hasSubgrade) VALUES ('${user.organization}', '${grade}', '${subgradeNames[existing.length + difference - 1]}', 1)`)
+      await mysql.sendQuery(`INSERT INTO grades (organization, grade, subgrade, hasSubgrade) VALUES (${escape(user.organization)}, ${escape(grade)}, ${escape(subgradeNames[existing.length + difference - 1])}, 1)`)
     }
   } else if (difference < 0) {
     for ( ; difference < 0; difference++) {
-      const deletion = await mysql.sendQuery(`DELETE FROM grades WHERE organization = '${user.organization}' AND grade = '${grade}' AND subgrade = '${subgradeNames[existing.length + difference]}'`)
+      const deletion = await mysql.sendQuery(`DELETE FROM grades WHERE organization = ${escape(user.organization)} AND grade = ${escape(grade)} AND subgrade = ${escape(subgradeNames[existing.length + difference])}`)
       if (deletion === false) return response.status(401).json({ message: 'subgrade is not empty' })
     }
   }
@@ -86,10 +87,10 @@ router.delete("/", async (request, response) => {
   var { grade } = request.body
   grade = grade.toLowerCase()
 
-  const existing = await mysql.sendQuery(`SELECT * FROM grades WHERE organization = '${user.organization}' AND grade = '${grade}'`)
+  const existing = await mysql.sendQuery(`SELECT * FROM grades WHERE organization = ${escape(user.organization)} AND grade = ${escape(grade)}`)
   if (existing.length === 0) return response.status(401).json({ message: 'grade does not exist' })
   
-  const deletion = await mysql.sendQuery(`DELETE FROM grades WHERE organization = '${user.organization}' AND grade = '${grade}'`)
+  const deletion = await mysql.sendQuery(`DELETE FROM grades WHERE organization = ${escape(user.organization)} AND grade = ${escape(grade)}`)
   if (deletion === false) return response.status(401).json({ message: 'grade is not empty' })
   
   return response.status(200).json({ message: 'success' })

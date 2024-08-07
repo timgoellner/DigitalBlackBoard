@@ -1,17 +1,11 @@
 .settings-component {
-  display: flex;
-  justify-content: center;
-  width: 60dvw;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-left: 15dvw;
+  width: 50dvw;
   margin-top: 15dvh;
-  gap: 8rem;
 
-  .lists {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-  }
-
-  .lists > div {
+  > div:not(.danger-zone) {
     .search {
       border: 1px solid var(--lightgray);
       border-bottom: 3px solid var(--blue);
@@ -134,7 +128,9 @@
 
     .submit {
       display: flex;
-      justify-content: center;
+      position: relative;
+      flex-direction: column;
+      align-items: center;
       margin-bottom: 2rem;
 
       > button {
@@ -146,6 +142,12 @@
 
       > button:hover {
         background-color: var(--darkblue);
+      }
+
+      > p {
+        position: absolute;
+        bottom: -1.1rem;
+        color: var(--darkgreen);
       }
     }
 

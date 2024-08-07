@@ -1,6 +1,7 @@
 const jwt =  require('jsonwebtoken')
 const bcypt =  require('bcrypt')
 const express = require('express')
+const escape = require("mysql2").escape
 
 const mysql = require("../helpers/mysql");
 const validateUser = require("../helpers/validateUser")
@@ -20,7 +21,7 @@ router.post("/", async (request, response) => {
     return response.status(401).json({ message: 'invalid login credentials' })
   }
 
-  const userData = await mysql.sendQuery(`SELECT password, isStaff FROM accounts WHERE organization = '${organization}' AND identifier = '${identifier}'`)
+  const userData = await mysql.sendQuery(`SELECT password, isStaff FROM accounts WHERE organization = ${escape(organization)} AND identifier = ${escape(identifier)}`)
 
   if (!userData.length) {
     return response.status(401).json({ message: 'invalid login credentials' })
@@ -33,6 +34,12 @@ router.post("/", async (request, response) => {
   if (isStaff && !await bcypt.compare(password, userData[0].password)) {
     return response.status(401).json({ message: 'invalid login credentials' })
   }
+
+  const organisationData = await mysql.sendQuery(`SELECT * FROM organizations WHERE name = ${escape(organization)}`)
+  if (organisationData[0].quarantine === 1 && !isStaff) {
+    return response.status(401).json({ message: 'organization currently blocks logins' })
+  }
+
   const data = {
     signInTime: Date.now(),
     organization,

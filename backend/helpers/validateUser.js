@@ -1,4 +1,4 @@
-const jwt =  require('jsonwebtoken')
+const jwt = require('jsonwebtoken')
 
 function validateUser(request) {
   const jwtSecretKey = process.env.JWT_SECRET

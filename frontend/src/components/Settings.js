@@ -13,6 +13,7 @@ function Settings() {
   const [identifier, setIndentifier] = useState('')
   const [news, setNews] = useState('')
   const [quarantine, setQuarantine] = useState(false)
+  const [response, setResponse] = useState('')
 
   const [subjects, setSubjects] = useState([])
   const [subject, setSubject] = useState('')
@@ -97,7 +98,7 @@ function Settings() {
 
   useEffect(roomsRequest, [room])
 
-  const request = () => {
+  const request = async () => {
     fetch(`http://localhost:100/dashboard/organizations`, {
       method: 'PUT',
       headers: {
@@ -106,6 +107,8 @@ function Settings() {
       },
       body: JSON.stringify({ news, quarantine }),
     })
+      .then((response) => response.json())
+      .then((data) => { setResponse(data.message) })
   }
 
   async function handleKeyRoom(e) {
@@ -171,75 +174,6 @@ function Settings() {
 
   return(
     <div className='settings-component'>
-      <div className='lists'>
-        <div className='accounts-zone'>
-          <p>Staff Accounts</p>
-          <div className='search'>
-            <input
-              value={identifier}
-              type="text"
-              placeholder='Identifier'
-              onChange={(e) => setIndentifier(e.target.value)}
-            />
-            <table className='list'>
-              {accounts}
-            </table>
-          </div>
-          <div className='actions'>
-            <AccountsPopup type={'new'} refresh={refresh}/>
-          </div>
-        </div>
-        <div className='subjects-zone'>
-          <p>Subjects</p>
-          <div className='search'>
-            <input
-              value={subject}
-              type="text"
-              placeholder='Subject'
-              onChange={(e) => setSubject(e.target.value)}
-            />
-            <table className='list'>
-              {subjects.map((subject) => (
-                <tr value={subject} className='small-element'>
-                  <p>{subject}</p>
-                  <a href onClick={() => deleteSubject(subject)}><IoMdClose /></a>
-                </tr>
-              ))}
-            </table>
-          </div>
-          <input
-            value={currentSubject}
-            type="text"
-            onChange={(e) => setCurrentSubject(e.target.value)}
-            onKeyUp={(e) => handleKeySubject(e)}
-          />
-        </div>
-        <div className='rooms-zone'>
-          <p>Rooms</p>
-          <div className='search'>
-            <input
-              value={room}
-              type="text"
-              placeholder='Room'
-              onChange={(e) => setRoom(e.target.value)}
-            />
-            <table className='list'>
-              {rooms.map((room) => (
-                <tr value={room} className='small-element'>
-                  <p>{room}</p>
-                  <a href onClick={() => deleteRoom(room)}><IoMdClose /></a>
-                </tr>
-              ))}
-            </table>
-          </div>
-          <input
-            value={currentRoom}
-            type="text"
-            onChange={(e) => setCurrentRoom(e.target.value)}
-            onKeyUp={(e) => handleKeyRoom(e)}
-          />
-        </div>
-      </div>
       <div className='danger-zone'>
         <p>Global Actions</p>
         <div className='settings'>
@@ -260,13 +194,86 @@ function Settings() {
             </div>
           </div>
           <div className='submit'>
-            <button onClick={request}>Save</button>
+            <button onClick={() => {
+              request()
+              setTimeout(() => {
+                  setResponse('')
+              }, 3000);
+            }}>Save</button>
+            <p className='response'>{response}</p>
           </div>
         </div>
         <div className='delete'>
           <p>Delete Organization</p>
           <DeletePopup />
         </div>
+      </div>
+      <div className='accounts-zone'>
+        <p>Staff Accounts</p>
+        <div className='search'>
+          <input
+            value={identifier}
+            type="text"
+            placeholder='Identifier'
+            onChange={(e) => setIndentifier(e.target.value)}
+          />
+          <table className='list'>
+            {accounts}
+          </table>
+        </div>
+        <div className='actions'>
+          <AccountsPopup type={'new'} refresh={refresh}/>
+        </div>
+      </div>
+      <div className='subjects-zone'>
+        <p>Subjects</p>
+        <div className='search'>
+          <input
+            value={subject}
+            type="text"
+            placeholder='Subject'
+            onChange={(e) => setSubject(e.target.value)}
+          />
+          <table className='list'>
+            {subjects.map((subject) => (
+              <tr value={subject} className='small-element'>
+                <p>{subject}</p>
+                <a href onClick={() => deleteSubject(subject)}><IoMdClose /></a>
+              </tr>
+            ))}
+          </table>
+        </div>
+        <input
+          value={currentSubject}
+          type="text"
+          onChange={(e) => setCurrentSubject(e.target.value)}
+          onKeyUp={(e) => handleKeySubject(e)}
+        />
+      </div>
+      <div className='rooms-zone'>
+        <p>Rooms</p>
+        <div className='search'>
+          <input
+            value={room}
+            type="text"
+            placeholder='Room'
+            onChange={(e) => setRoom(e.target.value)}
+          />
+          <table className='list'>
+            {rooms.map((room) => (
+              <tr value={room} className='small-element'>
+                <p>{room}</p>
+                <a href onClick={() => deleteRoom(room)}><IoMdClose /></a>
+              </tr>
+            ))}
+          </table>
+        </div>
+        <input
+          value={currentRoom}
+          type="text"
+          onChange={(e) => setCurrentRoom(e.target.value)}
+          onKeyUp={(e) => handleKeyRoom(e)}
+        />
       </div>
     </div>
   )

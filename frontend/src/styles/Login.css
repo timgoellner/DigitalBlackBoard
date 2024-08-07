@@ -100,7 +100,8 @@
   }
   
   form:first-child error {
-    bottom: 1.5rem;
+    top: 12.5rem;
+    white-space: wrap;
   }
   
   button {

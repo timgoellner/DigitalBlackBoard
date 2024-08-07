@@ -1,6 +1,7 @@
 const jwt =  require('jsonwebtoken')
 const bcypt =  require('bcrypt')
 const express = require('express')
+const escape = require("mysql2").escape
 
 const mysql =  require("../helpers/mysql");
 
@@ -16,13 +17,13 @@ router.post("/", async (request, response) => {
     return response.status(401).json({ message: 'invalid credentials' })
   }
 
-  const alreadyExists = await mysql.sendQuery(`SELECT COUNT(*) AS count FROM accounts WHERE organization = '${organization}'`)
+  const alreadyExists = await mysql.sendQuery(`SELECT COUNT(*) AS count FROM accounts WHERE organization = ${escape(organization)}`)
   if (alreadyExists[0].count > 0) return response.status(401).json({ message: 'organisation already exists' })
 
-  await mysql.sendQuery(`INSERT INTO organizations (name, quarantine) VALUES ('${organization}', 0)`)
+  await mysql.sendQuery(`INSERT INTO organizations (name, quarantine) VALUES (${escape(organization)}, 0)`)
 
   password = await bcypt.hash(password, 10)
-  await mysql.sendQuery(`INSERT INTO accounts (organization, identifier, password, isStaff) VALUES ('${organization}', '${identifier}', '${password}', 1)`)
+  await mysql.sendQuery(`INSERT INTO accounts (organization, identifier, password, isStaff) VALUES (${escape(organization)}, ${escape(identifier)}, ${escape(password)}, 1)`)
 
   const data = {
     signInTime: Date.now(),
