@@ -20,7 +20,7 @@ import Settings from '../components/Settings';
 function Dashboard() {
   const [page, setPage] = useState(0)
 
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   function logout() {
     localStorage.removeItem('jwt-token')
@@ -40,7 +40,7 @@ function Dashboard() {
   const user = useLoaderData()
 
   return (
-    <main className='dashboard'>
+    <div className='dashboard'>
       <div className='controll-section'>
         <div>
           <span>
@@ -82,7 +82,7 @@ function Dashboard() {
         (page === 5 && <Changes />) ||
         (page === 6 && <Settings />)
       }
-    </main>
+    </div>
   )
 }
 

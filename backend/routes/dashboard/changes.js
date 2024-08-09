@@ -56,6 +56,9 @@ router.post("/", async (request, response) => {
   const class_ = await mysql.sendQuery(`SELECT * FROM classes WHERE organization = ${escape(user.organization)} AND id = ${escape(changeClass)}`)
   if (class_.length === 0) return response.status(401).json({ message: 'class does not exist' })
 
+  const change = await mysql.sendQuery(`SELECT * FROM changes WHERE organization = ${escape(user.organization)} AND class = ${escape(changeClass)}`)
+  if (change.length > 0) return response.status(401).json({ message: 'class already has a change' })
+
   if (!types.some(type => type === changeType)) return response.status(401).json({ message: 'invalid type' })
 
   const changeId = JSON.parse(JSON.stringify(await mysql.sendQuery(`INSERT INTO changes (organization, type, class) VALUES (${escape(user.organization)}, ${escape(changeType)}, ${escape(class_[0].id)})`))).insertId

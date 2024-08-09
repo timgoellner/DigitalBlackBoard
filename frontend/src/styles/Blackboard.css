@@ -1,0 +1,32 @@
+.blackboard {
+  margin: .5rem;
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  p {
+    font-size: .9rem;
+    margin: 0;
+  }
+
+  h1 {
+    font-size: 1.3rem;
+    margin: 0;
+  }
+
+  button {
+    border: 2px solid var(--blue);
+    border-radius: .3rem;
+    background-color: white;
+    color: var(--blue);
+    padding: .1rem .3rem;
+  }
+  
+  button:hover {
+    cursor: pointer;
+    background-color: var(--darkblue);
+  }
+}
