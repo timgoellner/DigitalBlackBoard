@@ -1,10 +1,9 @@
-.blackboard {
-  margin: .5rem;
-
+.blackboard-page {
   header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin: .5rem;
   }
 
   p {
@@ -28,5 +27,115 @@
   button:hover {
     cursor: pointer;
     background-color: var(--darkblue);
+  }
+
+  .content {
+    width: 100dvw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 7dvh;
+
+    .buttons {
+      display: flex;
+      position: relative;
+      gap: 2rem;
+
+      button {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 3rem;
+        height: 3rem;
+        background-color: var(--white);
+        border-radius: 50%;
+        border: 2px solid var(--blue);
+
+        svg {
+          color: var(--blue);
+          width: 100%;
+          height: 100%;
+          transform: translate(.1rem);
+        }
+      }
+
+      button:first-child > svg {
+        transform: translate(-.1rem);
+      }
+    }
+
+    > div:last-child {
+      position: relative;
+      overflow: hidden;
+      width: 100dvw;
+      height: 70dvh;
+      margin-top: 2dvh;
+      box-sizing: border-box;
+    }
+
+    .blackboard {
+      display: flex;
+      position: absolute;
+      left: 0;
+      overflow: hidden;
+      height: 70dvh;
+      
+      .weekday {
+        width: 100dvw;
+        height: 70dvh;
+        display: flex;
+        position: relative;
+        flex-direction: column;
+        align-items: center;
+
+        > p {
+          text-transform: capitalize;
+          font-size: .95rem;
+          margin-bottom: 1.5rem;
+        }
+
+        > div {
+          width: 100dvw;
+          height: 70dvh;
+          display: flex;
+          position: relative;
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .element {
+          display: flex;
+          flex-direction: column;
+          position: absolute;
+          border-radius: .3rem;
+          border: 1px solid var(--lightgray);
+          width: 50%;
+        }
+
+        .timelines {
+          position: absolute;
+          width: 100dvw;
+          height: 70dvh;
+          left: 1rem;
+
+          .timeline > span {
+            display: flex;
+            justify-content: space-between;
+            margin-right: 10dvw;
+
+            div {
+              height: 1px;
+              width: 92%;
+              background-color: var(--lightlightgray);
+            }
+
+            p {
+              transform: translateY(-.5rem);
+            }
+          }
+        }
+      }
+    }
   }
 }
