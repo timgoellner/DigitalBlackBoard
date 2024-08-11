@@ -52,18 +52,14 @@
     background-color: var(--blue);
   
     transition: all 1s ease-in-out;
-  }
-  
-  .switch::after {
-    content: '';
-    position: absolute;
-    width: 1rem;
-    height: 1rem;
-    border-bottom: 5px solid white;
-    border-right: 5px solid white;
-    transform: rotate(-45deg);
-    margin-top: .85rem;
-    margin-left: .55rem;
+
+    svg {
+      position: absolute;
+      width: 3rem;
+      height: 3rem;
+      color: white;
+      margin-left: .2rem;
+    }
   }
   
   .switch.clicked {

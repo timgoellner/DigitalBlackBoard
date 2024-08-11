@@ -4,17 +4,35 @@
   --blue: #2b4b6f;
   --darkblue: #153253;
   --lightblue: #2f5f965f;
+  --cyan: #226666;
+  --darkcyan: #003333;
+  --lightcyan: #22666650;
   --orange: #be6217;
   --darkorange: #ae5105;
-  --lightorange: #be621752;
+  --lightorange: #be621750;
   --green: #37962d;
   --darkgreen: #1d7614;
   --lightgreen: #37962de4;
   --red: #a11d1d;
   --darkred: #790404;
+  --lightred: #a11d1d50;
   --gray: #6e6e6e;
   --lightgray: #aaa8a8;
   --lightlightgray: #aaa8a82f;
+}
+
+::-webkit-scrollbar {
+  width: 3px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(155, 155, 155, 0.5);
+  border-radius: 20px;
+  border: transparent;
 }
 
 body {

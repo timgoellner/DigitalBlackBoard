@@ -40,7 +40,7 @@ router.get("/", async (request, response) => {
 
   const teachers = await mysql.sendQuery(`SELECT id, forename, lastname FROM teachers WHERE teachers.organization = ${escape(user.organization)} ORDER BY forename, lastname`)
   const grades = await mysql.sendQuery(`SELECT id, grade, subgrade FROM grades WHERE grades.organization = ${escape(user.organization)} ORDER BY grade, subgrade`)
-  const classes = await mysql.sendQuery(`SELECT classes.id, name, grades.id gradeId, grades.grade, grades.subgrade FROM classes LEFT JOIN grades ON classes.grade = grades.id WHERE classes.organization = ${escape(user.organization)} ORDER BY grade, subgrade`)
+  const classes = await mysql.sendQuery(`SELECT classes.id, name, weekday, grades.id gradeId, grades.grade, grades.subgrade FROM classes LEFT JOIN grades ON classes.grade = grades.id WHERE classes.organization = ${escape(user.organization)} ORDER BY grade, subgrade`)
 
   return response.status(200).json({ message: 'success', changes, teachers, grades, classes })
 })

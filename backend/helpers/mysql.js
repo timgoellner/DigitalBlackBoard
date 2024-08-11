@@ -7,7 +7,7 @@ DATABASE TABLE SETUP
     - id (int [pk, nn, uq, ai])
     - name (varchar(45) [nn])
     - quarantine (boolean [nn])
-    - news (varchar(100))
+    - news (varchar(150))
 
  * accounts
     - id (int [pk, nn, uq, ai])

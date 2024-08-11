@@ -1,8 +1,11 @@
 import { useNavigate, useLoaderData } from 'react-router-dom';
 import { useState, useMemo } from 'react';
 
-import { IoIosArrowForward } from "react-icons/io";
-import { IoIosArrowBack } from "react-icons/io";
+import { IoIosArrowForward, IoIosArrowBack } from "react-icons/io";
+import { PiChalkboardTeacherFill } from "react-icons/pi";
+import { FaPeopleLine, FaCircleInfo  } from "react-icons/fa6";
+import { BiSolidBookBookmark } from "react-icons/bi";
+import { MdMeetingRoom } from "react-icons/md";
 
 import "../styles/Blackboard.css"
 
@@ -10,6 +13,7 @@ function Blackboard() {
   const [blackboard, setBlackboard] = useState([[], [], [], [], [], [], []])
   const [student, setStudent] = useState()
   const [timelines, setTimelines] = useState([])
+  const [news, setNews] = useState('')
 
   const navigate = useNavigate()
   const user = useLoaderData()
@@ -32,12 +36,35 @@ function Blackboard() {
 
           blackboardHtml[index] = [
             ...blackboardHtml[index],
-            <div className='element' style={{ height: `${((element.endTime - element.startTime) / (data.latest - data.earliest)) * 65}dvh`, top: `${((element.startTime - data.earliest) / (data.latest - data.earliest)) * 65}dvh` }}>
-              <p>{String((element.startTime / 60) | 0).padStart(2, '0')}:{String(element.startTime % 60).padStart(2, '0')}</p>
-              <div className='data'>
-                <p>{element.name}</p>
+            <div className={'element ' + ((element.changeType !== null) ? element.changeType : '')} style={{ height: `${((element.endTime - element.startTime) / (data.latest - data.earliest)) * 65}dvh`, top: `${((element.startTime - data.earliest) / (data.latest - data.earliest)) * 65}dvh` }}>
+              <div className='element-time'>
+                <p>{String((element.startTime / 60) | 0).padStart(2, '0')}:{String(element.startTime % 60).padStart(2, '0')}</p>
+                <p>{String((element.endTime / 60) | 0).padStart(2, '0')}:{String(element.endTime % 60).padStart(2, '0')}</p>
               </div>
-              <p>{String((element.endTime / 60) | 0).padStart(2, '0')}:{String(element.endTime % 60).padStart(2, '0')}</p>
+              <div className='data'>
+                <span>
+                  <FaPeopleLine />
+                  <p>{element.name}</p>
+                </span>
+                {(element.changeInformation) && (
+                  <span>
+                    <FaCircleInfo />
+                    <p className='info'>{element.changeInformation}</p>
+                  </span>
+                )}
+                <span>
+                  <PiChalkboardTeacherFill />
+                  {(element.changeTeacherForename) ? <p className='change'>{element.changeTeacherForename} {element.changeTeacherLastname}</p> : <p>{element.teacherForename} {element.teacherLastname}</p>}
+                </span>
+                <span>
+                  <BiSolidBookBookmark />
+                  {(element.changeSubject) ? <p className='change'>{element.changeSubject}</p> : <p>{element.subject}</p>}
+                </span>
+                <span>
+                  <MdMeetingRoom />
+                  {(element.changeRoom) ? <p className='change'>{element.changeRoom}</p> : <p>{element.room}</p>}
+                </span>
+              </div>
             </div>
           ]
         })
@@ -60,6 +87,7 @@ function Blackboard() {
         setBlackboard(blackboardHtml)
         setStudent(data.student)
         setTimelines(timelinesHtml)
+        setNews(data.news)
       })
   }
 
@@ -86,9 +114,18 @@ function Blackboard() {
       <div className='blackboard-page'>
         <header>
           <p>{user.organization}<br />{student?.forename} {student?.lastname}</p>
-          <h1>Blackboard</h1>
+          <span>
+            <p>Digital</p>
+            <p>Black</p>
+            <p>Board</p>
+          </span>
           <button onClick={() => logout()}>Logout</button>
         </header>
+        <div className='news'>
+          {news && 
+            <p>{news}</p>
+          }
+        </div>
         <main className='content'>
           <div className='buttons'>
             <button onClick={() => shiftWeekday('left')}><IoIosArrowBack /></button>

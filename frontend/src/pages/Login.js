@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 
+import { IoIosArrowForward } from "react-icons/io";
+
 import "../styles/Login.css"
 
 function Login() {
@@ -58,7 +60,9 @@ function Login() {
         <p>Board</p>
         <h1>Login</h1>
       </div>
-      <div className='switch' onClick={(event) => { toggleLogin(event) }}></div>
+      <div className='switch' onClick={(event) => { toggleLogin(event) }}>
+        <IoIosArrowForward />
+      </div>
       <div className='forms'>
         <form onSubmit={(event) => {
           isStaff = false

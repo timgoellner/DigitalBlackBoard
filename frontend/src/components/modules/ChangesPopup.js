@@ -86,7 +86,7 @@ function ChangesPopup({ type, refresh, change, teachers, classes, grades }) {
         ? [<option key="blank" value="">Select a class</option>,
           ...filteredClasses.map(class_ => (
             <option key={class_.id} value={class_.id}>
-              {class_.name}
+              {class_.name}  |  {class_.weekday}
             </option>
           ))]
         : [<option key="no-classes" value="">{(classGrade === '') ? 'Select a grade to choose classes' : 'No classes available'}</option>]
