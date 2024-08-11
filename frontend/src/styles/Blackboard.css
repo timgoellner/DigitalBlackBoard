@@ -69,7 +69,7 @@
       position: relative;
       overflow: hidden;
       width: 100dvw;
-      height: 70dvh;
+      height: 75dvh;
       margin-top: 2dvh;
       box-sizing: border-box;
     }
@@ -79,11 +79,12 @@
       position: absolute;
       left: 0;
       overflow: hidden;
-      height: 70dvh;
+      height: 75dvh;
+      transition: .8s;
       
       .weekday {
         width: 100dvw;
-        height: 70dvh;
+        height: 75dvh;
         display: flex;
         position: relative;
         flex-direction: column;
@@ -97,7 +98,7 @@
 
         > div {
           width: 100dvw;
-          height: 70dvh;
+          height: 75dvh;
           display: flex;
           position: relative;
           flex-direction: column;
@@ -116,7 +117,7 @@
         .timelines {
           position: absolute;
           width: 100dvw;
-          height: 70dvh;
+          height: 75dvh;
           left: 1rem;
 
           .timeline > span {
@@ -136,6 +137,10 @@
           }
         }
       }
+    }
+
+    .blackboard.weekday-1 {
+      transform: translateX(-100dvw);
     }
   }
 }

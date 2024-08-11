@@ -16,6 +16,7 @@ function Blackboard() {
   const token = localStorage.getItem('jwt-token')
 
   const weekdays = { "monday": 1, "tuesday": 2, "wednesday": 3, "thursday": 4, "friday": 5, "saturday": 6, "sunday": 7 }
+  var currentWeekday = 0
 
   const refresh = () => {
     fetch(`http://localhost:100/blackboard/${user.organization}/${user.identifier}`, { headers: { 'jwt-token': token } })
@@ -31,7 +32,7 @@ function Blackboard() {
 
           blackboardHtml[index] = [
             ...blackboardHtml[index],
-            <div className='element' style={{ height: `${((element.endTime - element.startTime) / (data.latest - data.earliest)) * 70}dvh`, top: `${((element.startTime - data.earliest) / (data.latest - data.earliest)) * 70}dvh` }}>
+            <div className='element' style={{ height: `${((element.endTime - element.startTime) / (data.latest - data.earliest)) * 65}dvh`, top: `${((element.startTime - data.earliest) / (data.latest - data.earliest)) * 65}dvh` }}>
               <p>{String((element.startTime / 60) | 0).padStart(2, '0')}:{String(element.startTime % 60).padStart(2, '0')}</p>
               <div className='data'>
                 <p>{element.name}</p>
@@ -43,10 +44,11 @@ function Blackboard() {
 
         var timelinesHtml = []
         const timelinesCount = ((data.latest / 60) | 0) - ((data.earliest / 60) | 0)
-        const topOffset = (1 - (data.earliest / 60 % 1))
+        const topOffset = 1 - (data.earliest / 60 % 1)
+        const hour = 65 / ((data.latest - data.earliest) / 60)
         for (var i = 1; i <= timelinesCount; i++) {
           timelinesHtml.push(
-            <div className='timeline' style={{ height: `${70/timelinesCount}dvh`, marginTop: `${(i === 1) ? ((70/timelinesCount) * topOffset) : 0}dvh`}}>
+            <div className='timeline' style={{ height: `${hour}dvh`, marginTop: `${(i === 1) ? (hour * topOffset) : 0}dvh`}}>
               <span>
                 <p>{parseInt((data.earliest / 60) | 0) + i}</p>
                 <div></div>
@@ -68,6 +70,17 @@ function Blackboard() {
     navigate('/login')
   }
 
+  function shiftWeekday(direction) {
+    const activeWeekdays = blackboard.filter(weekday => weekday.length > 0).length
+    const newWeekday = (direction === 'right') ? (currentWeekday + 1) : (currentWeekday - 1)
+
+    if (activeWeekdays <= newWeekday || newWeekday < 0) return
+
+    document.getElementsByClassName('blackboard')[0].classList.remove("weekday-" + String(currentWeekday))
+    document.getElementsByClassName('blackboard')[0].classList.add("weekday-" + String(newWeekday))
+    currentWeekday = newWeekday
+  }
+
   return (
     <>
       <div className='blackboard-page'>
@@ -78,11 +91,11 @@ function Blackboard() {
         </header>
         <main className='content'>
           <div className='buttons'>
-            <button><IoIosArrowBack /></button>
-            <button><IoIosArrowForward /></button>
+            <button onClick={() => shiftWeekday('left')}><IoIosArrowBack /></button>
+            <button onClick={() => shiftWeekday('right')}><IoIosArrowForward /></button>
           </div>
           <div>
-            <div className='blackboard'>
+            <div className='blackboard weekday-0'>
               {blackboard.map((weekday, index) => {
                 return ((weekday.length > 0) && (
                   <div className='weekday'>
