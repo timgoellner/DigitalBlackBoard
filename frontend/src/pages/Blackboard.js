@@ -23,7 +23,7 @@ function Blackboard() {
   var currentWeekday = 0
 
   const refresh = () => {
-    fetch(`http://localhost:100/blackboard/${user.organization}/${user.identifier}`, { headers: { 'jwt-token': token } })
+    fetch(`http://localhost:5001/blackboard/${user.organization}/${user.identifier}`, { headers: { 'jwt-token': token } })
       .then((response) => response.json())
       .then((data) => {
         if (data.message !== 'success') navigate('/login')

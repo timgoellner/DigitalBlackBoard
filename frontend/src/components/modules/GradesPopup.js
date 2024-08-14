@@ -38,7 +38,7 @@ function GradesPopup({ type, refresh, gradeData }) {
   function request(method) {
     const token = localStorage.getItem('jwt-token')
 
-    fetch(`http://localhost:100/dashboard/grades`, {
+    fetch(`http://localhost:5001/dashboard/grades`, {
       method: method,
       headers: {
         'content-type': 'application/json',

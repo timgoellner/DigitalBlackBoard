@@ -38,7 +38,7 @@ services:
       MYSQL_DATABASE: dbb
       MYSQL_PASSWORD: 
     ports:
-      - 100:100
+      - 5001:5001
     volumes:
       - ./backend:/backend
 
@@ -46,7 +46,7 @@ services:
     build: 
       context: ./frontend
     ports:
-      - 3000:80
+      - 3001:80
     volumes:
       - ./frontend:/frontend
 

@@ -3,7 +3,7 @@ async function validateUser() {
   if (!token) return false;
 
   return new Promise((resolve, reject) => {
-    fetch('http://localhost:100/login', {
+    fetch('http://localhost:5001/login', {
       headers: {
         'jwt-token': token,
       },

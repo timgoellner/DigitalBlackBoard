@@ -20,7 +20,7 @@ function Login() {
     event.preventDefault()
 
     const userType = (isStaff) ? ('staff') : ('user')
-    fetch(`http://localhost:100/login?type=${userType}`, {
+    fetch(`http://localhost:5001/login?type=${userType}`, {
       method: 'POST',
       headers: {
         'content-type': 'application/json',

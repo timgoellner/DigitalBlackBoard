@@ -15,7 +15,7 @@ function Register() {
   function submitUser(event) {
     event.preventDefault()
 
-    fetch(`http://localhost:100/register`, {
+    fetch(`http://localhost:5001/register`, {
       method: 'POST',
       headers: {
         'content-type': 'application/json',

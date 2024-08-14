@@ -33,7 +33,7 @@ function AccountsPopup({ type, refresh, account }) {
   function request(method) {
     const token = localStorage.getItem('jwt-token')
 
-    fetch(`http://localhost:100/dashboard/accounts`, {
+    fetch(`http://localhost:5001/dashboard/accounts`, {
       method: method,
       headers: {
         'content-type': 'application/json',

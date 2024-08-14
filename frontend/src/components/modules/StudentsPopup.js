@@ -32,7 +32,7 @@ function StudentsPopup({ type, refresh, student }) {
   function request(method) {
     const token = localStorage.getItem('jwt-token')
 
-    fetch(`http://localhost:100/dashboard/students`, {
+    fetch(`http://localhost:5001/dashboard/students`, {
       method: method,
       headers: {
         'content-type': 'application/json',

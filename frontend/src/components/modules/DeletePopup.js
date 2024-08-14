@@ -18,7 +18,7 @@ function DeletePopup() {
   function request() {
     const token = localStorage.getItem('jwt-token')
 
-    fetch(`http://localhost:100/dashboard/organizations`, {
+    fetch(`http://localhost:5001/dashboard/organizations`, {
       method: 'DELETE',
       headers: {
         'content-type': 'application/json',

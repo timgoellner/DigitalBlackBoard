@@ -48,7 +48,7 @@ function TeachersPopup({ type, refresh, teacher }) {
       return
     }
 
-    fetch(`http://localhost:100/dashboard/teachers`, {
+    fetch(`http://localhost:5001/dashboard/teachers`, {
       method: method,
       headers: {
         'content-type': 'application/json',

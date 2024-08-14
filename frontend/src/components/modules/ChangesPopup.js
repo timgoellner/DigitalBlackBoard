@@ -102,7 +102,7 @@ function ChangesPopup({ type, refresh, change, teachers, classes, grades }) {
   function request(method) {
     const token = localStorage.getItem('jwt-token')
 
-    fetch(`http://localhost:100/dashboard/changes`, {
+    fetch(`http://localhost:5001/dashboard/changes`, {
       method: method,
       headers: {
         'content-type': 'application/json',
