@@ -23,6 +23,10 @@
     box-sizing: border-box;
   }
 
+  input {
+    height: 2.2rem;
+  }
+
   input:focus, select:focus {
     border-color: var(--blue);
     outline: none;
@@ -46,12 +50,12 @@
     }
 
     .time {
-      div:not(:first-child) {
-        width: 22.5%;
+      div:nth-child(1) {
+        min-width: 11.5rem;
       }
 
-      div:first-child {
-        width: 50%;
+      div:nth-child(2) {
+        min-width: 6rem;
       }
     }
 

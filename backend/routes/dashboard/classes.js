@@ -72,6 +72,9 @@ router.post("/", async (request, response) => {
     classDuration == 0
   ) return response.status(401).json({ message: 'invalid parameters' })
 
+  const starttimeSplit = classStarttime.split(":")
+  if ((parseInt(starttimeSplit[0]*60) + parseInt(starttimeSplit[1]) + parseInt(classDuration)) > 1440) return response.status(401).json({ message: 'class duration extends 24 hours' })
+
   const teacher = await mysql.sendQuery(`SELECT * FROM teachers WHERE organization = ${escape(user.organization)} AND id = ${escape(classTeacher)}`)
   if (teacher.length === 0) return response.status(401).json({ message: 'teacher does not exist' })
 
@@ -109,6 +112,9 @@ router.put("/", async (request, response) => {
     !/^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/.test(classStarttime) ||
     classDuration == 0
   ) return response.status(401).json({ message: 'invalid parameters' })
+
+  const starttimeSplit = classStarttime.split(":")
+  if ((parseInt(starttimeSplit[0]*60) + parseInt(starttimeSplit[1]) + parseInt(classDuration)) > 1440) return response.status(401).json({ message: 'class duration extends 24 hours' })
 
   const existing = await mysql.sendQuery(`SELECT * FROM classes WHERE organization = ${escape(user.organization)} AND id = ${escape(classId)}`)
   if (existing.length === 0) return response.status(401).json({ message: 'class does not exist' })
