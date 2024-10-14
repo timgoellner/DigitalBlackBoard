@@ -15,7 +15,7 @@ function Register() {
   function submitUser(event) {
     event.preventDefault()
 
-    fetch(`http://localhost:5001/register`, {
+    fetch(`https://dbb.timgöllner.de/api/register`, {
       method: 'POST',
       headers: {
         'content-type': 'application/json',

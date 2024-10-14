@@ -59,7 +59,7 @@
   
   button:hover {
     cursor: pointer;
-    background-color: var(--darkblue);
+    background-color: var(--lightblue);
   }
 
   .content {
@@ -91,6 +91,10 @@
           height: 100%;
           transform: translate(.1rem);
         }
+      }
+
+      button:hover {
+        background-color: var(--lightblue);
       }
 
       button:first-child > svg {

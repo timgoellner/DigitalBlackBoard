@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 
+import axios from 'axios'
+
 import { IoIosArrowForward } from "react-icons/io";
 
 import "../styles/Login.css"
@@ -20,7 +22,8 @@ function Login() {
     event.preventDefault()
 
     const userType = (isStaff) ? ('staff') : ('user')
-    fetch(`http://localhost:5001/login?type=${userType}`, {
+
+    fetch(`https://dbb.timgöllner.de/api/login?type=${userType}`, {
       method: 'POST',
       headers: {
         'content-type': 'application/json',

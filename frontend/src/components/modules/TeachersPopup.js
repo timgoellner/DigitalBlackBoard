@@ -48,7 +48,7 @@ function TeachersPopup({ type, refresh, teacher }) {
       return
     }
 
-    fetch(`http://localhost:5001/dashboard/teachers`, {
+    fetch(`https://dbb.timgöllner.de/api/dashboard/teachers`, {
       method: method,
       headers: {
         'content-type': 'application/json',

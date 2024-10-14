@@ -32,7 +32,7 @@ function StudentsPopup({ type, refresh, student }) {
   function request(method) {
     const token = localStorage.getItem('jwt-token')
 
-    fetch(`http://localhost:5001/dashboard/students`, {
+    fetch(`https://dbb.timgöllner.de/api/dashboard/students`, {
       method: method,
       headers: {
         'content-type': 'application/json',

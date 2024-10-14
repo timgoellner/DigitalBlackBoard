@@ -52,16 +52,15 @@ function Dashboard() {
         </div>
         <div className='bars'>
           <div className='bar'>
-            <div onClick={() => selectPage(0)} className='selected'><FaSchool /> Home</div>
-            <div onClick={() => selectPage(1)}><IoLayers /> Grades</div>
-            <div onClick={() => selectPage(2)}><PiChalkboardTeacherFill /> Teachers</div>
-            <div onClick={() => selectPage(3)}><PiStudentFill /> Students</div>
-            <div onClick={() => selectPage(4)}><FaPeopleLine /> Classes</div>
+            <div onClick={() => selectPage(0)} className='selected'><IoLayers /> Grades</div>
+            <div onClick={() => selectPage(1)}><PiChalkboardTeacherFill /> Teachers</div>
+            <div onClick={() => selectPage(2)}><PiStudentFill /> Students</div>
+            <div onClick={() => selectPage(3)}><FaPeopleLine /> Classes</div>
           </div>
           <hr />
           <div className='bar'>
-            <div onClick={() => selectPage(5)}><FaExclamationTriangle /> Changes</div>
-            <div onClick={() => selectPage(6)}><IoSettingsSharp /> Settings</div>
+            <div onClick={() => selectPage(4)}><FaExclamationTriangle /> Changes</div>
+            <div onClick={() => selectPage(5)}><IoSettingsSharp /> Settings</div>
           </div>
           <hr />
           <div className='bar'>
@@ -74,13 +73,12 @@ function Dashboard() {
       </div>
 
       {
-        (page === 0 && <Home />) ||
-        (page === 1 && <Grades />) ||
-        (page === 2 && <Teachers />) ||
-        (page === 3 && <Students />) ||
-        (page === 4 && <Classes />) ||
-        (page === 5 && <Changes />) ||
-        (page === 6 && <Settings />)
+        (page === 0 && <Grades />) ||
+        (page === 1 && <Teachers />) ||
+        (page === 2 && <Students />) ||
+        (page === 3 && <Classes />) ||
+        (page === 4 && <Changes />) ||
+        (page === 5 && <Settings />)
       }
     </div>
   )

@@ -90,25 +90,25 @@ DATABASE TABLE SETUP
 if (process.env.NODE_ENV !== "production") { require("dotenv").config() }
 const mysql = require("mysql2")
 
-const connection = mysql.createConnection({
-    host: process.env.DATABASE_HOST,
-    user: process.env.DATABASE_USER,
-    password: process.env.DATABASE_PASSWORD,
-    database: process.env.DATABASE_NAME
+const pool = mysql.createPool({
+   host: process.env.DATABASE_HOST,
+   user: process.env.DATABASE_USER,
+   password: process.env.DATABASE_PASSWORD,
+   database: process.env.DATABASE_NAME
 })
 
 async function sendQuery(query) {
-    return new Promise(function(resolve, reject) {
-        setTimeout(function() {
-            connection.query(query, function(error, rows, fields) {
-                if (error) {
-                  console.log("[mysql] error: " + error)
-                  resolve(false)
-               }
-                resolve(rows)
-            })
-        }, 0);
-    });
+   return new Promise(function(resolve, reject) {
+      setTimeout(function() {
+         pool.query(query, (error, rows) => {
+            if (error) {
+               console.log("[mysql] error: " + error)
+               resolve(false)
+            }
+            resolve(rows)
+         })
+      }, 0);
+   });
 }
 
 module.exports = { sendQuery }
