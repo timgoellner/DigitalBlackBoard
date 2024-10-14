@@ -124,7 +124,7 @@ function Classes() {
           <div className='multi'>
             <p>Teacher</p>
             <div>
-              <p>Forename</p>
+              <p>Name</p>
               <input
                 value={classTeacherForename}
                 type="text"
@@ -132,7 +132,7 @@ function Classes() {
               />
             </div>
             <div>
-              <p>Lastname</p>
+              <p>Surname</p>
               <input
                 value={classTeacherLastname}
                 type="text"

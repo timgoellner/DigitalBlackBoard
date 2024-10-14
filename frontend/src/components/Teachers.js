@@ -64,8 +64,8 @@ function Teachers() {
     <div className='teachers-component'>
       <table className='teachers'>
         <tr>
-          <th>Forename</th>
-          <th>Lastname</th>
+          <th>Name</th>
+          <th>Surname</th>
           <th>Classes</th>
           <th>Subjects</th>
         </tr>
@@ -75,7 +75,7 @@ function Teachers() {
         <div className='sort'>
           <p>Search options</p>
           <div>
-            <p>Forename</p>
+            <p>Name</p>
             <input
               value={teacherForeame}
               type="text"
@@ -83,7 +83,7 @@ function Teachers() {
             />
           </div>
           <div>
-            <p>Lastname</p>
+            <p>Surname</p>
             <input
               value={teacherLastname}
               type="text"

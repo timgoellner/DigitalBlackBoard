@@ -128,7 +128,7 @@ function Changes() {
           <div className='multi'>
             <p>Teacher</p>
             <div>
-              <p>Forename</p>
+              <p>Name</p>
               <input
                 value={changeTeacherForename}
                 type="text"
@@ -136,7 +136,7 @@ function Changes() {
               />
             </div>
             <div>
-              <p>Lastname</p>
+              <p>Surname</p>
               <input
                 value={changeTeacherLastname}
                 type="text"

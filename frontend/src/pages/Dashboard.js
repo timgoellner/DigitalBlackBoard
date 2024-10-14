@@ -2,14 +2,13 @@ import { useNavigate, useLoaderData } from 'react-router-dom';
 import { useState } from 'react';
 
 import { PiChalkboardTeacherFill, PiStudentFill } from "react-icons/pi";
-import { FaPeopleLine, FaSchool } from "react-icons/fa6";
+import { FaPeopleLine } from "react-icons/fa6";
 import { IoLayers, IoSettingsSharp } from "react-icons/io5";
 import { FaExclamationTriangle } from "react-icons/fa";
 import { FiLogOut } from "react-icons/fi";
 
 import "../styles/Dashboard.css"
 
-import Home from '../components/Home';
 import Grades from '../components/Grades';
 import Teachers from '../components/Teachers';
 import Students from '../components/Students';

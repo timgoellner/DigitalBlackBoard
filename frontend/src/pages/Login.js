@@ -1,8 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 
-import axios from 'axios'
-
 import { IoIosArrowForward } from "react-icons/io";
 
 import "../styles/Login.css"
