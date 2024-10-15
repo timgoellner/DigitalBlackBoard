@@ -1,6 +1,6 @@
 # Digital Blackboard
 
-Simle Compiler, which compiles to x86 64-bit nasm style assembly.
+A digital blackboard for schools.<br>
 **This repository is optimized for personal use and is therefore not "plug and play ready"**
 
 Detailed information about the project can be found [here](https://timgöllner.de/posts/2).
