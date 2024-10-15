@@ -1,3 +1,4 @@
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
@@ -10,7 +11,7 @@ import "../styles/components/Students.css"
 import StudentsPopup from './modules/StudentsPopup';
 
 function Students() {
-  const [students, setStudents] = useState([])
+  const [students, setStudents] = useState<any[]>([])
   const [studentForename, setStudentForename] = useState('')
   const [studentLastname, setStudentLastname] = useState('')
   const [studentGrade, setStudentsGrade] = useState('')
@@ -19,7 +20,7 @@ function Students() {
 
   const navigate = useNavigate();
 
-  const token = localStorage.getItem('jwt-token')
+  const token = localStorage.getItem('jwt-token') as string
 
   const refresh = () => {
     fetch(`https://dbb.timgöllner.de/api/dashboard/students`, { headers: { 'jwt-token': token } })
@@ -29,8 +30,8 @@ function Students() {
 
         var studentsList = Object.keys(data.students).map(key => { return { ...data.students[key], key } })
 
-        if (order === 0) studentsList = studentsList.sort((a, b) =>  b.forename < a.forename)
-        else if (order === 1) studentsList = studentsList.sort((a, b) =>  b.grade < a.grade)
+        if (order === 0) studentsList = studentsList.sort((a, b) => (b.forename < a.forename) ? 1 : 0)
+        else if (order === 1) studentsList = studentsList.sort((a, b) => (b.grade < a.grade) ? 1 : 0)
         else if (order === 2) studentsList = studentsList.sort((a, b) => b.classes.length - a.classes.length)
 
         studentsList = studentsList.map((student) => {
@@ -45,7 +46,7 @@ function Students() {
           student.classes.sort()
 
           return (
-            <StudentsPopup key={student.id} type={'old'} refresh={refresh} student={student}/>
+            <StudentsPopup key={student.id} refresh={refresh} student={student}/>
           )
         })
 
@@ -55,7 +56,7 @@ function Students() {
   
   useEffect(refresh, [studentForename, studentLastname, studentGrade, studentSubgrade, order])
 
-  function orderStudents(schema) {
+  function orderStudents(schema: React.SetStateAction<number>) {
     const buttons = document.getElementsByClassName('order-buttons')[0].children
     for (var i = 0; i < 3; i++) {
       if (i === schema) buttons[i].classList.add('selected')
@@ -124,7 +125,7 @@ function Students() {
           </div>
         </div>
         <hr />
-        <StudentsPopup type={'new'} refresh={refresh}/>
+        <StudentsPopup refresh={refresh} student={null}/>
       </div>
     </div>
   )

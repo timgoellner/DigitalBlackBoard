@@ -1,3 +1,4 @@
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
@@ -8,9 +9,10 @@ import { PiChalkboardTeacherFill, PiStudentFill } from "react-icons/pi";
 import "../styles/components/Classes.css"
 
 import ClassesPopup from './modules/ClassesPopup';
+import { SmallStudent } from './modules/SmallTypes'
 
 function Classes() {
-  const [classes, setClasses] = useState([])
+  const [classes, setClasses] = useState<any>([])
   const [className, setClassName] = useState('')
   const [classWeekday, setClassWeekday] = useState('')
   const [classTeacherForename, setClassTeacherForename] = useState('')
@@ -27,7 +29,7 @@ function Classes() {
 
   const navigate = useNavigate();
 
-  const token = localStorage.getItem('jwt-token')
+  const token = localStorage.getItem('jwt-token') as string
 
   const refresh = () => {
     fetch(`https://dbb.timgöllner.de/api/dashboard/classes`, { headers: { 'jwt-token': token } })
@@ -40,11 +42,11 @@ function Classes() {
         const gradesList = data.grades
         const studentsList = data.students
 
-        if (order === 0) classesList = classesList.sort((a, b) => b.name < a.name)
-        else if (order === 1) classesList = classesList.sort((a, b) => weekdays[a.weekday] - weekdays[b.weekday])
-        else if (order === 2) classesList = classesList.sort((a, b) => b.teacher.forename < a.teacher.forename)
-        else if (order === 3) classesList = classesList.sort((a, b) => b.subject < a.subject)
-        else if (order === 4) classesList = classesList.sort((a, b) => b.grade.grade < a.grade.grade)
+        if (order === 0) classesList = classesList.sort((a, b) => (b.name < a.name) ? 1 : 0)
+        else if (order === 1) classesList = classesList.sort((a, b) => weekdays[a.weekday as keyof typeof weekdays] - weekdays[b.weekday as keyof typeof weekdays])
+        else if (order === 2) classesList = classesList.sort((a, b) => (b.teacher.forename < a.teacher.forename) ? 1 : 0)
+        else if (order === 3) classesList = classesList.sort((a, b) => (b.subject < a.subject) ? 1 : 0)
+        else if (order === 4) classesList = classesList.sort((a, b) => (b.grade.grade < a.grade.grade) ? 1 : 0)
         else if (order === 5) classesList = classesList.sort((a, b) => b.students.length - a.students.length)
 
         classesList = classesList.map((class_) => {
@@ -59,10 +61,10 @@ function Classes() {
             (classSubgrade && !class_.grade.subgrade.includes(classSubgrade.toLowerCase()))
           ) return null
 
-          class_.students.sort((a, b) => b.forename < a.forename)
+          class_.students.sort((a: SmallStudent, b: SmallStudent) => b.forename < a.forename)
 
           return (
-            <ClassesPopup key={class_.id} type={'old'} refresh={refresh}
+            <ClassesPopup key={class_.id} refresh={refresh}
             class_={class_} teachers={teachersList} grades={gradesList} students={studentsList}/>
           )
         })
@@ -76,7 +78,7 @@ function Classes() {
   
   useEffect(refresh, [className, classWeekday, classTeacherForename, classTeacherLastname, classSubject, classGrade, classSubgrade, order])
 
-  function orderClasses(schema) {
+  function orderClasses(schema: React.SetStateAction<number>) {
     const buttons = document.getElementsByClassName('order-buttons')[0].children
     for (var i = 0; i < 6; i++) {
       if (i === schema) buttons[i].classList.add('selected')
@@ -180,7 +182,7 @@ function Classes() {
           </div>
         </div>
         <hr />
-        {(teachers !== null) && <ClassesPopup type={'new'} refresh={refresh} teachers={teachers} grades={grades} students={students}/>}
+        {(teachers !== null) && <ClassesPopup class_={null} refresh={refresh} teachers={teachers} grades={grades} students={students}/>}
       </div>
     </div>
   )

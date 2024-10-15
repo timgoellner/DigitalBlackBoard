@@ -1,3 +1,4 @@
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
@@ -10,7 +11,7 @@ import "../styles/components/Changes.css"
 import ChangesPopup from './modules/ChangesPopup';
 
 function Changes() {
-  const [changes, setChanges] = useState([])
+  const [changes, setChanges] = useState<any[]>([])
   const [changeType, setChangeType] = useState('')
   const [changeClass, setChangeClass] = useState('')
   const [changeTeacherForename, setChangeTeacherForename] = useState('')
@@ -26,7 +27,7 @@ function Changes() {
 
   const navigate = useNavigate();
 
-  const token = localStorage.getItem('jwt-token')
+  const token = localStorage.getItem('jwt-token') as string
 
   const refresh = () => {
     fetch(`https://dbb.timgöllner.de/api/dashboard/changes`, { headers: { 'jwt-token': token } })
@@ -39,18 +40,18 @@ function Changes() {
         const classesList = data.classes
         const gradesList = data.grades
 
-        if (order === 0) changesList = changesList.sort((a, b) => b.type < a.type)
+        if (order === 0) changesList = changesList.sort((a, b) => (b.type < a.type) ? 1 : 0)
         else if (order === 1) changesList = changesList.sort((a, b) => {
           if (a.teacher.forename === null) return 1
           else if (b.teacher.forename === null) return -1
 
-          return b.teacher.forename < a.teacher.forename
+          return (b.teacher.forename < a.teacher.forename) ? 1 : 0
         })
         else if (order === 2) changesList = changesList.sort((a, b) => {
           if (a.subject === null) return 1
           else if (b.subject === null) return -1
 
-          return b.subject < a.subject
+          return (b.subject < a.subject) ? 1 : 0
         })
 
         changesList = changesList.map((change) => {
@@ -69,7 +70,7 @@ function Changes() {
           ) return null
 
           return (
-            <ChangesPopup key={change.id} type={'old'} refresh={refresh}
+            <ChangesPopup key={change.id} refresh={refresh}
             change={change} teachers={teachersList} classes={classesList} grades={gradesList}/>
           )
         })
@@ -83,7 +84,7 @@ function Changes() {
   
   useEffect(refresh, [changeType, changeClass, changeTeacherForename, changeTeacherLastname, changeSubject, changeGrade, changeSubgrade, order])
 
-  function orderChanges(schema) {
+  function orderChanges(schema: React.SetStateAction<number>) {
     const buttons = document.getElementsByClassName('order-buttons')[0].children
     for (var i = 0; i < 3; i++) {
       if (i === schema) buttons[i].classList.add('selected')
@@ -181,7 +182,7 @@ function Changes() {
           </div>
         </div>
         <hr />
-        <ChangesPopup type={'new'} refresh={refresh} teachers={teachers} classes={classes} grades={grades}/>
+        <ChangesPopup refresh={refresh} change={null} teachers={teachers} classes={classes} grades={grades}/>
       </div>
     </div>
   )

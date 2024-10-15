@@ -93,7 +93,7 @@
     justify-content: center;
   }
 
-  error {
+  .error {
     color: darkred;
     text-align: center;
     transform: translate(0, .5rem);

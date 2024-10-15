@@ -1,10 +1,31 @@
+import React from 'react'
 import { useState, useEffect, useMemo } from 'react'
 import Popup from 'reactjs-popup'
 import { IoMdClose } from "react-icons/io"
 
 import "../../styles/components/modules/ChangesPopup.css"
+import { SmallTeacher, SmallGrade, SmallClass } from './SmallTypes'
 
-function ChangesPopup({ type, refresh, change, teachers, classes, grades }) {
+type Change = {
+  key: string,
+  type: string,
+  class: { id: string, name: string },
+  teacher: SmallTeacher,
+  subject: string,
+  room: string,
+  grade: SmallGrade,
+  information: string
+}
+
+type Props = {
+  refresh: Function,
+  change: Change | null,
+  teachers: SmallTeacher[],
+  grades: SmallGrade[],
+  classes: SmallClass[]
+}
+
+function ChangesPopup({ refresh, change, teachers, classes, grades }: Props) {
   const [changeType, setChangeType] = useState('')
   const [changeClass, setChangeClass] = useState('')
   const [changeTeacher, setChangeTeacher] = useState('')
@@ -16,9 +37,9 @@ function ChangesPopup({ type, refresh, change, teachers, classes, grades }) {
   const [className, setClassName] = useState('')
   const [classGrade, setClassGrade] = useState('')
 
-  const [allTeachers, setAllTeachers] = useState([])
-  const [allClasses, setAllClasses] = useState([])
-  const [allGrades, setAllGrades] = useState([])
+  const [allTeachers, setAllTeachers] = useState<SmallTeacher[]>([])
+  const [allClasses, setAllClasses] = useState<SmallClass[]>([])
+  const [allGrades, setAllGrades] = useState<SmallGrade[]>([])
 
   const [open, setOpen] = useState(false)
   const closeModal = () => {
@@ -26,13 +47,9 @@ function ChangesPopup({ type, refresh, change, teachers, classes, grades }) {
     setOpen(false)
   }
 
-  const old = type === 'old'
-
-  const types = [ "cancellation", "change", "information" ]
-
   useEffect(() => {
     if (open) {
-      if (old) {
+      if (change !== null) {
         setChangeType(change.type)
         setChangeClass(change.class.id)
         setChangeTeacher(change.teacher.id)
@@ -52,7 +69,7 @@ function ChangesPopup({ type, refresh, change, teachers, classes, grades }) {
       setAllGrades(grades)
       setAllClasses(classes)
     }
-  }, [open, old, change, teachers, grades, classes])
+  }, [open, change, teachers, grades, classes])
 
   const htmlTeachers = useMemo(() => 
     [
@@ -94,13 +111,14 @@ function ChangesPopup({ type, refresh, change, teachers, classes, grades }) {
     ]
   }, [open, allClasses, classGrade, className])
 
-  function alterGrade(id) {
+  function alterGrade(id: React.SetStateAction<string>) {
     setClassGrade(id)
     setChangeClass('')
   }
 
-  function request(method) {
+  function request(method: string) {
     const token = localStorage.getItem('jwt-token')
+    if (token == null) return
 
     fetch(`https://dbb.timgöllner.de/api/dashboard/changes`, {
       method: method,
@@ -109,7 +127,7 @@ function ChangesPopup({ type, refresh, change, teachers, classes, grades }) {
         'jwt-token': token
       },
       body: JSON.stringify({ 
-        changeId: (old) && change.key,
+        changeId: (change !== null) && change.key,
         changeType, 
         changeClass,
         changeTeacher: changeTeacher !== "" ? changeTeacher : undefined,
@@ -131,7 +149,7 @@ function ChangesPopup({ type, refresh, change, teachers, classes, grades }) {
 
   return (
     <>
-      {!old ? (
+      {change === null ? (
         <button type="button" className="button" onClick={() => setOpen(o => !o)}>
           New change
         </button>
@@ -148,10 +166,10 @@ function ChangesPopup({ type, refresh, change, teachers, classes, grades }) {
 
       <Popup open={open} closeOnDocumentClick onClose={closeModal}>
         <div className='changes-popup'>
-          <a href className="close" onClick={closeModal}><IoMdClose /></a>
-          <p>{old ? 'Alter change' : 'New change'}</p>
+          <button className="close" onClick={closeModal}><IoMdClose /></button>
+          <p>{change !== null ? 'Alter change' : 'New change'}</p>
           <div className='settings'>
-            {!old ?
+            {change === null ?
               <>
                 <div>
                   <p>Class Search Options</p>
@@ -252,8 +270,8 @@ function ChangesPopup({ type, refresh, change, teachers, classes, grades }) {
             }
           </div>
           <div className='footer'>
-            <div className={old ? 'actions old' : 'actions'}>
-              {!old ? (
+            <div className={change !== null ? 'actions old' : 'actions'}>
+              {change === null ? (
                 <button onClick={() => request('POST')}>Create</button>
               ) : (
                 <>
@@ -262,7 +280,7 @@ function ChangesPopup({ type, refresh, change, teachers, classes, grades }) {
                 </>
               )}
             </div>
-            <error>{error}</error>
+            <p className='error'>{error}</p>
           </div>
         </div>
       </Popup>
@@ -271,3 +289,4 @@ function ChangesPopup({ type, refresh, change, teachers, classes, grades }) {
 }
 
 export default ChangesPopup
+export { Change }

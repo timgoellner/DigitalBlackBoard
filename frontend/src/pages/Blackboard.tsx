@@ -1,3 +1,4 @@
+import React, { ReactElement } from 'react';
 import { useNavigate, useLoaderData } from 'react-router-dom';
 import { useState, useMemo } from 'react';
 
@@ -8,16 +9,36 @@ import { BiSolidBookBookmark } from "react-icons/bi";
 import { MdMeetingRoom } from "react-icons/md";
 
 import "../styles/Blackboard.css"
+import { User } from "./Dashboard"
+import { SmallStudent } from '../components/modules/SmallTypes'
+
+type BlackboardElement = {
+  weekday: string
+  endTime: number
+  startTime: number
+  name: string
+  teacherForename: string
+  teacherLastname: string
+  subject: string
+  room: string
+  changeType: string
+  changeSubject: string | null
+  changeRoom: string | null
+  changeInformation: string | null
+  changeTeacherForename: string | null
+  changeTeacherLastname: string | null
+}
 
 function Blackboard() {
-  const [blackboard, setBlackboard] = useState([[], [], [], [], [], [], []])
-  const [student, setStudent] = useState()
-  const [timelines, setTimelines] = useState([])
+  const [blackboard, setBlackboard] = useState<ReactElement[][]>([[], [], [], [], [], [], []])
+  const [student, setStudent] = useState<SmallStudent>()
+  const [timelines, setTimelines] = useState<ReactElement[]>([])
   const [news, setNews] = useState('')
 
   const navigate = useNavigate()
-  const user = useLoaderData()
-  const token = localStorage.getItem('jwt-token')
+  const user = useLoaderData() as User
+  
+  const token = localStorage.getItem('jwt-token') as string
 
   const weekdays = { "monday": 1, "tuesday": 2, "wednesday": 3, "thursday": 4, "friday": 5, "saturday": 6, "sunday": 7 }
   var currentWeekday = 0
@@ -29,10 +50,10 @@ function Blackboard() {
         if (data.message !== 'success') navigate('/login')
 
         var blackboardData = data.blackboardData
-        var blackboardHtml = [[], [], [], [], [], [], []]
+        var blackboardHtml: ReactElement[][] = [[], [], [], [], [], [], []]
 
-        blackboardData.forEach((element) => {
-          const index = weekdays[element.weekday]-1
+        blackboardData.forEach((element: BlackboardElement) => {
+          const index = weekdays[element.weekday as keyof typeof weekdays] - 1
 
           blackboardHtml[index] = [
             ...blackboardHtml[index],
@@ -77,7 +98,7 @@ function Blackboard() {
           timelinesHtml.push(
             <div className='timeline' style={{ height: `${hour}dvh`, marginTop: `${(i === 1) ? (hour * topOffset) : 0}dvh`}}>
               <span>
-                <p>{parseInt((data.earliest / 60) | 0) + i}</p>
+                <p>{(data.earliest / 60 | 0) + i}</p>
                 <div></div>
               </span>
             </div>
@@ -98,7 +119,7 @@ function Blackboard() {
     navigate('/login')
   }
 
-  function shiftWeekday(direction) {
+  function shiftWeekday(direction: string) {
     const activeWeekdays = blackboard.filter(weekday => weekday.length > 0).length
     const newWeekday = (direction === 'right') ? (currentWeekday + 1) : (currentWeekday - 1)
 

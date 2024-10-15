@@ -1,3 +1,4 @@
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
@@ -10,14 +11,14 @@ import "../styles/components/Teachers.css"
 import TeachersPopup from './modules/TeachersPopup';
 
 function Teachers() {
-  const [teachers, setTeachers] = useState([])
+  const [teachers, setTeachers] = useState<any[]>([])
   const [teacherForeame, setTeacherForename] = useState('')
   const [teacherLastname, setTeacherLastname] = useState('')
   const [order, setOrder] = useState(0)
 
   const navigate = useNavigate();
 
-  const token = localStorage.getItem('jwt-token')
+  const token = localStorage.getItem('jwt-token') as string
 
   const refresh = () => {
     fetch(`https://dbb.timgöllner.de/api/dashboard/teachers`, { headers: { 'jwt-token': token } })
@@ -27,8 +28,8 @@ function Teachers() {
 
         var teachersList = Object.keys(data.teachers).map(key => { return { ...data.teachers[key], key } })
 
-        if (order === 0) teachersList = teachersList.sort((a, b) =>  b.forename < a.forename)
-        else if (order === 1) teachersList = teachersList.sort((a, b) =>  b.subjects.length - a.subjects.length)
+        if (order === 0) teachersList = teachersList.sort((a, b) => (b.forename < a.forename) ? 1 : 0)
+        else if (order === 1) teachersList = teachersList.sort((a, b) => b.subjects.length - a.subjects.length)
         else if (order === 2) teachersList = teachersList.sort((a, b) => b.classes - a.classes)
 
         teachersList = teachersList.map((teacher) => {
@@ -40,7 +41,7 @@ function Teachers() {
           teacher.subjects.sort()
 
           return (
-            <TeachersPopup key={teacher.id} type={'old'} refresh={refresh} teacher={teacher}/>
+            <TeachersPopup key={teacher.id} refresh={refresh} teacher={teacher}/>
           )
         })
 
@@ -50,7 +51,7 @@ function Teachers() {
   
   useEffect(refresh, [teacherForeame, teacherLastname, order])
 
-  function orderTeachers(schema) {
+  function orderTeachers(schema: React.SetStateAction<number>) {
     const buttons = document.getElementsByClassName('order-buttons')[0].children
     for (var i = 0; i < 3; i++) {
       if (i === schema) buttons[i].classList.add('selected')
@@ -100,7 +101,7 @@ function Teachers() {
           </div>
         </div>
         <hr />
-        <TeachersPopup type={'new'} refresh={refresh}/>
+        <TeachersPopup refresh={refresh} teacher={null}/>
       </div>
     </div>
   )

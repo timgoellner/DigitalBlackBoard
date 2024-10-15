@@ -1,5 +1,6 @@
+import React from 'react';
 import { useNavigate, useLoaderData } from 'react-router-dom';
-import { useState } from 'react';
+import { SetStateAction, useState } from 'react';
 
 import { PiChalkboardTeacherFill, PiStudentFill } from "react-icons/pi";
 import { FaPeopleLine } from "react-icons/fa6";
@@ -16,6 +17,14 @@ import Classes from '../components/Classes';
 import Changes from '../components/Changes';
 import Settings from '../components/Settings';
 
+
+type User = {
+  signInTime: Date,
+  organization: string,
+  identifier: string,
+  isStaff: boolean
+}
+
 function Dashboard() {
   const [page, setPage] = useState(0)
 
@@ -26,17 +35,18 @@ function Dashboard() {
     navigate('/login')
   }
 
-  function selectPage(pageId) {
+  function selectPage(pageId: SetStateAction<number>) {
     setPage(pageId)
 
     const childs = Array.from(document.getElementsByClassName('bar')[0].children).concat(Array.from(document.getElementsByClassName('bar')[1].children))
+
     for (var i = 0; i < childs.length; i++) {
-      if (i === pageId) childs.at(i).classList.add('selected')
-      else childs.at(i).classList.remove('selected')
+      if (i === pageId) childs.at(i)?.classList.add('selected')
+      else childs.at(i)?.classList.remove('selected')
     }
   }
 
-  const user = useLoaderData()
+  const user = useLoaderData() as User
 
   return (
     <div className='dashboard'>
@@ -84,3 +94,4 @@ function Dashboard() {
 }
 
 export default Dashboard;
+export { User }

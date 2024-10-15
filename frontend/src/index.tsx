@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
+import ReactDOM, { Container } from 'react-dom/client';
 
 import { createBrowserRouter, createRoutesFromElements, redirect, Route, RouterProvider } from "react-router-dom";
 
@@ -11,12 +11,13 @@ import Blackboard from './pages/Blackboard';
 import Dashboard from './pages/Dashboard';
 
 import validateUser from './helpers/validateUser';
+import { User } from './pages/Dashboard';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route path = '/' loader = {async () => {
-        const user = await validateUser();
+        const user = await validateUser() as User
 
         if (user && !user.isStaff) return redirect('/blackboard')
         else if (user && user.isStaff) return redirect('/dashboard')
@@ -24,7 +25,7 @@ const router = createBrowserRouter(
       }}/>
 
       <Route path = '/login' element = {<Login />} loader = {async () => {
-        const user = await validateUser();
+        const user = await validateUser() as User
 
         if (user && !user.isStaff) return redirect('/blackboard')
         else if (user && user.isStaff) return redirect('/dashboard')
@@ -32,7 +33,7 @@ const router = createBrowserRouter(
       }}/>
 
       <Route path = '/register' element = {<Register />} loader = {async () => {
-        const user = await validateUser();
+        const user = await validateUser() as User
 
         if (user && !user.isStaff) return redirect('/blackboard')
         else if (user && user.isStaff) return redirect('/dashboard')
@@ -40,14 +41,14 @@ const router = createBrowserRouter(
       }}/>
 
       <Route path = '/blackboard' element = {<Blackboard />} loader = {async () => {
-        const user = await validateUser();
+        const user = await validateUser() as User
 
         if (!user || user.isStaff) return redirect('/login')
         else return user
       }}/>
 
       <Route path = '/dashboard' element = {<Dashboard />} loader = {async () => {
-        const user = await validateUser();
+        const user = await validateUser() as User
 
         if (!user || !user.isStaff) return redirect('/login')
         else return user
@@ -56,7 +57,7 @@ const router = createBrowserRouter(
   )
 );
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById('root') as Container);
 root.render(
   <React.StrictMode>
     <RouterProvider router={router} />

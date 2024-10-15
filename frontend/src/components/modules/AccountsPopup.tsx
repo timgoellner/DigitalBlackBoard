@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState, useEffect } from 'react';
 import Popup from 'reactjs-popup';
 
@@ -5,7 +6,20 @@ import { IoMdClose } from "react-icons/io";
 
 import "../../styles/components/modules/AccountsPopup.css"
 
-function AccountsPopup({ type, refresh, account }) {
+type Account = {
+  id: number,
+  organization: string,
+  identifier: string,
+  password: string,
+  isStaff: boolean
+}
+
+type Props = {
+  refresh: Function,
+  account: Account | null
+}
+
+function AccountsPopup({ refresh, account }: Props) {
   const [identifier, setIndentifier] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -17,21 +31,20 @@ function AccountsPopup({ type, refresh, account }) {
     setOpen(false)
   }
 
-  const old = type === 'old'
-
   useEffect(() => {
     if (open) {
-      if (old) {
+      if (account !== null) {
         setIndentifier(account.identifier)
       } else setIndentifier('')
 
       setPassword('')
       setConfirmPassword('')
     }
-  }, [open, old, account])
+  }, [open, account])
 
-  function request(method) {
+  function request(method: string) {
     const token = localStorage.getItem('jwt-token')
+    if (token == null) return
 
     fetch(`https://dbb.timgöllner.de/api/dashboard/accounts`, {
       method: method,
@@ -39,7 +52,7 @@ function AccountsPopup({ type, refresh, account }) {
         'content-type': 'application/json',
         'jwt-token': token
       },
-      body: JSON.stringify({ identifier, password, confirmPassword, id: (old) ? account.id : null }),
+      body: JSON.stringify({ identifier, password, confirmPassword, id: (account !== null) ? account.id : null }),
     })
       .then((response) => response.json())
       .then((data) => {
@@ -54,28 +67,27 @@ function AccountsPopup({ type, refresh, account }) {
 
   return (
     <>
-      {((!old) && (
+      {(account === null) ? (
         <button type="button" className="button" onClick={() => setOpen(o => !o)}>
           New staff account
         </button>
-      )) || ((old) && (
+      ) : (
         <tr className='account' onClick={() => setOpen(o => !o)}>
           <th>{account.identifier}</th>
         </tr>
-      ))}
+      )}
 
       <Popup open={open} closeOnDocumentClick onClose={closeModal}>
         <div className='accounts-popup'>
-          <a href className="close" onClick={closeModal}><IoMdClose /></a>
-          {((!old) && (<p>New staff account</p>)) ||
-           ((old) && (<p>Change staff account</p>))}
+          <button className="close" onClick={closeModal}><IoMdClose /></button>
+          {(account === null) ? (<p>New staff account</p>) : (<p>Change staff account</p>)}
           <div className='settings'>
             <div>
               <p>Identifier</p>
               <input
                 value={identifier}
                 type="text"
-                onChange={(e) => (!old) && setIndentifier(e.target.value)}
+                onChange={(e) => (account === null) && setIndentifier(e.target.value)}
               />
             </div>
             <div className='multi'>
@@ -98,17 +110,17 @@ function AccountsPopup({ type, refresh, account }) {
             </div>
           </div>
           <div className='footer'>
-            <div className={(old) ? 'actions old' : 'actions'}>
-              {((!old) && (
+            <div className={(account !== null) ? 'actions old' : 'actions'}>
+              {(account === null) ? (
                 <button onClick={() => request('POST')}>Create</button>
-              )) || ((old) && (
+              ) : (
                 <>
                   <button onClick={() => request('PUT')}>Change</button>
                   <button onClick={() => request('DELETE')}>Remove</button>
                 </>
-              ))}
+              )}
             </div>
-            <error>{error}</error>
+            <p className='error'>{error}</p>
           </div>
         </div>
       </Popup>
@@ -117,3 +129,4 @@ function AccountsPopup({ type, refresh, account }) {
 }
 
 export default AccountsPopup;
+export { Account }

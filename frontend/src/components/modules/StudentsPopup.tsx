@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState, useMemo } from 'react';
 import Popup from 'reactjs-popup';
 
@@ -5,7 +6,22 @@ import { IoMdClose } from "react-icons/io";
 
 import "../../styles/components/modules/StudentsPopup.css"
 
-function StudentsPopup({ type, refresh, student }) {
+type Student = {
+  key: string,
+  forename: string,
+  lastname: string,
+  identifier: string,
+  grade: string,
+  subgrade: string,
+  classes: string[]
+}
+
+type Props = {
+  refresh: Function,
+  student: Student | null
+}
+
+function StudentsPopup({ refresh, student }: Props) {
   const [studentForename, setStudentForename] = useState('')
   const [studentLastname, setStudentLastname] = useState('')
   const [studentGrade, setStudentGrade] = useState('')
@@ -19,18 +35,25 @@ function StudentsPopup({ type, refresh, student }) {
     setOpen(false)
   }
 
-  const old = type === 'old'
-
   useMemo(() => {
-    setStudentForename((old) ? student.forename : '')
-    setStudentLastname((old) ? student.lastname : '')
-    setStudentGrade((old) ? student.grade : '')
-    setStudentSubgrade((old) ? student.subgrade : '')
-    setStudentIdentifier((old) ? student.identifier : '')
+    if (student !== null) {
+      setStudentForename(student.forename)
+      setStudentLastname(student.lastname)
+      setStudentGrade(student.grade)
+      setStudentSubgrade(student.subgrade)
+      setStudentIdentifier(student.identifier)
+    } else {
+      setStudentForename('')
+      setStudentLastname('')
+      setStudentGrade('')
+      setStudentSubgrade('')
+      setStudentIdentifier('')
+    }
   }, [open])
 
-  function request(method) {
+  function request(method: string) {
     const token = localStorage.getItem('jwt-token')
+    if (token == null) return
 
     fetch(`https://dbb.timgöllner.de/api/dashboard/students`, {
       method: method,
@@ -38,7 +61,7 @@ function StudentsPopup({ type, refresh, student }) {
         'content-type': 'application/json',
         'jwt-token': token
       },
-      body: JSON.stringify({ studentForename, studentLastname, studentGrade, studentSubgrade, id: (old) ? student.key : null }),
+      body: JSON.stringify({ studentForename, studentLastname, studentGrade, studentSubgrade, id: (student !== null) ? student.key : null }),
     })
       .then((response) => response.json())
       .then((data) => {
@@ -53,24 +76,23 @@ function StudentsPopup({ type, refresh, student }) {
 
   return (
     <>
-      {((!old) && (
+      {(student === null) ? (
         <button type="button" className="button" onClick={() => setOpen(o => !o)}>
           New student
         </button>
-      )) || ((old) && (
+      ) : (
         <tr className='student' onClick={() => setOpen(o => !o)}>
           <th>{student.forename}</th>
           <th>{student.lastname}</th>
           <th>{student.grade + ((student.subgrade !== null) && student.subgrade)}</th>
           <th>{student.classes.join(', ')}</th>
         </tr>
-      ))}
+      )}
 
       <Popup open={open} closeOnDocumentClick onClose={closeModal}>
         <div className='students-popup'>
-          <a href className="close" onClick={closeModal}><IoMdClose /></a>
-          {((!old) && (<p>New student</p>)) ||
-           ((old) && (<p>Change student</p>))}
+          <button className="close" onClick={closeModal}><IoMdClose /></button>
+          {(student === null) ? (<p>New student</p>) : (<p>Change student</p>)}
           <div className='settings'>
             <div>
               <div>
@@ -78,7 +100,7 @@ function StudentsPopup({ type, refresh, student }) {
                 <input
                   value={studentForename}
                   type="text"
-                  onChange={(e) => (!old) && setStudentForename(e.target.value)}
+                  onChange={(e) => (student === null) && setStudentForename(e.target.value)}
                 />
               </div>
               <div>
@@ -86,7 +108,7 @@ function StudentsPopup({ type, refresh, student }) {
                 <input
                   value={studentLastname}
                   type="text"
-                  onChange={(e) => (!old) && setStudentLastname(e.target.value)}
+                  onChange={(e) => (student === null) && setStudentLastname(e.target.value)}
                 />
               </div>
             </div>
@@ -108,7 +130,7 @@ function StudentsPopup({ type, refresh, student }) {
                 />
               </div>
             </div>
-            {(old) && (
+            {(student !== null) && (
               <div className='identifier'>
                 <p>Identifier:</p>
                 <p>{studentIdentifier}</p>
@@ -116,17 +138,17 @@ function StudentsPopup({ type, refresh, student }) {
             )}
           </div>
           <div className='footer'>
-            <div className={(old) ? 'actions old' : 'actions'}>
-              {((!old) && (
+            <div className={(student !== null) ? 'actions old' : 'actions'}>
+              {(student === null) ? (
                 <button onClick={() => request('POST')}>Create</button>
-              )) || ((old) && (
+              ) : (
                 <>
                   <button onClick={() => request('PUT')}>Change</button>
                   <button onClick={() => request('DELETE')}>Remove</button>
                 </>
-              ))}
+              )}
             </div>
-            <error>{error}</error>
+            <p className='error'>{error}</p>
           </div>
         </div>
       </Popup>

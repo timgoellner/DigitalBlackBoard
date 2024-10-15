@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 
@@ -16,7 +17,7 @@ function Login() {
 
   const navigate = useNavigate();
 
-  function submitUser(event) {
+  function submitUser(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
     const userType = (isStaff) ? ('staff') : ('user')
@@ -61,7 +62,7 @@ function Login() {
         <p>Board</p>
         <h1>Login</h1>
       </div>
-      <div className='switch' onClick={(event) => { toggleLogin(event) }}>
+      <div className='switch' onClick={() => { toggleLogin() }}>
         <IoIosArrowForward />
       </div>
       <div className='forms'>
@@ -85,7 +86,7 @@ function Login() {
           />
 
           <button type="submit">Login</button>
-          <error>{errorUser}</error>
+          <p className='error'>{errorUser}</p>
         </form>
 
         <div className='gap'></div>
@@ -117,7 +118,7 @@ function Login() {
           />
 
           <button type="submit">Login</button>
-          <error>{errorStaff}</error>
+          <p className='error'>{errorStaff}</p>
         </form>
       </div>
       <button onClick={ () => { navigate('/register') } } className='new-organization'>Register organization</button>

@@ -1,14 +1,28 @@
-import { useState, useMemo } from 'react'
+import React from 'react'
+import { useState, useMemo, KeyboardEvent } from 'react'
 import Popup from 'reactjs-popup'
 
 import { IoMdClose } from "react-icons/io"
 
 import "../../styles/components/modules/TeachersPopup.css"
 
-function TeachersPopup({ type, refresh, teacher }) {
+type Teacher = {
+  key: string,
+  forename: string,
+  lastname: string,
+  classes: number,
+  subjects: string[]
+}
+
+type Props = {
+  refresh: Function,
+  teacher: Teacher | null
+}
+
+function TeachersPopup({ refresh, teacher }: Props) {
   const [teacherForename, setTeacherForename] = useState('')
   const [teacherLastname, setTeacherLastname] = useState('')
-  const [teacherSubjects, setTeacherSubjects] = useState([])
+  const [teacherSubjects, setTeacherSubjects] = useState<string[]>([])
   const [currentSubject, setCurrentSubject] = useState('')
   const [error, setError] = useState('')
 
@@ -19,31 +33,38 @@ function TeachersPopup({ type, refresh, teacher }) {
     setOpen(false)
   }
 
-  const old = type === 'old'
-
   useMemo(() => {
-    setTeacherForename((old) ? teacher.forename : '')
-    setTeacherLastname((old) ? teacher.lastname : '')
-    setTeacherSubjects((old) ? teacher.subjects : [])
+    if (teacher !== null) {
+      setTeacherForename(teacher.forename)
+      setTeacherLastname(teacher.lastname)
+      setTeacherSubjects(teacher.subjects)
+    } else {
+      setTeacherForename('')
+      setTeacherLastname('')
+      setTeacherSubjects([])
+    }
   }, [open])
 
-  function handleKeyUp(e) {
-    if (e.keyCode === 13 && e.target.value && !(/^\s*$/.test(e.target.value)) && e.target.value.length < 40) {
-      setTeacherSubjects((oldValues) => [...oldValues, e.target.value])
+  function handleKeyUp(e: KeyboardEvent<HTMLInputElement>) {
+    const value = (e.target as HTMLInputElement).value
+
+    if (e.keyCode === 13 && value && !(/^\s*$/.test((e.target as HTMLInputElement).value)) && value.length < 40) {
+      setTeacherSubjects((oldValues) => [...oldValues, value])
       setCurrentSubject('')
     }
   }
 
-  function handleDelete(index) {
+  function handleDelete(index: number) {
     var subjects = [...teacherSubjects]
     subjects.splice(index, 1)
     setTeacherSubjects(subjects)
   }
 
-  function request(method) {
+  function request(method: string) {
     const token = localStorage.getItem('jwt-token')
+    if (token == null) return
 
-    if (method === 'DELETE' && teacher.classes > 0) {
+    if (method === 'DELETE' && teacher !== null && teacher.classes > 0) {
       setError('teacher has active classes')
       return
     }
@@ -69,24 +90,23 @@ function TeachersPopup({ type, refresh, teacher }) {
 
   return (
     <>
-      {((!old) && (
+      {(teacher === null) ? (
         <button type="button" className="button" onClick={() => setOpen(o => !o)}>
           New Teacher     
         </button>
-      )) || ((old) && (
+      ) : (
         <tr className='teacher' onClick={() => setOpen(o => !o)}>
           <th>{teacher.forename}</th>
           <th>{teacher.lastname}</th>
           <th>{teacher.classes}</th>
           <th>{teacher.subjects.join(', ')}</th>
         </tr>
-      ))}
+      )}
 
       <Popup open={open} closeOnDocumentClick onClose={closeModal}>
         <div className='teachers-popup'>
-          <a href className="close" onClick={closeModal}><IoMdClose /></a>
-          {((!old) && (<p>New teacher</p>)) ||
-           ((old) && (<p>Change teacher</p>))}
+          <button className="close" onClick={closeModal}><IoMdClose /></button>
+          {(teacher === null) ? (<p>New teacher</p>) : (<p>Change teacher</p>)}
           <div className='settings'>
             <div>
               <div>
@@ -94,7 +114,7 @@ function TeachersPopup({ type, refresh, teacher }) {
                 <input
                   value={teacherForename}
                   type="text"
-                  onChange={(e) => (!old) && setTeacherForename(e.target.value)}
+                  onChange={(e) => (teacher === null) && setTeacherForename(e.target.value)}
                 />
               </div>
               <div>
@@ -102,7 +122,7 @@ function TeachersPopup({ type, refresh, teacher }) {
                 <input
                   value={teacherLastname}
                   type="text"
-                  onChange={(e) => (!old) && setTeacherLastname(e.target.value)}
+                  onChange={(e) => (teacher === null) && setTeacherLastname(e.target.value)}
                 />
               </div>
             </div>
@@ -113,7 +133,7 @@ function TeachersPopup({ type, refresh, teacher }) {
                   {teacherSubjects.map((subject, index) => (
                     <span>
                       <p>{subject}</p>
-                      <a href onClick={() => handleDelete(index)}><IoMdClose /></a>
+                      <button onClick={() => handleDelete(index)}><IoMdClose /></button>
                     </span>
                   ))}
                 </div>
@@ -127,17 +147,17 @@ function TeachersPopup({ type, refresh, teacher }) {
             </div>
           </div>
           <div className='footer'>
-            <div className={(old) ? 'actions old' : 'actions'}>
-              {((!old) && (
+            <div className={(teacher !== null) ? 'actions old' : 'actions'}>
+              {(teacher === null) ? (
                 <button onClick={() => request('POST')}>Create</button>
-              )) || ((old) && (
+              ) : (
                 <>
                   <button onClick={() => request('PUT')}>Change</button>
                   <button onClick={() => request('DELETE')}>Remove</button>
                 </>
-              ))}
+              )}
             </div>
-            <error>{error}</error>
+            <p className='error'>{error}</p>
           </div>
         </div>
       </Popup>

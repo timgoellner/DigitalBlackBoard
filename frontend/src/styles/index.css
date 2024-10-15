@@ -57,8 +57,10 @@ body {
   .close {
     position: absolute;
     cursor: pointer;
-    width: 1.5rem;
-    height: 1.5rem;
+    background-color: transparent;
+    border: none;
+    width: 2rem;
+    height: 2rem;
     top: 0;
     right: 0;
 

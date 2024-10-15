@@ -69,8 +69,12 @@
             transform: translate(0, -.15rem);
           }
   
-          a {
+          button {
             cursor: pointer;
+            background-color: transparent;
+            border: none;
+            width: 1.2rem;
+            height: 1.2rem;
           }
         }
       }
@@ -127,7 +131,7 @@
     justify-content: center;
   }
 
-  error {
+  .error {
     color: darkred;
     text-align: center;
     transform: translate(0, .5rem);

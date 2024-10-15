@@ -1,3 +1,4 @@
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
@@ -5,7 +6,7 @@ import { IoMdClose } from "react-icons/io"
 
 import "../styles/components/Settings.css"
 
-import AccountsPopup from './modules/AccountsPopup';
+import AccountsPopup, { Account } from './modules/AccountsPopup';
 import DeletePopup from './modules/DeletePopup'
 
 function Settings() {
@@ -25,7 +26,7 @@ function Settings() {
 
   const navigate = useNavigate();
 
-  const token = localStorage.getItem('jwt-token')
+  const token = localStorage.getItem('jwt-token') as string
 
   const load = () => {
     fetch(`https://dbb.timgöllner.de/api/dashboard/organizations`, { headers: { 'jwt-token': token } })
@@ -50,10 +51,10 @@ function Settings() {
 
         var accountsList = data.accounts
 
-        accountsList = accountsList.map((account) => {
+        accountsList = accountsList.map((account: Account) => {
           if (identifier && !account.identifier.toLowerCase().includes(identifier)) return null
 
-          return <AccountsPopup key={account.id} type={'old'} refresh={refresh} account={account}/>
+          return <AccountsPopup key={account.id} refresh={refresh} account={account}/>
         })
 
         setAccounts(accountsList)
@@ -70,7 +71,7 @@ function Settings() {
 
         var subjectsList = data.subjects
 
-        subjectsList = subjectsList.filter((subjectElement) => {
+        subjectsList = subjectsList.filter((subjectElement: string) => {
           return !(subject && !subjectElement.toLowerCase().includes(subject))
         })
 
@@ -88,7 +89,7 @@ function Settings() {
 
         var roomsList = data.rooms
 
-        roomsList = roomsList.filter((roomElement) => {
+        roomsList = roomsList.filter((roomElement: string) => {
           return !(room && !roomElement.includes(room))
         })
 
@@ -111,8 +112,11 @@ function Settings() {
       .then((data) => { setResponse(data.message) })
   }
 
-  async function handleKeyRoom(e) {
-    if (e.keyCode === 13 && e.target.value && !(/^\s*$/.test(e.target.value)) && e.target.value.length < 40) {
+  async function handleKeyRoom(e: React.KeyboardEvent<HTMLInputElement>) {
+    const value = (e.target as HTMLInputElement).value
+    if (token == null) return
+
+    if (e.keyCode === 13 && value && !(/^\s*$/.test(value)) && value.length < 40) {
       setCurrentRoom('')
 
       await fetch(`https://dbb.timgöllner.de/api/dashboard/rooms`, {
@@ -121,14 +125,16 @@ function Settings() {
           'content-type': 'application/json',
           'jwt-token': token
         },
-        body: JSON.stringify({ room: e.target.value }),
+        body: JSON.stringify({ room: value }),
       })
 
       roomsRequest()
     }
   }
 
-  async function deleteRoom(room) {
+  async function deleteRoom(room: string) {
+    if (token == null) return
+    
     await fetch(`https://dbb.timgöllner.de/api/dashboard/rooms`, {
       method: 'DELETE',
       headers: {
@@ -141,8 +147,11 @@ function Settings() {
     roomsRequest()
   }
 
-  async function handleKeySubject(e) {
-    if (e.keyCode === 13 && e.target.value && !(/^\s*$/.test(e.target.value)) && e.target.value.length < 40) {
+  async function handleKeySubject(e: React.KeyboardEvent<HTMLInputElement>) {
+    const value = (e.target as HTMLInputElement).value
+    if (token == null) return
+
+    if (e.keyCode === 13 && value && !(/^\s*$/.test(value)) && value.length < 40) {
       setCurrentSubject('')
 
       await fetch(`https://dbb.timgöllner.de/api/dashboard/subjects`, {
@@ -151,14 +160,16 @@ function Settings() {
           'content-type': 'application/json',
           'jwt-token': token
         },
-        body: JSON.stringify({ subject: e.target.value }),
+        body: JSON.stringify({ subject: value }),
       })
 
       subjectsRequest()
     }
   }
 
-  async function deleteSubject(subject) {
+  async function deleteSubject(subject: string) {
+    if (token == null) return
+
     await fetch(`https://dbb.timgöllner.de/api/dashboard/subjects`, {
       method: 'DELETE',
       headers: {
@@ -222,7 +233,7 @@ function Settings() {
           </table>
         </div>
         <div className='actions'>
-          <AccountsPopup type={'new'} refresh={refresh}/>
+          <AccountsPopup account={null} refresh={refresh}/>
         </div>
       </div>
       <div className='subjects-zone'>
@@ -236,9 +247,9 @@ function Settings() {
           />
           <table className='list'>
             {subjects.map((subject) => (
-              <tr value={subject} className='small-element'>
+              <tr className='small-element'>
                 <p>{subject}</p>
-                <a href onClick={() => deleteSubject(subject)}><IoMdClose /></a>
+                <a href="" onClick={() => deleteSubject(subject)}><IoMdClose /></a>
               </tr>
             ))}
           </table>
@@ -261,9 +272,9 @@ function Settings() {
           />
           <table className='list'>
             {rooms.map((room) => (
-              <tr value={room} className='small-element'>
+              <tr className='small-element'>
                 <p>{room}</p>
-                <a href onClick={() => deleteRoom(room)}><IoMdClose /></a>
+                <a href="" onClick={() => deleteRoom(room)}><IoMdClose /></a>
               </tr>
             ))}
           </table>

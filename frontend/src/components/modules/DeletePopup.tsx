@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import Popup from 'reactjs-popup'
@@ -6,8 +7,6 @@ import { IoMdClose } from "react-icons/io"
 import "../../styles/components/modules/DeletePopup.css"
 
 function DeletePopup() {
-  const [error, setError] = useState('')
-
   const navigate = useNavigate();
 
   const [open, setOpen] = useState(false)
@@ -17,6 +16,7 @@ function DeletePopup() {
 
   function request() {
     const token = localStorage.getItem('jwt-token')
+    if (token == null) return
 
     fetch(`https://dbb.timgöllner.de/api/dashboard/organizations`, {
       method: 'DELETE',
@@ -31,8 +31,6 @@ function DeletePopup() {
           setOpen(false)
           localStorage.removeItem('jwt-token')
           navigate('/login')
-        } else {
-          setError(data.message)
         }
       })
   }
@@ -45,7 +43,7 @@ function DeletePopup() {
 
       <Popup open={open} closeOnDocumentClick onClose={closeModal}>
         <div className='delete-popup'>
-          <a href className="close" onClick={closeModal}><IoMdClose /></a>
+          <button className="close" onClick={closeModal}><IoMdClose /></button>
           <p>Confirm deletion</p>
           <div>
             <p>When clicking Confirm, all organization data including all accounts will be deleted</p>

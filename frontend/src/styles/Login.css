@@ -86,16 +86,17 @@
     outline: none;
   }
   
-  form error {
+  form .error {
     position: absolute;
     bottom: -1.5rem;
     width: 100%;
     color: darkred;
     font-size: .9rem;
     white-space: nowrap;
+    margin: 0;
   }
   
-  form:first-child error {
+  form:first-child .error {
     top: 12.5rem;
     white-space: wrap;
   }
@@ -154,7 +155,7 @@
     position: relative;
   }
 
-  form.register-form p {
+  form.register-form p:not(.error) {
     position: absolute;
     margin: 0;
     font-size: small;

@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState, useMemo } from 'react';
 import Popup from 'reactjs-popup';
 
@@ -6,7 +7,19 @@ import { MdAccountTree, MdPeopleAlt } from "react-icons/md";
 
 import "../../styles/components/modules/GradesPopup.css"
 
-function GradesPopup({ type, refresh, gradeData }) {
+type Grade = {
+  key: string,
+  id: string,
+  subgrades: string[] | null,
+  count: string
+}
+
+type Props = {
+  refresh: Function,
+  gradeData: Grade | null
+}
+
+function GradesPopup({ refresh, gradeData }: Props) {
   const [grade, setGrade] = useState('')
   const [subgradesCount, setSubgradesCount] = useState(0)
   const [error, setError] = useState('')
@@ -17,14 +30,12 @@ function GradesPopup({ type, refresh, gradeData }) {
     setOpen(false)
   }
 
-  const old = type === 'old'
-
   useMemo(() => {
-    setGrade((old) ? gradeData.key : '')
-    setSubgradesCount((!old || gradeData.subgrades === null) ? 0 : gradeData.subgrades.length)
+    setGrade((gradeData !== null) ? gradeData.key : '')
+    setSubgradesCount((gradeData === null || gradeData.subgrades === null) ? 0 : gradeData.subgrades.length)
   }, [open])
 
-  function setSubgrades(count) {
+  function setSubgrades(count: number) {
     const subgrades = document.getElementsByClassName('subgrades')[0].children
     for (var i = 0; i < 8; i++) {
       if (i <= count && subgradesCount !== (count + 1)) subgrades[i].classList.add('selected')
@@ -35,8 +46,9 @@ function GradesPopup({ type, refresh, gradeData }) {
     else setSubgradesCount(count + 1)
   }
 
-  function request(method) {
+  function request(method: string) {
     const token = localStorage.getItem('jwt-token')
+    if (token == null) return
 
     fetch(`https://dbb.timgöllner.de/api/dashboard/grades`, {
       method: method,
@@ -59,11 +71,11 @@ function GradesPopup({ type, refresh, gradeData }) {
 
   return (
     <>
-      {((!old) && (
+      {(gradeData === null) ? (
         <button type="button" className="button" onClick={() => setOpen(o => !o)}>
           New Grade     
         </button>
-      )) || ((old) && (
+      ) : (
         <div className='grade' onClick={() => setOpen(o => !o)}>
           <p>{gradeData.key}</p>
           <span>
@@ -71,49 +83,48 @@ function GradesPopup({ type, refresh, gradeData }) {
             <p><MdPeopleAlt />{gradeData.count}</p>
           </span>
         </div>
-      ))}
+      )}
 
       <Popup open={open} closeOnDocumentClick onClose={closeModal}>
         <div className='grades-popup'>
-          <a href className="close" onClick={closeModal}><IoMdClose /></a>
-          {((!old) && (<p>New grade</p>)) ||
-           ((old) && (<p>Change grade</p>))}
+          <button className="close" onClick={closeModal}><IoMdClose /></button>
+          {(gradeData === null) ? (<p>New grade</p>) : (<p>Change grade</p>)}
           <div className='settings'>
             <div>
               <p>Name</p>
               <input
                 value={grade}
                 type="text"
-                onChange={(e) => (!old) && setGrade(e.target.value)}
+                onChange={(e) => (gradeData === null) && setGrade(e.target.value)}
               />
             </div>
             <div>
               <p>Subgrades</p>
               <div className='subgrades'>
-                <button className={(old && subgradesCount > 0) && 'selected'} onClick={() => setSubgrades(0)}>a</button>
-                <button className={(old && subgradesCount > 1) && 'selected'} onClick={() => setSubgrades(1)}>b</button>
-                <button className={(old && subgradesCount > 2) && 'selected'} onClick={() => setSubgrades(2)}>c</button>
-                <button className={(old && subgradesCount > 3) && 'selected'} onClick={() => setSubgrades(3)}>d</button>
-                <button className={(old && subgradesCount > 4) && 'selected'} onClick={() => setSubgrades(4)}>e</button>
-                <button className={(old && subgradesCount > 5) && 'selected'} onClick={() => setSubgrades(5)}>f</button>
-                <button className={(old && subgradesCount > 6) && 'selected'} onClick={() => setSubgrades(6)}>g</button>
-                <button className={(old && subgradesCount > 7) && 'selected'} onClick={() => setSubgrades(7)}>h</button>
+                <button className={((gradeData !== null) && subgradesCount > 0) ? 'selected' : ""} onClick={() => setSubgrades(0)}>a</button>
+                <button className={((gradeData !== null) && subgradesCount > 1) ? 'selected' : ""} onClick={() => setSubgrades(1)}>b</button>
+                <button className={((gradeData !== null) && subgradesCount > 2) ? 'selected' : ""} onClick={() => setSubgrades(2)}>c</button>
+                <button className={((gradeData !== null) && subgradesCount > 3) ? 'selected' : ""} onClick={() => setSubgrades(3)}>d</button>
+                <button className={((gradeData !== null) && subgradesCount > 4) ? 'selected' : ""} onClick={() => setSubgrades(4)}>e</button>
+                <button className={((gradeData !== null) && subgradesCount > 5) ? 'selected' : ""} onClick={() => setSubgrades(5)}>f</button>
+                <button className={((gradeData !== null) && subgradesCount > 6) ? 'selected' : ""} onClick={() => setSubgrades(6)}>g</button>
+                <button className={((gradeData !== null) && subgradesCount > 7) ? 'selected' : ""} onClick={() => setSubgrades(7)}>h</button>
               </div>
             </div>
           </div>
           <div className='footer'>
-            <div className={(old) ? 'actions old' : 'actions'}>
-              {((!old) && (
+            <div className={(gradeData !== null) ? 'actions old' : 'actions'}>
+              {(gradeData === null) ? (
                 <button onClick={() => request('POST')}>Create</button>
-              )) || ((old) && (
+              ) : (
                 <>
                   <button onClick={() => request('PUT')}>Change</button>
                   <button onClick={() => request('DELETE')}>Remove</button>
                 </>
-              ))}
+              )}
               
             </div>
-            <error>{error}</error>
+            <p className='error'>{error}</p>
           </div>
         </div>
       </Popup>

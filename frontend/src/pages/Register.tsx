@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import React from 'react';
+import { FormEvent, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 
 import "../styles/Login.css"
@@ -12,7 +13,7 @@ function Register() {
 
   const navigate = useNavigate();
 
-  function submitUser(event) {
+  function submitUser(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
     fetch(`https://dbb.timgöllner.de/api/register`, {
@@ -75,7 +76,7 @@ function Register() {
           </div>
 
           <button type="submit">Register</button>
-          <error>{error}</error>
+          <p className='error'>{error}</p>
         </form>
     </main>
   ) 

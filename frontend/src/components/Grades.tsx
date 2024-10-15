@@ -1,3 +1,4 @@
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
@@ -9,14 +10,14 @@ import "../styles/components/Grades.css"
 import GradesPopup from './modules/GradesPopup';
 
 function Grades() {
-  const [grades, setGrades] = useState([])
+  const [grades, setGrades] = useState<any[]>([])
   const [gradeName, setGradeName] = useState('')
   const [subgradeName, setSubgradeName] = useState('')
   const [order, setOrder] = useState(0)
 
   const navigate = useNavigate();
 
-  const token = localStorage.getItem('jwt-token')
+  const token = localStorage.getItem('jwt-token') as string
 
   const refresh = () => {
     fetch(`https://dbb.timgöllner.de/api/dashboard/grades`, { headers: { 'jwt-token': token } })
@@ -26,7 +27,7 @@ function Grades() {
 
         var gradesList = Object.keys(data.grades).map(key => { return { ...data.grades[key], key } })
 
-        if (order === 1) gradesList = gradesList.sort((a, b) => (b.subgrades !== null && a.subgrades !== null) && b.subgrades.length - a.subgrades.length)
+        if (order === 1) gradesList = gradesList.sort((a, b) => (b.subgrades !== null && a.subgrades !== null) ? b.subgrades.length - a.subgrades.length : 0)
         else if (order === 2) gradesList = gradesList.sort((a, b) => b.count - a.count)
 
         gradesList = gradesList.map((grade) => {
@@ -39,7 +40,7 @@ function Grades() {
           if (grade.subgrades !== null) grade.subgrades.sort()
 
           return (
-            <GradesPopup key={grade.id} type={'old'} refresh={refresh} gradeData={grade}/>
+            <GradesPopup key={grade.id} refresh={refresh} gradeData={grade}/>
           )
         })
 
@@ -49,7 +50,7 @@ function Grades() {
   
   useEffect(refresh, [gradeName, subgradeName, order])
 
-  function orderGrades(schema) {
+  function orderGrades(schema: React.SetStateAction<number>) {
     const buttons = document.getElementsByClassName('order-buttons')[0].children
     for (var i = 0; i < 3; i++) {
       if (i === schema) buttons[i].classList.add('selected')
@@ -93,7 +94,7 @@ function Grades() {
           </div>
         </div>
         <hr />
-        <GradesPopup type={'new'} refresh={refresh} grade={{}}/>
+        <GradesPopup refresh={refresh} gradeData={null}/>
       </div>
     </div>
   )

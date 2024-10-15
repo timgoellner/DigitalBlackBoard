@@ -1,10 +1,33 @@
+import React from 'react'
 import { useState, useEffect, useMemo } from 'react'
 import Popup from 'reactjs-popup'
 import { IoMdClose } from "react-icons/io"
 
 import "../../styles/components/modules/ClassesPopup.css"
+import { SmallTeacher, SmallGrade, SmallStudent } from './SmallTypes'
 
-function ClassesPopup({ type, refresh, class_, teachers, grades, students }) {
+type Class = {
+  key: string,
+  name: string,
+  weekday: string,
+  startTime: string,
+  duration: string,
+  teacher: SmallTeacher,
+  subject: string,
+  room: string,
+  grade: SmallGrade,
+  students: SmallStudent[]
+}
+
+type Props = {
+  refresh: Function,
+  class_: Class | null,
+  teachers: SmallTeacher[],
+  grades: SmallGrade[],
+  students: SmallStudent[]
+}
+
+function ClassesPopup({ refresh, class_, teachers, grades, students }: Props) {
   const [className, setClassName] = useState('')
   const [classWeekday, setClassWeekday] = useState('')
   const [classStarttime, setClassStarttime] = useState('00:00')
@@ -13,12 +36,12 @@ function ClassesPopup({ type, refresh, class_, teachers, grades, students }) {
   const [classSubject, setClassSubject] = useState('')
   const [classRoom, setClassRoom] = useState('')
   const [classGrade, setClassGrade] = useState('')
-  const [classStudents, setClassStudents] = useState([])
+  const [classStudents, setClassStudents] = useState<SmallStudent[]>([])
   const [error, setError] = useState('')
 
-  const [allTeachers, setAllTeachers] = useState([])
-  const [allGrades, setAllGrades] = useState([])
-  const [allStudents, setAllStudents] = useState([])
+  const [allTeachers, setAllTeachers] = useState<SmallTeacher[]>([])
+  const [allGrades, setAllGrades] = useState<SmallGrade[]>([])
+  const [allStudents, setAllStudents] = useState<SmallStudent[]>([])
 
   const [open, setOpen] = useState(false)
   const closeModal = () => {
@@ -26,11 +49,9 @@ function ClassesPopup({ type, refresh, class_, teachers, grades, students }) {
     setOpen(false)
   }
 
-  const old = type === 'old'
-
   useEffect(() => {
     if (open) {
-      if (old) {
+      if (class_ !== null) {
         setClassName(class_.name)
         setClassWeekday(class_.weekday)
         setClassStarttime(class_.startTime.substring(0, 5))
@@ -55,7 +76,7 @@ function ClassesPopup({ type, refresh, class_, teachers, grades, students }) {
       setAllGrades(grades)
       setAllStudents(students)
     }
-  }, [open, old, class_, teachers, grades, students])
+  }, [open, class_, teachers, grades, students])
 
   const htmlTeachers = useMemo(() => 
     [
@@ -106,7 +127,7 @@ function ClassesPopup({ type, refresh, class_, teachers, grades, students }) {
     ]
   }, [open, allStudents, classGrade, classStudents])
 
-  function studentAdd(id) {
+  function studentAdd(id: string) {
     if (id !== "") {
       const student = allStudents.find(student => student.id == id)
       if (student && !classStudents.some(s => s.id == id)) {
@@ -115,19 +136,20 @@ function ClassesPopup({ type, refresh, class_, teachers, grades, students }) {
     }
   }
 
-  function studentDelete(index) {
+  function studentDelete(index: number) {
     const students = [...classStudents]
     students.splice(index, 1)
     setClassStudents(students)
   }
 
-  function changeGrade(id) {
+  function changeGrade(id: React.SetStateAction<string>) {
     setClassGrade(id)
     setClassStudents([])
   }
 
-  function request(method) {
+  function request(method: string) {
     const token = localStorage.getItem('jwt-token')
+    if (token == null) return
 
     fetch(`https://dbb.timgöllner.de/api/dashboard/classes`, {
       method: method,
@@ -136,7 +158,7 @@ function ClassesPopup({ type, refresh, class_, teachers, grades, students }) {
         'jwt-token': token
       },
       body: JSON.stringify({ 
-        classId: (old) && class_.key,
+        classId: (class_ !== null) && class_.key,
         className, 
         classWeekday, 
         classStarttime, 
@@ -161,7 +183,7 @@ function ClassesPopup({ type, refresh, class_, teachers, grades, students }) {
 
   return (
     <>
-      {!old ? (
+      {class_ === null ? (
         <button type="button" className="button" onClick={() => setOpen(o => !o)}>
           New class
         </button>
@@ -181,15 +203,15 @@ function ClassesPopup({ type, refresh, class_, teachers, grades, students }) {
 
       <Popup open={open} closeOnDocumentClick onClose={closeModal}>
         <div className='classes-popup'>
-          <a href className="close" onClick={closeModal}><IoMdClose /></a>
-          <p>{old ? 'Change class' : 'New class'}</p>
+          <button className="close" onClick={closeModal}><IoMdClose /></button>
+          <p>{(class_ !== null) ? 'Change class' : 'New class'}</p>
           <div className='settings'>
             <div>
               <p>Name</p>
               <input
                 value={className}
                 type="text"
-                onChange={(e) => (!old) && setClassName(e.target.value)}
+                onChange={(e) => (class_ === null) && setClassName(e.target.value)}
               />
             </div>
             <div>
@@ -270,7 +292,7 @@ function ClassesPopup({ type, refresh, class_, teachers, grades, students }) {
                   {classStudents.map((student, index) => (
                     <span key={student.id}>
                       <p>{student.forename} {student.lastname}</p>
-                      <a href onClick={() => studentDelete(index)}><IoMdClose /></a>
+                      <button onClick={() => studentDelete(index)}><IoMdClose /></button>
                     </span>
                   ))}
                 </div>
@@ -283,8 +305,8 @@ function ClassesPopup({ type, refresh, class_, teachers, grades, students }) {
             </div> 
           </div>
           <div className='footer'>
-            <div className={old ? 'actions old' : 'actions'}>
-              {!old ? (
+            <div className={(class_ !== null) ? 'actions old' : 'actions'}>
+              {(class_ === null) ? (
                 <button onClick={() => request('POST')}>Create</button>
               ) : (
                 <>
@@ -293,7 +315,7 @@ function ClassesPopup({ type, refresh, class_, teachers, grades, students }) {
                 </>
               )}
             </div>
-            <error>{error}</error>
+            <p className='error'>{error}</p>
           </div>
         </div>
       </Popup>
