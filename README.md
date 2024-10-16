@@ -46,17 +46,17 @@ The request body structure can be looked up in the `backend/routes/...` files.
 Here is a list of all api endpoints:
 
 <pre>
-  [POST]                   <b>/register</b>
-  [GET, POST]              <b>/login</b>
-  [GET]                    <b>/blackboard</b>/:organization/:identifier
+  [POST]                      <b>/register</b>
+  [GET, POST]                 <b>/login</b>
+  [GET]                       <b>/blackboard</b>/:organization/:identifier
 
-  [GET, POST, PUT, DELETE] <b>/dashboard/accounts</b>
-  [GET, POST, PUT, DELETE] <b>/dashboard/changes</b>
-  [GET, POST, PUT, DELETE] <b>/dashboard/classes</b>
-  [GET, POST, PUT, DELETE] <b>/dashboard/grades</b>
-  [GET, PUT, DELETE]       <b>/dashboard/organizations</b>
-  [GET, POST, DELETE]      <b>/dashboard/rooms</b>
-  [GET, POST, PUT, DELETE] <b>/dashboard/students</b>
-  [GET, POST, DELETE]      <b>/dashboard/subjects</b>
-  [GET, POST, PUT, DELETE] <b>/dashboard/teachers</b>
+  [GET, POST, PUT, DELETE]    <b>/dashboard/accounts</b>
+  [GET, POST, PUT, DELETE]    <b>/dashboard/changes</b>
+  [GET, POST, PUT, DELETE]    <b>/dashboard/classes</b>
+  [GET, POST, PUT, DELETE]    <b>/dashboard/grades</b>
+  [GET, PUT, DELETE]          <b>/dashboard/organizations</b>
+  [GET, POST, DELETE]         <b>/dashboard/rooms</b>
+  [GET, POST, PUT, DELETE]    <b>/dashboard/students</b>
+  [GET, POST, DELETE]         <b>/dashboard/subjects</b>
+  [GET, POST, PUT, DELETE]    <b>/dashboard/teachers</b>
 </pre>
