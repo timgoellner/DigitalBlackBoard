@@ -2,13 +2,19 @@
   "name": "dbb-api",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
-    "devStart": "nodemon server.js"
+    "devStart": "nodemon server.ts"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/jsonwebtoken": "^9.0.7",
+    "@types/method-override": "^0.0.35",
+    "@types/node": "^22.7.6",
     "bcrypt": "^5.1.0",
     "cors": "^2.8.5",
     "ejs": "^3.1.9",
@@ -20,10 +26,11 @@
     "method-override": "^3.0.0",
     "mysql2": "^3.3.1",
     "passport": "^0.6.0",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "typescript": "^5.6.3"
   },
   "devDependencies": {
     "dotenv": "^16.0.3",
-    "nodemon": "^2.0.22"
+    "nodemon": "^3.1.7"
   }
 }

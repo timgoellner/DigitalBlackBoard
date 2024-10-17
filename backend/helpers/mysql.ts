@@ -88,27 +88,27 @@ DATABASE TABLE SETUP
 */
 
 if (process.env.NODE_ENV !== "production") { require("dotenv").config() }
-const mysql = require("mysql2")
+import mysql_lib, { RowDataPacket, ResultSetHeader } from "mysql2";
 
-const pool = mysql.createPool({
+const pool = mysql_lib.createPool({
    host: process.env.DATABASE_HOST,
    user: process.env.DATABASE_USER,
    password: process.env.DATABASE_PASSWORD,
    database: process.env.DATABASE_NAME
 })
 
-async function sendQuery(query) {
+async function sendQuery(query: string): Promise<RowDataPacket[] | ResultSetHeader> {
    return new Promise(function(resolve, reject) {
       setTimeout(function() {
-         pool.query(query, (error, rows) => {
+         pool.query(query, (error: string, result: RowDataPacket[] | ResultSetHeader) => {
             if (error) {
                console.log("[mysql] error: " + error)
-               resolve(false)
+               reject(error)
             }
-            resolve(rows)
+            resolve(result)
          })
       }, 0);
    });
 }
 
-module.exports = { sendQuery }
+export default sendQuery

@@ -1,14 +1,15 @@
-const jwt =  require('jsonwebtoken')
-const bcypt =  require('bcrypt')
-const express = require('express')
+import jwt, { Secret } from 'jsonwebtoken';
+import bcypt from 'bcrypt';
+import express from 'express';
 const escape = require("mysql2").escape
 
-const mysql = require("../helpers/mysql");
-const validateUser = require("../helpers/validateUser")
+import sendQuery from "../helpers/mysql";
+import validateUser from "../helpers/validateUser";
+import { RowDataPacket } from 'mysql2';
 
 const router = express.Router()
 
-router.post("/", async (request, response) => {
+router.post("/", async (request: express.Request, response: express.Response): Promise<any> => {
   const jwtSecretKey = process.env.JWT_SECRET
 
   const isStaff = request.query.type === 'staff'
@@ -21,7 +22,7 @@ router.post("/", async (request, response) => {
     return response.status(401).json({ message: 'invalid login credentials' })
   }
 
-  const userData = await mysql.sendQuery(`SELECT password, isStaff FROM accounts WHERE organization = ${escape(organization)} AND identifier = ${escape(identifier)}`)
+  const userData = await sendQuery(`SELECT password, isStaff FROM accounts WHERE organization = ${escape(organization)} AND identifier = ${escape(identifier)}`) as RowDataPacket[]
 
   if (!userData.length) {
     return response.status(401).json({ message: 'invalid login credentials' })
@@ -35,7 +36,7 @@ router.post("/", async (request, response) => {
     return response.status(401).json({ message: 'invalid login credentials' })
   }
 
-  const organisationData = await mysql.sendQuery(`SELECT * FROM organizations WHERE name = ${escape(organization)}`)
+  const organisationData = await sendQuery(`SELECT * FROM organizations WHERE name = ${escape(organization)}`) as RowDataPacket[]
   if (organisationData[0].quarantine === 1 && !isStaff) {
     return response.status(401).json({ message: 'organization currently blocks logins' })
   }
@@ -47,11 +48,11 @@ router.post("/", async (request, response) => {
     isStaff
   }
 
-  const token = jwt.sign(data, jwtSecretKey)
+  const token = jwt.sign(data, jwtSecretKey as Secret)
   response.status(200).json({ message: 'valid', token })
 })
 
-router.get("/", async (request, response) => {
+router.get("/", async (request: express.Request, response: express.Response): Promise<any> => {
   const user = await validateUser(request);
   if (user) {
     return response.status(200).json({ message: 'valid', user })
@@ -60,4 +61,4 @@ router.get("/", async (request, response) => {
   }
 })
 
-module.exports = router
+export default router

@@ -1,16 +1,16 @@
 if (process.env.NODE_ENV !== "production") { require("dotenv").config() }
 
-const express = require("express")
-const methodOverride = require("method-override")
-const helmet = require("helmet")
-const cors = require('cors')
+import express from "express"
+import methodOverride from "method-override"
+import helmet from "helmet"
+import cors from 'cors'
 
 const app = express()
 
-const loginRouter = require("./routes/login")
-const registerRouter = require("./routes/register")
-const dashboardRouter = require("./routes/dashboard")
-const blackboardRouter = require("./routes/blackboard")
+import loginRouter from "./routes/login"
+import registerRouter from "./routes/register"
+import dashboardRouter from "./routes/dashboard"
+import blackboardRouter from "./routes/blackboard"
 
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
