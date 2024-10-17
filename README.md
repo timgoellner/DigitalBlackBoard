@@ -40,7 +40,7 @@ npm run devStart
 
 If started with the `docker-compose.yml` file, all incomming requests to `/api` will be routed to the backend.
 
-All api endpoints (besides `/register [GET]` and `/login [POST]`) require the `jwt-token` header as authentication.
+All api endpoints (besides `[GET] /register` and `[POST] /login`) require the `jwt-token` header as authentication.
 The request body structure can be looked up in the `backend/routes/...` files.
 
 Here is a list of all api endpoints:
