@@ -43,12 +43,12 @@ router.post("/", async (request: express.Request, response: express.Response): P
   if (studentForename.length > 45 || studentForename.length === 0 ||
       studentLastname.length > 45 || studentLastname.length === 0 ||
       studentGrade.length > 5 || studentGrade.length === 0 ||
-      (studentSubgrade !== '' && studentSubgrade.length !== 1)) return response.status(401).json({ message: 'invalid parameters' })
+      (studentSubgrade !== '' && studentSubgrade.length !== 1)) return response.status(409).json({ message: 'invalid parameters' })
 
   studentSubgrade = (studentSubgrade === '') ? "IS NULL" : `= ${escape(studentSubgrade)}`
 
   const grade = await sendQuery(`SELECT grades.id FROM grades WHERE organization = ${escape(user.organization)} AND grade = ${escape(studentGrade)} AND subgrade ${studentSubgrade}`) as RowDataPacket[]
-  if (grade.length === 0) return response.status(401).json({ message: 'grade does not exist' })
+  if (grade.length === 0) return response.status(409).json({ message: 'grade does not exist' })
 
   const identifierData = await sendQuery(`SELECT identifier FROM accounts WHERE organization = ${escape(user.organization)} AND isStaff = FALSE ORDER BY identifier DESC LIMIT 1`) as RowDataPacket[]
   const identifier = String(parseInt((!identifierData) ? '0' : identifierData[0].identifier) + 1).padStart(5, '0')
@@ -73,15 +73,15 @@ router.put("/", async (request: express.Request, response: express.Response): Pr
   if (studentForename.length > 45 || studentForename.length === 0 ||
       studentLastname.length > 45 || studentLastname.length === 0 ||
       studentGrade.length > 5 || studentGrade.length === 0 ||
-      (studentSubgrade !== '' && studentSubgrade.length !== 1)) return response.status(401).json({ message: 'invalid parameters' })
+      (studentSubgrade !== '' && studentSubgrade.length !== 1)) return response.status(409).json({ message: 'invalid parameters' })
 
   const existing = await sendQuery(`SELECT * FROM students WHERE organization = ${escape(user.organization)} AND id = ${escape(id)}`) as RowDataPacket[]
-  if (existing.length === 0) return response.status(401).json({ message: 'student does not exist' })
+  if (existing.length === 0) return response.status(409).json({ message: 'student does not exist' })
 
   studentSubgrade = (studentSubgrade === '') ? "IS NULL" : `= ${escape(studentSubgrade)}`
 
   const grade = await sendQuery(`SELECT grades.id FROM grades WHERE organization = ${escape(user.organization)} AND grade = ${escape(studentGrade)} AND subgrade ${studentSubgrade}`) as RowDataPacket[]
-  if (grade.length === 0) return response.status(401).json({ message: 'grade does not exist' })
+  if (grade.length === 0) return response.status(409).json({ message: 'grade does not exist' })
 
   await sendQuery(`UPDATE students SET grade = ${escape(grade[0].id)} WHERE id = ${escape(id)}`)
 
@@ -95,7 +95,7 @@ router.delete("/", async (request: express.Request, response: express.Response):
   var { id } = request.body
 
   const existing = await sendQuery(`SELECT * FROM students WHERE organization = ${escape(user.organization)} AND id = ${escape(id)}`) as RowDataPacket[]
-  if (existing.length === 0) return response.status(401).json({ message: 'student does not exist' })
+  if (existing.length === 0) return response.status(409).json({ message: 'student does not exist' })
 
   await sendQuery(`DELETE FROM students WHERE organization = ${escape(user.organization)} AND id = ${escape(existing[0].id)}`)
   await sendQuery(`DELETE FROM accounts WHERE organization = ${escape(user.organization)} AND id = ${escape(existing[0].account)}`)

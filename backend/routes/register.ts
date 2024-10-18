@@ -15,11 +15,11 @@ router.post("/", async (request: express.Request, response: express.Response): P
   organization = organization.toLowerCase()
 
   if (!organization || !identifier || !password) {
-    return response.status(401).json({ message: 'invalid credentials' })
+    return response.status(409).json({ message: 'invalid credentials' })
   }
 
   const alreadyExists = await sendQuery(`SELECT COUNT(*) AS count FROM accounts WHERE organization = ${escape(organization)}`) as RowDataPacket[]
-  if (alreadyExists[0].count > 0) return response.status(401).json({ message: 'organisation already exists' })
+  if (alreadyExists[0].count > 0) return response.status(409).json({ message: 'organisation already exists' })
 
   await sendQuery(`INSERT INTO organizations (name, quarantine) VALUES (${escape(organization)}, 0)`)
 

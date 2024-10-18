@@ -23,11 +23,11 @@ router.post("/", async (request: express.Request, response: express.Response): P
   var { identifier, password, confirmPassword } = request.body
   identifier = identifier?.toLowerCase()
 
-  if (identifier.length > 45 || identifier.length === 0 || password.length === 0) return response.status(401).json({ message: 'invalid parameters' })
-  if (password !== confirmPassword) return response.status(401).json({ message: 'passwords do not match' })
+  if (identifier.length > 45 || identifier.length === 0 || password.length === 0) return response.status(409).json({ message: 'invalid parameters' })
+  if (password !== confirmPassword) return response.status(409).json({ message: 'passwords do not match' })
 
   const account = await sendQuery(`SELECT * FROM accounts WHERE organization = ${escape(user.organization)} AND identifier = ${escape(identifier)}`) as RowDataPacket[]
-  if (account.length > 0) return response.status(401).json({ message: 'account already exists' })
+  if (account.length > 0) return response.status(409).json({ message: 'account already exists' })
 
   password = await bcypt.hash(password, 10)
 
@@ -42,11 +42,11 @@ router.put("/", async (request: express.Request, response: express.Response): Pr
 
   var { id, password, confirmPassword } = request.body
 
-  if (password.length === 0) return response.status(401).json({ message: 'invalid parameters' })
-  if (password !== confirmPassword) return response.status(401).json({ message: 'passwords do not match' })
+  if (password.length === 0) return response.status(409).json({ message: 'invalid parameters' })
+  if (password !== confirmPassword) return response.status(409).json({ message: 'passwords do not match' })
 
   const account = await sendQuery(`SELECT * FROM accounts WHERE organization = ${escape(user.organization)} AND id = ${escape(id)}`) as RowDataPacket[]
-  if (account.length === 0) return response.status(401).json({ message: 'account does not exist' })
+  if (account.length === 0) return response.status(409).json({ message: 'account does not exist' })
 
   password = await bcypt.hash(password, 10)
 
@@ -61,10 +61,10 @@ router.delete("/", async (request: express.Request, response: express.Response):
 
   var { id, identifier } = request.body
 
-  if (user.identifier === identifier) return response.status(401).json({ message: 'cannot delete current account' })
+  if (user.identifier === identifier) return response.status(409).json({ message: 'cannot delete current account' })
 
   const existing = await sendQuery(`SELECT * FROM accounts WHERE organization = ${escape(user.organization)} AND id = ${escape(id)}`) as RowDataPacket[]
-  if (existing.length === 0) return response.status(401).json({ message: 'account does not exist' })
+  if (existing.length === 0) return response.status(409).json({ message: 'account does not exist' })
 
   await sendQuery(`DELETE FROM accounts WHERE organization = ${escape(user.organization)} AND id = ${escape(id)}`)
   

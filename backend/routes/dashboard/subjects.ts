@@ -25,7 +25,7 @@ router.post("/", async (request: express.Request, response: express.Response): P
   var { subject } = request.body
   subject = subject?.toLowerCase()
 
-  if (subject.length > 45 || subject.length === 0) return response.status(401).json({ message: 'invalid parameters' })
+  if (subject.length > 45 || subject.length === 0) return response.status(409).json({ message: 'invalid parameters' })
 
   await sendQuery(`INSERT INTO subjects (organization, name) VALUES (${escape(user.organization)}, ${escape(subject)})`)
 

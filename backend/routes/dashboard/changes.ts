@@ -54,12 +54,12 @@ router.post("/", async (request: express.Request, response: express.Response): P
   changeSubject = changeSubject?.toLowerCase()
 
   const class_ = await sendQuery(`SELECT * FROM classes WHERE organization = ${escape(user.organization)} AND id = ${escape(changeClass)}`) as RowDataPacket[]
-  if (class_.length === 0) return response.status(401).json({ message: 'class does not exist' })
+  if (class_.length === 0) return response.status(409).json({ message: 'class does not exist' })
 
   const change = await sendQuery(`SELECT * FROM changes WHERE organization = ${escape(user.organization)} AND class = ${escape(changeClass)}`) as RowDataPacket[]
-  if (change.length > 0) return response.status(401).json({ message: 'class already has a change' })
+  if (change.length > 0) return response.status(409).json({ message: 'class already has a change' })
 
-  if (!types.some(type => type === changeType)) return response.status(401).json({ message: 'invalid type' })
+  if (!types.some(type => type === changeType)) return response.status(409).json({ message: 'invalid type' })
 
   const changeId = (await sendQuery(`INSERT INTO changes (organization, type, class) VALUES (${escape(user.organization)}, ${escape(changeType)}, ${escape(class_[0].id)})`) as ResultSetHeader).insertId
 
@@ -67,21 +67,21 @@ router.post("/", async (request: express.Request, response: express.Response): P
   if (changeType === 'change') {
     if (changeTeacher) {
       const teacher = await sendQuery(`SELECT * FROM teachers WHERE organization = ${escape(user.organization)} AND id = ${escape(changeTeacher)}`) as RowDataPacket[]
-      if (teacher.length === 0) return response.status(401).json({ message: 'teacher does not exist' })
+      if (teacher.length === 0) return response.status(409).json({ message: 'teacher does not exist' })
 
       changes.push(`teacher = ${escape(teacher[0].id)}`)
     }
 
     if (changeSubject) {
       const subject = await sendQuery(`SELECT * FROM subjects WHERE organization = ${escape(user.organization)} AND name = ${escape(changeSubject)}`) as RowDataPacket[]
-      if (subject.length === 0) return response.status(401).json({ message: 'subject does not exist' })
+      if (subject.length === 0) return response.status(409).json({ message: 'subject does not exist' })
 
       changes.push(`subject = ${escape(subject[0].id)}`)
     }
 
     if (changeRoom) {
       const room = await sendQuery(`SELECT * FROM rooms WHERE organization = ${escape(user.organization)} AND name = ${escape(changeRoom)}`) as RowDataPacket[]
-      if (room.length === 0) return response.status(401).json({ message: 'room does not exist' })
+      if (room.length === 0) return response.status(409).json({ message: 'room does not exist' })
 
       changes.push(`room = ${escape(room[0].id)}`)
     }
@@ -89,7 +89,7 @@ router.post("/", async (request: express.Request, response: express.Response): P
   
   if (changeType === 'change' || changeType === 'information') {
     if (changeInformation) {
-      if (changeInformation.length > 100) return response.status(401).json({ message: 'too long information' })
+      if (changeInformation.length > 100) return response.status(409).json({ message: 'too long information' })
 
       changes.push(`information = ${escape(changeInformation)}`)
     }
@@ -109,12 +109,12 @@ router.put("/", async (request: express.Request, response: express.Response): Pr
   changeSubject = changeSubject?.toLowerCase()
 
   const change = await sendQuery(`SELECT * FROM changes WHERE organization = ${escape(user.organization)} AND id = ${escape(changeId)}`) as RowDataPacket[]
-  if (change.length === 0) return response.status(401).json({ message: 'change does not exist' })
+  if (change.length === 0) return response.status(409).json({ message: 'change does not exist' })
 
   const class_ = await sendQuery(`SELECT * FROM classes WHERE organization = ${escape(user.organization)} AND id = ${escape(changeClass)}`) as RowDataPacket[]
-  if (class_.length === 0) return response.status(401).json({ message: 'class does not exist' })
+  if (class_.length === 0) return response.status(409).json({ message: 'class does not exist' })
 
-  if (!types.some(type => type === changeType)) return response.status(401).json({ message: 'invalid type' })
+  if (!types.some(type => type === changeType)) return response.status(409).json({ message: 'invalid type' })
 
   const changes = [`type = ${escape(changeType)}`]
 
@@ -125,21 +125,21 @@ router.put("/", async (request: express.Request, response: express.Response): Pr
   if (changeType === 'change') {
     if (changeTeacher) {
       const teacher = await sendQuery(`SELECT * FROM teachers WHERE organization = ${escape(user.organization)} AND id = ${escape(changeTeacher)}`) as RowDataPacket[]
-      if (teacher.length === 0) return response.status(401).json({ message: 'teacher does not exist' })
+      if (teacher.length === 0) return response.status(409).json({ message: 'teacher does not exist' })
 
       changes.push(`teacher = ${escape(teacher[0].id)}`)
     } else changes.push("teacher = NULL")
 
     if (changeSubject) {
       const subject = await sendQuery(`SELECT * FROM subjects WHERE organization = ${escape(user.organization)} AND name = ${escape(changeSubject)}`) as RowDataPacket[]
-      if (subject.length === 0) return response.status(401).json({ message: 'subject does not exist' })
+      if (subject.length === 0) return response.status(409).json({ message: 'subject does not exist' })
 
       changes.push(`subject = ${escape(subject[0].id)}`)
     } else changes.push("subject = NULL")
 
     if (changeRoom) {
       const room = await sendQuery(`SELECT * FROM rooms WHERE organization = ${escape(user.organization)} AND name = ${escape(changeRoom)}`) as RowDataPacket[]
-      if (room.length === 0) return response.status(401).json({ message: 'room does not exist' })
+      if (room.length === 0) return response.status(409).json({ message: 'room does not exist' })
 
       changes.push(`room = ${escape(room[0].id)}`)
     } else changes.push("room = NULL")
@@ -147,7 +147,7 @@ router.put("/", async (request: express.Request, response: express.Response): Pr
 
   if (changeType === 'change' || changeType === 'information') {
     if (changeInformation) {
-      if (changeInformation.length > 100) return response.status(401).json({ message: 'too long information' })
+      if (changeInformation.length > 100) return response.status(409).json({ message: 'too long information' })
 
       changes.push(`information = ${escape(changeInformation)}`)
     } else changes.push("information = NULL")
@@ -165,7 +165,7 @@ router.delete("/", async (request: express.Request, response: express.Response):
   var { changeId } = request.body
 
   const deletion = await sendQuery(`DELETE FROM changes WHERE organization = ${escape(user.organization)} AND id = ${escape(changeId)}`) as ResultSetHeader
-  if (deletion.affectedRows === 0) return response.status(401).json({ message: 'change does not exist' })
+  if (deletion.affectedRows === 0) return response.status(409).json({ message: 'change does not exist' })
   
   return response.status(200).json({ message: 'success' })
 })

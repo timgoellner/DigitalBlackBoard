@@ -11,7 +11,7 @@ router.get("/", async (request: express.Request, response: express.Response): Pr
   if (!user || !user.isStaff) return response.status(401).json({ message: 'error' })
   
   const organizationData = await sendQuery(`SELECT * FROM organizations WHERE name = ${escape(user.organization)}`) as RowDataPacket[]
-  if (organizationData.length === 0) return response.status(401).json({ message: 'error' })
+  if (organizationData.length === 0) return response.status(409).json({ message: 'organization does not exist' })
   const organization = organizationData[0]
   
   return response.status(200).json({ message: 'success', organization })

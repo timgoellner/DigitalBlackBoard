@@ -36,10 +36,10 @@ router.post("/", async (request: express.Request, response: express.Response): P
   teacherForename = teacherForename.toLowerCase()
   teacherLastname = teacherLastname.toLowerCase()
 
-  if (teacherForename.length > 45 || teacherForename.length === 0 || teacherLastname.length > 45 || teacherLastname.length === 0) return response.status(401).json({ message: 'invalid parameters' })
+  if (teacherForename.length > 45 || teacherForename.length === 0 || teacherLastname.length > 45 || teacherLastname.length === 0) return response.status(409).json({ message: 'invalid parameters' })
 
   const existing = await sendQuery(`SELECT * FROM teachers WHERE organization = ${escape(user.organization)} AND forename = ${escape(teacherForename)} AND lastname = ${escape(teacherLastname)}`) as RowDataPacket[]
-  if (existing.length > 0) return response.status(401).json({ message: 'teacher already exists' })
+  if (existing.length > 0) return response.status(409).json({ message: 'teacher already exists' })
 
   await sendQuery("SET information_schema_stats_expiry = 0")
   const nextPK = await sendQuery("SELECT AUTO_INCREMENT FROM information_schema.tables WHERE table_name = 'teachers' AND table_schema = DATABASE( )") as RowDataPacket[]
@@ -48,7 +48,7 @@ router.post("/", async (request: express.Request, response: express.Response): P
   for (var i = 0; i < teacherSubjects.length; i++) {
     const subject = teacherSubjects.at(i).toLowerCase()
     const existingSubject = await sendQuery(`SELECT * FROM subjects WHERE organization = ${escape(user.organization)} AND name = ${escape(subject)}`) as RowDataPacket[]
-    if (existingSubject.length === 0) return response.status(401).json({ message: `subject ${subject} does not exist` })
+    if (existingSubject.length === 0) return response.status(409).json({ message: `subject ${subject} does not exist` })
 
     subjectIds[subject] = existingSubject[0].id
   }
@@ -71,10 +71,10 @@ router.put("/", async (request: express.Request, response: express.Response): Pr
   teacherForename = teacherForename.toLowerCase()
   teacherLastname = teacherLastname.toLowerCase()
 
-  if (teacherForename.length > 45 || teacherForename.length === 0 || teacherLastname.length > 45 || teacherLastname.length === 0) return response.status(401).json({ message: 'invalid parameters' })
+  if (teacherForename.length > 45 || teacherForename.length === 0 || teacherLastname.length > 45 || teacherLastname.length === 0) return response.status(409).json({ message: 'invalid parameters' })
 
   const existing = await sendQuery(`SELECT * FROM teachers WHERE organization = ${escape(user.organization)} AND forename = ${escape(teacherForename)} AND lastname = ${escape(teacherLastname)}`) as RowDataPacket[]
-  if (existing.length === 0) return response.status(401).json({ message: 'teacher does not exist' })
+  if (existing.length === 0) return response.status(409).json({ message: 'teacher does not exist' })
 
   const currentTeacherSubjects = await sendQuery(`SELECT subject FROM teacher_subjects WHERE organization = ${escape(user.organization)} AND teacher = ${escape(existing[0].id)}`) as RowDataPacket[]
   const subjects = await sendQuery(`SELECT id, name FROM subjects WHERE organization = ${escape(user.organization)}`) as RowDataPacket[]
@@ -83,7 +83,7 @@ router.put("/", async (request: express.Request, response: express.Response): Pr
     const teacherSubject = teacherSubjects.at(i)
 
     const subjectData = subjects.find(subject => subject.name === teacherSubject)
-    if (!subjectData) return response.status(401).json({ message: `subject ${teacherSubject} does not exist` })
+    if (!subjectData) return response.status(409).json({ message: `subject ${teacherSubject} does not exist` })
     
     const subjectId = subjectData.id
     const currentSubject = currentTeacherSubjects.find(currentTeacherSubject => currentTeacherSubject.subject === subjectId)
@@ -108,12 +108,12 @@ router.delete("/", async (request: express.Request, response: express.Response):
   teacherLastname = teacherLastname.toLowerCase()
 
   const existing = await sendQuery(`SELECT * FROM teachers WHERE organization = ${escape(user.organization)} AND forename = ${escape(teacherForename)} AND lastname = ${escape(teacherLastname)}`) as RowDataPacket[]
-  if (existing.length === 0) return response.status(401).json({ message: 'teacher does not exist' })
+  if (existing.length === 0) return response.status(409).json({ message: 'teacher does not exist' })
   
   await sendQuery(`DELETE FROM teacher_subjects WHERE organization = ${escape(user.organization)} AND teacher = ${escape(existing[0].id)}`)
 
   const deletion = await sendQuery(`DELETE FROM teachers WHERE organization = ${escape(user.organization)} AND id = ${escape(existing[0].id)}`) as ResultSetHeader
-  if (deletion.affectedRows === 0) return response.status(401).json({ message: 'error' })
+  if (deletion.affectedRows === 0) return response.status(409).json({ message: 'error' })
   
   return response.status(200).json({ message: 'success' })
 })

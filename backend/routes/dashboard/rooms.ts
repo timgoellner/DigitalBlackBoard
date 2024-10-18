@@ -24,7 +24,7 @@ router.post("/", async (request: express.Request, response: express.Response): P
 
   var { room } = request.body
 
-  if (room.length > 45 || room.length === 0) return response.status(401).json({ message: 'invalid parameters' })
+  if (room.length > 45 || room.length === 0) return response.status(409).json({ message: 'invalid parameters' })
 
   await sendQuery(`INSERT INTO rooms (organization, name) VALUES (${escape(user.organization)}, ${escape(room)})`)
 

@@ -70,22 +70,22 @@ router.post("/", async (request: express.Request, response: express.Response): P
     !weekdays.includes(classWeekday) ||
     !/^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/.test(classStarttime) ||
     classDuration == 0
-  ) return response.status(401).json({ message: 'invalid parameters' })
+  ) return response.status(409).json({ message: 'invalid parameters' })
 
   const starttimeSplit = classStarttime.split(":")
-  if ((starttimeSplit[0]*60 + parseInt(starttimeSplit[1]) + parseInt(classDuration)) > 1440) return response.status(401).json({ message: 'class duration extends 24 hours' })
+  if ((starttimeSplit[0]*60 + parseInt(starttimeSplit[1]) + parseInt(classDuration)) > 1440) return response.status(409).json({ message: 'class duration extends 24 hours' })
 
   const teacher = await sendQuery(`SELECT * FROM teachers WHERE organization = ${escape(user.organization)} AND id = ${escape(classTeacher)}`) as RowDataPacket[]
-  if (teacher.length === 0) return response.status(401).json({ message: 'teacher does not exist' })
+  if (teacher.length === 0) return response.status(409).json({ message: 'teacher does not exist' })
 
   const subject = await sendQuery(`SELECT * FROM subjects WHERE organization = ${escape(user.organization)} AND name = ${escape(classSubject)}`) as RowDataPacket[]
-  if (subject.length === 0) return response.status(401).json({ message: 'subject does not exist' })
+  if (subject.length === 0) return response.status(409).json({ message: 'subject does not exist' })
 
   const room = await sendQuery(`SELECT * FROM rooms WHERE organization = ${escape(user.organization)} AND name = ${escape(classRoom)}`) as RowDataPacket[]
-  if (room.length === 0) return response.status(401).json({ message: 'room does not exist' })
+  if (room.length === 0) return response.status(409).json({ message: 'room does not exist' })
 
   const grade = await sendQuery(`SELECT * FROM grades WHERE organization = ${escape(user.organization)} AND id = ${escape(classGrade)}`) as RowDataPacket[]
-  if (grade.length === 0) return response.status(401).json({ message: 'grade does not exist' })
+  if (grade.length === 0) return response.status(409).json({ message: 'grade does not exist' })
 
   const classId = (await sendQuery(`INSERT INTO classes (organization, name, weekday, startTime, duration, teacher, subject, room, grade, usesGrade) VALUES (${escape(user.organization)}, ${escape(className)}, ${escape(classWeekday)}, ${escape(classStarttime)}, ${escape(classDuration)}, ${escape(teacher[0].id)}, ${escape(subject[0].id)}, ${escape(room[0].id)}, ${escape(grade[0].id)}, ${escape(grade[0].hasSubgrade)})`) as ResultSetHeader).insertId
 
@@ -111,25 +111,25 @@ router.put("/", async (request: express.Request, response: express.Response): Pr
     !weekdays.includes(classWeekday) ||
     !/^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/.test(classStarttime) ||
     classDuration == 0
-  ) return response.status(401).json({ message: 'invalid parameters' })
+  ) return response.status(409).json({ message: 'invalid parameters' })
 
   const starttimeSplit = classStarttime.split(":")
-  if ((starttimeSplit[0]*60 + parseInt(starttimeSplit[1]) + parseInt(classDuration)) > 1440) return response.status(401).json({ message: 'class duration extends 24 hours' })
+  if ((starttimeSplit[0]*60 + parseInt(starttimeSplit[1]) + parseInt(classDuration)) > 1440) return response.status(409).json({ message: 'class duration extends 24 hours' })
 
   const existing = await sendQuery(`SELECT * FROM classes WHERE organization = ${escape(user.organization)} AND id = ${escape(classId)}`) as RowDataPacket[]
-  if (existing.length === 0) return response.status(401).json({ message: 'class does not exist' })
+  if (existing.length === 0) return response.status(409).json({ message: 'class does not exist' })
 
   const teacher = await sendQuery(`SELECT * FROM teachers WHERE organization = ${escape(user.organization)} AND id = ${escape(classTeacher)}`) as RowDataPacket[]
-  if (teacher.length === 0) return response.status(401).json({ message: 'teacher does not exist' })
+  if (teacher.length === 0) return response.status(409).json({ message: 'teacher does not exist' })
 
   const subject = await sendQuery(`SELECT * FROM subjects WHERE organization = ${escape(user.organization)} AND name = ${escape(classSubject)}`) as RowDataPacket[]
-  if (subject.length === 0) return response.status(401).json({ message: 'subject does not exist' })
+  if (subject.length === 0) return response.status(409).json({ message: 'subject does not exist' })
 
   const room = await sendQuery(`SELECT * FROM rooms WHERE organization = ${escape(user.organization)} AND name = ${escape(classRoom)}`) as RowDataPacket[]
-  if (room.length === 0) return response.status(401).json({ message: 'room does not exist' })
+  if (room.length === 0) return response.status(409).json({ message: 'room does not exist' })
 
   const grade = await sendQuery(`SELECT * FROM grades WHERE organization = ${escape(user.organization)} AND id = ${escape(classGrade)}`) as RowDataPacket[]
-  if (grade.length === 0) return response.status(401).json({ message: 'grade does not exist' })
+  if (grade.length === 0) return response.status(409).json({ message: 'grade does not exist' })
 
   const currentClassStudents = await sendQuery(`SELECT * FROM student_classes WHERE organization = ${escape(user.organization)} AND class = ${escape(existing[0].id)}`) as RowDataPacket[]
   const students = await sendQuery(`SELECT * FROM students WHERE organization = ${escape(user.organization)}`) as RowDataPacket[]
@@ -138,7 +138,7 @@ router.put("/", async (request: express.Request, response: express.Response): Pr
     const classStudent = classStudents.at(i)
 
     const studentData = students.find((student) => student.id === classStudent.id)
-    if (!studentData) return response.status(401).json({ message: `student ${classStudent.forename} ${classStudent.lastname} does not exist` })
+    if (!studentData) return response.status(409).json({ message: `student ${classStudent.forename} ${classStudent.lastname} does not exist` })
 
     const currentStudent = currentClassStudents.find((currentClassStudent) => currentClassStudent.student == classStudent.id)
     
@@ -164,7 +164,7 @@ router.delete("/", async (request: express.Request, response: express.Response):
   await sendQuery(`DELETE FROM student_classes WHERE organization = ${escape(user.organization)} AND class = ${escape(classId)}`)
 
   const deletion = await sendQuery(`DELETE FROM classes WHERE organization = ${escape(user.organization)} AND id = ${escape(classId)}`) as ResultSetHeader
-  if (deletion.affectedRows === 0) return response.status(401).json({ message: 'class does not exist' })
+  if (deletion.affectedRows === 0) return response.status(409).json({ message: 'class does not exist' })
   
   return response.status(200).json({ message: 'success' })
 })

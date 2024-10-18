@@ -33,10 +33,10 @@ router.post("/", async (request: express.Request, response: express.Response): P
   var { grade, subgradesCount } = request.body
   grade = grade.toLowerCase()
 
-  if (grade.length > 5 || grade.length === 0 || subgradesCount > 8) return response.status(401).json({ message: 'invalid parameters' })
+  if (grade.length > 5 || grade.length === 0 || subgradesCount > 8) return response.status(409).json({ message: 'invalid parameters' })
 
   const existing = await sendQuery(`SELECT * FROM grades WHERE organization = ${escape(user.organization)} AND grade = ${escape(grade)}`) as RowDataPacket[]
-  if (existing.length > 0) return response.status(401).json({ message: 'grade already exists' }) 
+  if (existing.length > 0) return response.status(409).json({ message: 'grade already exists' }) 
 
   if (subgradesCount === 0) {
     await sendQuery(`INSERT INTO grades (organization, grade, hasSubgrade) VALUES (${escape(user.organization)}, ${escape(grade)}, 0)`)
@@ -57,13 +57,13 @@ router.put("/", async (request: express.Request, response: express.Response): Pr
   var { grade, subgradesCount } = request.body
   grade = grade.toLowerCase()
 
-  if (grade.length > 5 || grade.length === 0 || subgradesCount > 8) return response.status(401).json({ message: 'invalid parameters' })
+  if (grade.length > 5 || grade.length === 0 || subgradesCount > 8) return response.status(409).json({ message: 'invalid parameters' })
 
   const existing = await sendQuery(`SELECT * FROM grades WHERE organization = ${escape(user.organization)} AND grade = ${escape(grade)}`) as RowDataPacket[]
-  if (existing.length === 0) return response.status(401).json({ message: 'grade does not exist' })
+  if (existing.length === 0) return response.status(409).json({ message: 'grade does not exist' })
 
   var difference = subgradesCount - existing.length
-  if (!existing[0].hasSubgrade) return response.status(401).json({ message: 'grade does not have subgrades' })
+  if (!existing[0].hasSubgrade) return response.status(409).json({ message: 'grade does not have subgrades' })
 
   const subgradeNames = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
   if (difference > 0) {
@@ -73,7 +73,7 @@ router.put("/", async (request: express.Request, response: express.Response): Pr
   } else if (difference < 0) {
     for ( ; difference < 0; difference++) {
       const deletion = await sendQuery(`DELETE FROM grades WHERE organization = ${escape(user.organization)} AND grade = ${escape(grade)} AND subgrade = ${escape(subgradeNames[existing.length + difference])}`) as ResultSetHeader
-      if (deletion.affectedRows === 0) return response.status(401).json({ message: 'subgrade is not empty' })
+      if (deletion.affectedRows === 0) return response.status(409).json({ message: 'subgrade is not empty' })
     }
   }
   
@@ -88,10 +88,10 @@ router.delete("/", async (request: express.Request, response: express.Response):
   grade = grade.toLowerCase()
 
   const existing = await sendQuery(`SELECT * FROM grades WHERE organization = ${escape(user.organization)} AND grade = ${escape(grade)}`) as RowDataPacket[]
-  if (existing.length === 0) return response.status(401).json({ message: 'grade does not exist' })
+  if (existing.length === 0) return response.status(409).json({ message: 'grade does not exist' })
   
   const deletion = await sendQuery(`DELETE FROM grades WHERE organization = ${escape(user.organization)} AND grade = ${escape(grade)}`) as ResultSetHeader
-  if (deletion.affectedRows === 0) return response.status(401).json({ message: 'grade is not empty' })
+  if (deletion.affectedRows === 0) return response.status(409).json({ message: 'grade is not empty' })
   
   return response.status(200).json({ message: 'success' })
 })
