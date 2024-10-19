@@ -1,7 +1,7 @@
 # Digital Blackboard
 
 A digital blackboard for schools.<br>
-**This repository is optimized for personal use and is therefore not "plug and play ready"**
+**This repository is not optimized for recreational use and is therefore not "plug and play ready"**
 
 Detailed information about the project can be found [here](https://timgöllner.de/posts/2).
 
