@@ -1,11 +1,10 @@
-import jwt, { Secret } from 'jsonwebtoken';
-import bcypt from 'bcrypt';
-import express from 'express';
-const escape = require("mysql2").escape
+import jwt, { Secret } from 'jsonwebtoken'
+import bcypt from 'bcrypt'
+import express from 'express'
+import { RowDataPacket, escape } from 'mysql2'
 
-import sendQuery from "../helpers/mysql";
-import validateUser from "../helpers/validateUser";
-import { RowDataPacket } from 'mysql2';
+import sendQuery from "../helpers/mysql"
+import validateUser from "../helpers/validateUser"
 
 const router = express.Router()
 

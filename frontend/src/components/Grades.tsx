@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
 
 import { MdAccountTree, MdPeopleAlt } from "react-icons/md";
 import { IoLanguageSharp } from "react-icons/io5";

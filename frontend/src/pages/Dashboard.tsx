@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { useState, SetStateAction } from 'react';
 import { useNavigate, useLoaderData } from 'react-router-dom';
-import { SetStateAction, useState } from 'react';
 
 import { PiChalkboardTeacherFill, PiStudentFill } from "react-icons/pi";
 import { FaPeopleLine } from "react-icons/fa6";

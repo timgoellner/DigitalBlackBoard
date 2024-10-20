@@ -1,9 +1,8 @@
 import express from 'express'
-const escape = require("mysql2").escape
+import { RowDataPacket, escape } from 'mysql2'
 
 import sendQuery from "../helpers/mysql"
 import validateUser from "../helpers/validateUser"
-import { RowDataPacket } from 'mysql2'
 
 const router = express.Router()
 

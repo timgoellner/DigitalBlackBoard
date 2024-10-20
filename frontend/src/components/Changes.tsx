@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
 
 import { BiSolidBookBookmark } from "react-icons/bi";
 import { MdSmsFailed } from "react-icons/md";

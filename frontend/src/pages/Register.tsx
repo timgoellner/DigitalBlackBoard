@@ -1,5 +1,4 @@
-import React from 'react';
-import { FormEvent, useState } from 'react'
+import React, { FormEvent, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 
 import "../styles/Login.css"

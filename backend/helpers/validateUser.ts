@@ -2,8 +2,7 @@ import { Request } from 'express'
 
 import jwt from 'jsonwebtoken'
 import sendQuery from './mysql'
-import { RowDataPacket } from 'mysql2'
-const esc = require("mysql2").escape
+import { RowDataPacket, escape } from 'mysql2'
 
 type User = {
   signInTime: Date,
@@ -19,7 +18,7 @@ async function validateUser(request: Request) {
     const user = jwt.verify(token, jwtSecretKey) as User
 
     if (user && !user.isStaff) {
-      const quarantine = await sendQuery(`SELECT * FROM organizations WHERE name = ${esc(user.organization)}`) as RowDataPacket[]
+      const quarantine = await sendQuery(`SELECT * FROM organizations WHERE name = ${escape(user.organization)}`) as RowDataPacket[]
       if (quarantine[0].quarantine === 1) return false
     }
 

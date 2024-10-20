@@ -87,7 +87,7 @@ DATABASE TABLE SETUP
     - name (varchar(45) [nn])
 */
 
-if (process.env.NODE_ENV !== "production") { require("dotenv").config() }
+import 'dotenv/config'
 import mysql_lib, { RowDataPacket, ResultSetHeader } from "mysql2";
 
 const pool = mysql_lib.createPool({

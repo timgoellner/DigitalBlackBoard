@@ -1,4 +1,4 @@
-if (process.env.NODE_ENV !== "production") { require("dotenv").config() }
+import 'dotenv/config'
 
 import express from "express"
 import methodOverride from "method-override"

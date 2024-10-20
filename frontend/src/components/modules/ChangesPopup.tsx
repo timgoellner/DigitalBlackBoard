@@ -1,5 +1,4 @@
-import React from 'react'
-import { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import Popup from 'reactjs-popup'
 import { IoMdClose } from "react-icons/io"
 
