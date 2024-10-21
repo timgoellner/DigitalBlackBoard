@@ -87,3 +87,27 @@
   }
 }
 
+.screen-alert {
+  display: none;
+}
+
+@media only screen and (max-width: 1000px) {
+  .dashboard {
+    display: none;
+  }
+
+  .screen-alert {
+    display: block;
+    margin: 1rem;
+
+    div {
+      display: flex;
+      gap: .7rem;
+      cursor: pointer;
+      width: fit-content;
+      padding: .3rem 1rem;
+      border: 2px var(--blue) solid;
+      border-radius: .5rem;
+    }
+  }
+}

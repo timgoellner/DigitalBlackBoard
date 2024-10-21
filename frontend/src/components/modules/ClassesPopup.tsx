@@ -231,7 +231,7 @@ function ClassesPopup({ refresh, class_, teachers, grades, students }: Props) {
                 />
               </div>
             </div>
-            <div className='time'>
+            <div className='date'>
               <div>
                 <p>Weekday</p>
                 <select
@@ -248,20 +248,22 @@ function ClassesPopup({ refresh, class_, teachers, grades, students }: Props) {
                   <option value="sunday">Sunday</option>
                 </select>
               </div>
-              <div>
-                <p>Start Time</p>
-                <input
-                  value={classStarttime}
-                  onChange={e => setClassStarttime(e.target.value)}
-                  type='time'
-                />
-              </div>
-              <div>
-                <p>Duration</p>
-                <input
-                  value={classDuration}
-                  onChange={e => setClassDuration(e.target.value)}
-                />
+              <div className='time'>
+                <div>
+                  <p>Start Time</p>
+                  <input
+                    value={classStarttime}
+                    onChange={e => setClassStarttime(e.target.value)}
+                    type='time'
+                  />
+                </div>
+                <div>
+                  <p>Duration</p>
+                  <input
+                    value={classDuration}
+                    onChange={e => setClassDuration(e.target.value)}
+                  />
+                </div>
               </div>
             </div>
             <div>

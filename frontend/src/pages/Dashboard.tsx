@@ -48,47 +48,53 @@ function Dashboard() {
   const user = useLoaderData() as User
 
   return (
-    <div className='dashboard'>
-      <div className='controll-section'>
-        <div>
-          <span>
-            <p>Digital</p>
-            <p>Black</p>
-            <p>Board</p>
-          </span>
-          <h1> Dashboard</h1>
-        </div>
-        <div className='bars'>
-          <div className='bar'>
-            <div onClick={() => selectPage(0)} className='selected'><IoLayers /> Grades</div>
-            <div onClick={() => selectPage(1)}><PiChalkboardTeacherFill /> Teachers</div>
-            <div onClick={() => selectPage(2)}><PiStudentFill /> Students</div>
-            <div onClick={() => selectPage(3)}><FaPeopleLine /> Classes</div>
+    <>
+      <div className='dashboard'>
+        <div className='controll-section'>
+          <div>
+            <span>
+              <p>Digital</p>
+              <p>Black</p>
+              <p>Board</p>
+            </span>
+            <h1> Dashboard</h1>
           </div>
-          <hr />
-          <div className='bar'>
-            <div onClick={() => selectPage(4)}><FaExclamationTriangle /> Changes</div>
-            <div onClick={() => selectPage(5)}><IoSettingsSharp /> Settings</div>
+          <div className='bars'>
+            <div className='bar'>
+              <div onClick={() => selectPage(0)} className='selected'><IoLayers /> Grades</div>
+              <div onClick={() => selectPage(1)}><PiChalkboardTeacherFill /> Teachers</div>
+              <div onClick={() => selectPage(2)}><PiStudentFill /> Students</div>
+              <div onClick={() => selectPage(3)}><FaPeopleLine /> Classes</div>
+            </div>
+            <hr />
+            <div className='bar'>
+              <div onClick={() => selectPage(4)}><FaExclamationTriangle /> Changes</div>
+              <div onClick={() => selectPage(5)}><IoSettingsSharp /> Settings</div>
+            </div>
+            <hr />
+            <div className='bar'>
+              <div onClick={() => logout()}><FiLogOut /> Logout</div>
+            </div>
           </div>
-          <hr />
-          <div className='bar'>
-            <div onClick={() => logout()}><FiLogOut /> Logout</div>
+          <div className='info'>
+            {user.identifier} @ {user.organization}
           </div>
         </div>
-        <div className='info'>
-          {user.identifier} @ {user.organization}
-        </div>
-      </div>
 
-      {
-        (page === 0 && <Grades />) ||
-        (page === 1 && <Teachers />) ||
-        (page === 2 && <Students />) ||
-        (page === 3 && <Classes />) ||
-        (page === 4 && <Changes />) ||
-        (page === 5 && <Settings />)
-      }
-    </div>
+        {
+          (page === 0 && <Grades />) ||
+          (page === 1 && <Teachers />) ||
+          (page === 2 && <Students />) ||
+          (page === 3 && <Classes />) ||
+          (page === 4 && <Changes />) ||
+          (page === 5 && <Settings />)
+        }
+      </div>
+      <div className='screen-alert'>
+        <p>Sorry, the dashboard cannot be accessed with your screen width.</p>
+        <div onClick={() => logout()}><FiLogOut /> Logout</div>
+      </div>
+    </>
   )
 }
 

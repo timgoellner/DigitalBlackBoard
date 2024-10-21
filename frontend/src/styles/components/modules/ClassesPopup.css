@@ -49,14 +49,14 @@
       gap: 1rem;
     }
 
-    .time {
-      div:nth-child(1) {
-        min-width: 11.5rem;
-      }
+    .date > div {
+      min-width: calc(50% - 2rem);
+    }
 
-      div:nth-child(2) {
-        min-width: 6rem;
-      }
+    .time {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
     }
 
     > div:first-child input {
