@@ -9,6 +9,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Blackboard from './pages/Blackboard';
 import Dashboard from './pages/Dashboard';
+import NotFound from './pages/NotFound';
 
 import validateUser from './helpers/validateUser';
 import { User } from './pages/Dashboard';
@@ -53,6 +54,8 @@ const router = createBrowserRouter(
         if (!user || !user.isStaff) return redirect('/login')
         else return user
       }}/>
+
+      <Route path = '*' element = {<NotFound />} />
     </>
   )
 );
