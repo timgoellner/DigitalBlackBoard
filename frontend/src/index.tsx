@@ -5,6 +5,7 @@ import { createBrowserRouter, createRoutesFromElements, redirect, Route, RouterP
 
 import './styles/index.css';
 
+import Homepage from './pages/Homepage';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Blackboard from './pages/Blackboard';
@@ -17,12 +18,12 @@ import { User } from './pages/Dashboard';
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
-      <Route path = '/' loader = {async () => {
+      <Route path = '/' element = {<Homepage />} loader = {async () => {
         const user = await validateUser() as User
 
         if (user && !user.isStaff) return redirect('/blackboard')
         else if (user && user.isStaff) return redirect('/dashboard')
-        else return redirect('/login')
+        else return null
       }}/>
 
       <Route path = '/login' element = {<Login />} loader = {async () => {

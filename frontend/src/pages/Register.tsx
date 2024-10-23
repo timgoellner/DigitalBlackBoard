@@ -1,16 +1,19 @@
 import React, { FormEvent, useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import "../styles/Login.css"
 
 function Register() {
-  const [organization, setOrganization] = useState('')
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  const [organization, setOrganization] = useState(searchParams.get('organization') === null ? '' : searchParams.get('organization') as string)
   const [identifier, setIdentifier] = useState('')
   const [password, setPassword] = useState('')
 
   const [error, setError] = useState('')
 
   const navigate = useNavigate();
+
 
   function submitUser(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()

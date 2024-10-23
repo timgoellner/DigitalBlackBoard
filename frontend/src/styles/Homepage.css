@@ -1,0 +1,139 @@
+.homepage {
+  header {
+    display: flex;
+    position: absolute;
+    width: calc(100dvw - 4rem);
+    justify-content: space-between;
+    margin: 1.2rem 2rem;
+
+    .title {
+      display: flex;
+      gap: .3rem;
+      font-size: 1.5rem;
+      font-weight: bold;
+
+      span:nth-child(1) {
+        color: var(--lightblue);
+      }
+
+      span:nth-child(2) {
+        color: var(--blue);
+      }
+
+      span:nth-child(3) {
+        color: var(--darkblue);
+      }
+    }
+
+    .navigation {
+      display: flex;
+      gap: 2rem;
+
+      a {
+        color: black;
+        text-decoration: none;
+        padding: .5rem 1rem;
+      }
+
+      a:last-child {
+        border: black 1px solid;
+        border-radius: .5rem;
+      }
+
+      a:hover {
+        color: var(--darkgray);
+        border-color: var(--darkgray);
+      }
+    }
+  }
+
+  .intro {
+    display: flex;
+    height: 80dvh;
+    justify-content: center;
+    align-items: center;
+
+    > span {
+      display: flex;
+      flex-direction: column;
+      gap: 4rem;
+    }
+
+    .greeting {
+      h1 {
+        font-size: 3.5rem;
+        font-weight: bold;
+        margin: 0;
+      }
+
+      p {
+        font-size: 1.5rem;
+        margin: 0;
+        margin-top: 1rem;
+        color: var(--darkgray);
+      }
+    }
+
+    .actions {
+      display: flex;
+      flex-direction: column;
+      gap: .5rem;
+
+      > p {
+        margin: 0;
+        font-weight: bold;
+        font-size: .95rem;
+      }
+
+      > div {
+        display: flex;
+        gap: 1.5rem;
+        height: 3rem;
+
+        .registration {
+          display: flex;
+          border-radius: .4rem;
+          overflow: hidden;
+
+          input {
+            width: 13dvw;
+            border: var(--darkblue) 2px solid;
+            border-radius: .4rem 0 0 .4rem;
+            padding: .3rem 1rem;
+            font-family: -apple-system, 'Roboto', sans-serif;
+            font-size: 1.05rem;
+          }
+
+          span {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 8dvw;
+            height: 100%;
+            background-color: var(--darkblue);
+            color: white;
+            font-weight: bold;
+            font-size: 1.05rem;
+            cursor: pointer;
+          }
+        }
+
+        .seperator {
+          border-left: var(--darkgray) 2px solid;
+        }
+
+        .learn-more {
+          display: flex;
+          padding: .3rem 1.7rem .3rem 2rem;
+          justify-content: center;
+          align-items: center;
+          border: var(--darkblue) 2px solid;
+          border-radius: .4rem;
+          color: black;
+          text-decoration: none;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+}
