@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { IoIosArrowForward } from "react-icons/io";
 
 import "../styles/Homepage.css"
+import blackboardImage from '../images/blackboard.png'
+import classesImage from '../images/classes.png'
 
 function Homepage() {
   const [organization, setOrganization] = useState('')
@@ -41,11 +43,25 @@ function Homepage() {
                 />
                 <span onClick={() => navigate('/register?organization=' + organization)}>Register</span>
               </div>
-              <span className='seperator'></span>
+              <span className='seperator' />
               <a className='learn-more' href='https://timgöllner.de/posts/2'>Learn More&nbsp;<IoIosArrowForward/></a>
             </div>
           </div>
         </span>
+      </div>
+      <div className='impressions'>
+        <div>
+          <span className='bracket'/>
+          <span className='bracket'/>
+          <p>Let your students know whats going on</p>
+          <img src={blackboardImage}/>
+        </div>
+        <div>
+          <span className='bracket'/>
+          <span className='bracket'/>
+          <p>Setup everything how you want it</p>
+          <img src={classesImage}/>
+        </div>
       </div>
     </main>
   );
