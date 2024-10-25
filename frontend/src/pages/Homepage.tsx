@@ -20,6 +20,11 @@ function Homepage() {
           <span>Black</span>
           <span>Board</span>
         </div>
+        <div className='title-small'>
+          <span>D</span>
+          <span>B</span>
+          <span>B</span>
+        </div>
         <div className='navigation'>
           <a href='/login'>Login</a>
           <a href='/register'>Register</a>

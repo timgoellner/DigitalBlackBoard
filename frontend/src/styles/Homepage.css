@@ -6,7 +6,7 @@
     justify-content: space-between;
     margin: 1.2rem 2rem;
 
-    .title {
+    .title, .title-small {
       display: flex;
       gap: .3rem;
       font-size: 1.5rem;
@@ -23,6 +23,10 @@
       span:nth-child(3) {
         color: var(--darkblue);
       }
+    }
+
+    .title-small {
+      display: none;
     }
 
     .navigation {
@@ -48,10 +52,9 @@
   }
 
   .intro {
-    display: flex;
-    height: 80dvh;
-    justify-content: center;
-    align-items: center;
+    position: absolute;
+    top: 21dvh;
+    left: 37.5dvw;
 
     > span {
       display: flex;
@@ -138,9 +141,6 @@
   }
 
   .impressions {
-    position: absolute;
-    top: 0;
-
     div {
       position: absolute;
       display: flex;
@@ -149,6 +149,7 @@
       border: var(--gray) 2px solid;
       padding: 1rem;
       border-radius: 1rem;
+      bottom: -84dvh;
 
       p {
         font-size: .88rem;
@@ -197,8 +198,7 @@
     }
 
     div:nth-child(1) {
-      top: 19dvh;
-      left: 5dvw;
+      left: 13dvw;
 
       img {
         width: 16rem;
@@ -206,8 +206,7 @@
     }
 
     div:nth-child(2) {
-      top: 67dvh;
-      left: 60dvw;
+      left: calc(37.5dvw + 3.2rem);
 
       img {
         height: 8rem;
@@ -241,6 +240,82 @@
 
     > div:hover::after {
       background-color: transparent;
+    }
+  }
+
+  @media only screen and (max-width: 1300px) {
+    .intro {
+      top: 18dvh;
+      left: 20dvw;
+    }
+
+    .impressions {
+      > div:nth-child(1) {
+        display: none;
+      }
+
+      div:nth-child(2) {
+        left: 20dvw;
+        bottom: -90dvh;
+      }
+    }
+  }
+
+  @media only screen and (max-width: 900px) {
+    header {
+      position: relative;
+
+      .title {
+        display: none;
+      }
+
+      .title-small {
+        display: block;
+      }
+    }
+
+    .intro {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      top: unset;
+      left: unset;
+      height: 80dvh;
+      margin: 2rem;
+
+      .actions > div {
+        flex-direction: column;
+        height: unset;
+        gap: 1.5rem;
+
+        .registration {
+          height: 2.5rem;
+
+          input {
+            width: unset;
+          }
+
+          span {
+            width: 100%;
+            height: unset;
+          }
+        }
+
+        .seperator {
+          border-bottom: var(--darkgray) 2px dotted;
+        }
+
+        .learn-more {
+          height: 1.5rem;
+        }
+      }
+    }
+
+    .impressions {
+      div:nth-child(2) {
+        display: none;
+      }
     }
   }
 }
