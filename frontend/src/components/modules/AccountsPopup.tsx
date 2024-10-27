@@ -45,7 +45,7 @@ function AccountsPopup({ refresh, account }: Props) {
     const token = localStorage.getItem('jwt-token')
     if (token == null) return
 
-    fetch(`https://dbb.timgöllner.de/api/dashboard/accounts`, {
+    fetch(`https://dbb.timgöllner.de/api/v1/dashboard/accounts`, {
       method: method,
       headers: {
         'content-type': 'application/json',

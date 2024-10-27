@@ -119,7 +119,7 @@ function ChangesPopup({ refresh, change, teachers, classes, grades }: Props) {
     const token = localStorage.getItem('jwt-token')
     if (token == null) return
 
-    fetch(`https://dbb.timgöllner.de/api/dashboard/changes`, {
+    fetch(`https://dbb.timgöllner.de/api/v1/dashboard/changes`, {
       method: method,
       headers: {
         'content-type': 'application/json',

@@ -49,7 +49,7 @@ function GradesPopup({ refresh, gradeData }: Props) {
     const token = localStorage.getItem('jwt-token')
     if (token == null) return
 
-    fetch(`https://dbb.timgöllner.de/api/dashboard/grades`, {
+    fetch(`https://dbb.timgöllner.de/api/v1/dashboard/grades`, {
       method: method,
       headers: {
         'content-type': 'application/json',

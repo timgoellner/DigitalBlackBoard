@@ -17,7 +17,7 @@ function DeletePopup() {
     const token = localStorage.getItem('jwt-token')
     if (token == null) return
 
-    fetch(`https://dbb.timgöllner.de/api/dashboard/organizations`, {
+    fetch(`https://dbb.timgöllner.de/api/v1/dashboard/organizations`, {
       method: 'DELETE',
       headers: {
         'content-type': 'application/json',

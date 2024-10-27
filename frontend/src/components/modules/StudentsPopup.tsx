@@ -54,7 +54,7 @@ function StudentsPopup({ refresh, student }: Props) {
     const token = localStorage.getItem('jwt-token')
     if (token == null) return
 
-    fetch(`https://dbb.timgöllner.de/api/dashboard/students`, {
+    fetch(`https://dbb.timgöllner.de/api/v1/dashboard/students`, {
       method: method,
       headers: {
         'content-type': 'application/json',

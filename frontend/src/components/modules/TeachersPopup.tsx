@@ -68,7 +68,7 @@ function TeachersPopup({ refresh, teacher }: Props) {
       return
     }
 
-    fetch(`https://dbb.timgöllner.de/api/dashboard/teachers`, {
+    fetch(`https://dbb.timgöllner.de/api/v1/dashboard/teachers`, {
       method: method,
       headers: {
         'content-type': 'application/json',

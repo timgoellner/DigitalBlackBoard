@@ -22,7 +22,7 @@ function Students() {
   const token = localStorage.getItem('jwt-token') as string
 
   const refresh = () => {
-    fetch(`https://dbb.timgöllner.de/api/dashboard/students`, { headers: { 'jwt-token': token } })
+    fetch(`https://dbb.timgöllner.de/api/v1/dashboard/students`, { headers: { 'jwt-token': token } })
       .then((response) => response.json())
       .then((data) => {
         if (data.message !== 'success') navigate('/login')

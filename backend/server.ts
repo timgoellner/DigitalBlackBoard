@@ -24,10 +24,12 @@ app.use(helmet({
   },
 }))
 
-app.use("/login", loginRouter)
-app.use("/register", registerRouter)
-app.use("/dashboard", dashboardRouter)
-app.use("/blackboard", blackboardRouter)
+const version = "/v" + process.env.VERSION
+
+app.use(version + "/login", loginRouter)
+app.use(version + "/register", registerRouter)
+app.use(version + "/dashboard", dashboardRouter)
+app.use(version + "/blackboard", blackboardRouter)
 
 app.listen(process.env.PORT)
 console.log("[server] listening on port " + process.env.PORT)

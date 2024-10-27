@@ -150,7 +150,7 @@ function ClassesPopup({ refresh, class_, teachers, grades, students }: Props) {
     const token = localStorage.getItem('jwt-token')
     if (token == null) return
 
-    fetch(`https://dbb.timgöllner.de/api/dashboard/classes`, {
+    fetch(`https://dbb.timgöllner.de/api/v1/dashboard/classes`, {
       method: method,
       headers: {
         'content-type': 'application/json',

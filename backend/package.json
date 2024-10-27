@@ -4,8 +4,7 @@
   "description": "",
   "main": "server.ts",
   "scripts": {
-    "devStart": "nodemon server.ts",
-    "start": "node server.ts"
+    "start": "npx tsx server.ts"
   },
   "type": "module",
   "author": "",

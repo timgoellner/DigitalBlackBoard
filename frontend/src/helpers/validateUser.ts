@@ -3,7 +3,7 @@ async function validateUser() {
   if (!token) return false;
 
   return new Promise((resolve, reject) => {
-    fetch('https://dbb.timgöllner.de/api/login', {
+    fetch('https://dbb.timgöllner.de/api/v1/login', {
       headers: {
         'jwt-token': token,
       },

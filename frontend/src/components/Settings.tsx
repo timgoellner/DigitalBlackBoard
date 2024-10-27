@@ -28,7 +28,7 @@ function Settings() {
   const token = localStorage.getItem('jwt-token') as string
 
   const load = () => {
-    fetch(`https://dbb.timgöllner.de/api/dashboard/organizations`, { headers: { 'jwt-token': token } })
+    fetch(`https://dbb.timgöllner.de/api/v1/dashboard/organizations`, { headers: { 'jwt-token': token } })
       .then((response) => response.json())
       .then((data) => {
         if (data.message !== 'success') navigate('/login')
@@ -43,7 +43,7 @@ function Settings() {
   useEffect(load, [])
 
   const refresh = () => {
-    fetch(`https://dbb.timgöllner.de/api/dashboard/accounts`, { headers: { 'jwt-token': token } })
+    fetch(`https://dbb.timgöllner.de/api/v1/dashboard/accounts`, { headers: { 'jwt-token': token } })
       .then((response) => response.json())
       .then((data) => {
         if (data.message !== 'success') navigate('/login')
@@ -63,7 +63,7 @@ function Settings() {
   useEffect(refresh, [identifier])
 
   const subjectsRequest = () => {
-    fetch(`https://dbb.timgöllner.de/api/dashboard/subjects`, { headers: { 'jwt-token': token } })
+    fetch(`https://dbb.timgöllner.de/api/v1/dashboard/subjects`, { headers: { 'jwt-token': token } })
       .then((response) => response.json())
       .then((data) => {
         if (data.message !== 'success') navigate('/login')
@@ -81,7 +81,7 @@ function Settings() {
   useEffect(subjectsRequest, [subject])
 
   const roomsRequest = () => {
-    fetch(`https://dbb.timgöllner.de/api/dashboard/rooms`, { headers: { 'jwt-token': token } })
+    fetch(`https://dbb.timgöllner.de/api/v1/dashboard/rooms`, { headers: { 'jwt-token': token } })
       .then((response) => response.json())
       .then((data) => {
         if (data.message !== 'success') navigate('/login')
@@ -99,7 +99,7 @@ function Settings() {
   useEffect(roomsRequest, [room])
 
   const request = async () => {
-    fetch(`https://dbb.timgöllner.de/api/dashboard/organizations`, {
+    fetch(`https://dbb.timgöllner.de/api/v1/dashboard/organizations`, {
       method: 'PUT',
       headers: {
         'content-type': 'application/json',
@@ -118,7 +118,7 @@ function Settings() {
     if (e.keyCode === 13 && value && !(/^\s*$/.test(value)) && value.length < 40) {
       setCurrentRoom('')
 
-      await fetch(`https://dbb.timgöllner.de/api/dashboard/rooms`, {
+      await fetch(`https://dbb.timgöllner.de/api/v1/dashboard/rooms`, {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
@@ -134,7 +134,7 @@ function Settings() {
   async function deleteRoom(room: string) {
     if (token == null) return
     
-    await fetch(`https://dbb.timgöllner.de/api/dashboard/rooms`, {
+    await fetch(`https://dbb.timgöllner.de/api/v1/dashboard/rooms`, {
       method: 'DELETE',
       headers: {
         'content-type': 'application/json',
@@ -153,7 +153,7 @@ function Settings() {
     if (e.keyCode === 13 && value && !(/^\s*$/.test(value)) && value.length < 40) {
       setCurrentSubject('')
 
-      await fetch(`https://dbb.timgöllner.de/api/dashboard/subjects`, {
+      await fetch(`https://dbb.timgöllner.de/api/v1/dashboard/subjects`, {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
@@ -169,7 +169,7 @@ function Settings() {
   async function deleteSubject(subject: string) {
     if (token == null) return
 
-    await fetch(`https://dbb.timgöllner.de/api/dashboard/subjects`, {
+    await fetch(`https://dbb.timgöllner.de/api/v1/dashboard/subjects`, {
       method: 'DELETE',
       headers: {
         'content-type': 'application/json',

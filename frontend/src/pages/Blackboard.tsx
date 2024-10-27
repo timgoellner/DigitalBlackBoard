@@ -43,7 +43,7 @@ function Blackboard() {
   var currentWeekday = 0
 
   const refresh = () => {
-    fetch(`https://dbb.timgöllner.de/api/blackboard/${user.organization}/${user.identifier}`, { headers: { 'jwt-token': token } })
+    fetch(`https://dbb.timgöllner.de/api/v1/blackboard/${user.organization}/${user.identifier}`, { headers: { 'jwt-token': token } })
       .then((response) => response.json())
       .then((data) => {
         if (data.message !== 'success') navigate('/login')

@@ -20,7 +20,7 @@ function Teachers() {
   const token = localStorage.getItem('jwt-token') as string
 
   const refresh = () => {
-    fetch(`https://dbb.timgöllner.de/api/dashboard/teachers`, { headers: { 'jwt-token': token } })
+    fetch(`https://dbb.timgöllner.de/api/v1/dashboard/teachers`, { headers: { 'jwt-token': token } })
       .then((response) => response.json())
       .then((data) => {
         if (data.message !== 'success') navigate('/login')

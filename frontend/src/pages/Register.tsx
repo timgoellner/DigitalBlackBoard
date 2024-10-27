@@ -18,7 +18,7 @@ function Register() {
   function submitUser(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
-    fetch(`https://dbb.timgöllner.de/api/register`, {
+    fetch(`https://dbb.timgöllner.de/api/v1/register`, {
       method: 'POST',
       headers: {
         'content-type': 'application/json',

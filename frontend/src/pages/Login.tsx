@@ -21,7 +21,7 @@ function Login() {
 
     const userType = (isStaff) ? ('staff') : ('user')
 
-    fetch(`https://dbb.timgöllner.de/api/login?type=${userType}`, {
+    fetch(`https://dbb.timgöllner.de/api/v1/login?type=${userType}`, {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
